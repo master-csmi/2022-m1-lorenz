@@ -1,0 +1,74 @@
+% beamertheme.sty
+\ProvidesPackage{beamertheme}
+
+\RequirePackage{silence}
+\WarningsOff[mathdesign/mdbch]
+
+\RequirePackage{etoolbox}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{caption}[numbered]
+
+% \RequirePackage[T1]{fontenc}
+% \RequirePackage[charter,expert]{mathdesign}
+% \RequirePackage[scaled=.96,oldstyle]{XCharter}
+% \RequirePackage[default,scale=0.96,osfigures]{opensans}
+\RequirePackage{fontspec}
+\setromanfont{Georgia}
+\setsansfont[Scale=MatchLowercase]{Open Sans}
+
+% couleurs utilisées
+\RequirePackage{tikz}
+
+\definecolor{titre}{RGB}{111, 76, 91}
+\definecolor{sous-titre}{RGB}{158, 119, 119}
+\definecolor{triangle}{RGB}{245, 232, 199}
+
+\setbeamertemplate{title page}[default][left]
+\setbeamerfont{title}{family=\rmfamily,size=\Huge}
+\setbeamerfont{author}{size=\large}
+
+\setbeamersize{text margin left=2em, text margin right=2em}
+
+\setbeamertemplate{frametitle}{\vskip0.1\paperheight\insertframetitle} 
+\setbeamerfont{frametitle}{family=\rmfamily,series=\mdseries,size=\LARGE}
+\setbeamerfont{block title}{family=\rmfamily,size=\large}
+
+
+\setbeamercolor{titlelike}{fg=titre}
+\setbeamercolor{author}{fg=sous-titre}
+\setbeamercolor{institute}{fg=sous-titre}
+\setbeamercolor{date}{fg=sous-titre}
+\setbeamercolor{normal text}{fg=black}
+\setbeamercolor{structure}{fg=black}
+\setbeamercolor{block title}{fg=titre}
+
+\setbeamertemplate{itemize item}{\textbullet}
+\setbeamertemplate{itemize subitem}{--}
+\setbeamertemplate{itemize subsubitem}{\textbullet}
+\setlength{\leftmargini}{1.25em}
+\setlength{\leftmarginii}{1em}
+\setlength{\leftmarginiii}{1em}
+
+% \pgfdeclareimage[width=1.01\paperwidth]{blueslope}{blueslope}
+\pgfdeclareimage[height=0.12\paperheight]{logo}{logo-cemosis}
+
+\setbeamertemplate{background}{%
+\begin{tikzpicture}[overlay,remember picture]
+  \fill[triangle] (current page.south west) -- +(0, 0.18\paperheight) -- +(\paperwidth, 0.08\paperheight) -- (current page.south east) -- cycle;  
+% \node[anchor=south west,inner sep=0pt,draw=none,yshift=-6pt,xshift=-1pt] at (current page.south west) {\pgfuseimage{blueslope}};%
+\node[anchor=south west,inner sep=0pt,draw=none,xshift=0.055\paperheight,yshift=0.04\paperheight] at (current page.south west) {\pgfuseimage{logo}};%
+\end{tikzpicture}%
+}
+
+\setbeamertemplate{footline}{%
+\vskip0.15\paperheight
+}
+
+\newcommand{\smallframetitle}{%
+  \setbeamertemplate{frametitle}{\vskip0.15\paperheight\insertframetitle}
+  \setbeamerfont{frametitle}{size=\large,series=\bfseries}
+}
+\newcommand{\normalframetitle}{%
+  \setbeamertemplate{frametitle}{\vskip0.2\paperheight\insertframetitle} 
+  \setbeamerfont{frametitle}{size=\LARGE,series=\mdseries}
+}

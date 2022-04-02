@@ -1,4 +1,5 @@
 diapo/main.aux
+diapo/main.fdb_latexmk
 diapo/main.log
 diapo/main.nav
 diapo/main.out
@@ -18,3 +19,21 @@ rapports/rapport_v0.pdf
 rapports/rapport_v0.synctex.gz
 rapports/rapport_v0.toc
 .ipynb_checkpoints/
+
+rapports/rapport_v0_fred.aux
+rapports/rapport_v0_fred.fdb_latexmk
+rapports/rapport_v0_fred.fls
+rapports/rapport_v0_fred.log
+rapports/rapport_v0_fred.out
+rapports/rapport_v0_fred.pdf
+rapports/rapport_v0_fred.synctex.gz
+rapports/rapport_v0_fred.toc
+diapo/diapo_fred/main.aux
+diapo/diapo_fred/main.fdb_latexmk
+diapo/diapo_fred/main.log
+diapo/diapo_fred/main.nav
+diapo/diapo_fred/main.out
+diapo/diapo_fred/main.pdf
+diapo/diapo_fred/main.snm
+diapo/diapo_fred/main.synctex.gz
+diapo/diapo_fred/main.toc

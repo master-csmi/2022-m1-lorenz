@@ -1,0 +1,187 @@
+\documentclass[12pt]{article}
+\usepackage{a4wide}
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{enumitem}
+\usepackage[colorlinks]{hyperref}
+\usepackage{graphicx}
+\newcommand{\vect}[1]{\hat{\boldsymbol{#1}}}
+
+\begin{document}
+	AYDOGDU Melissa \\
+	LECOURTIER Frédérique \hfill 01 april 2022
+	\begin{center}
+		\Large\textbf{Project Report : Lorenz system}\\
+	\end{center}
+	
+	\tableofcontents
+	
+	\section{Introduction}
+	
+	\begin{enumerate}[label=\textbullet]
+		\item exemples d'utilisation (météo...)
+		\item présentation du système + propriétés mathématiques (non linéaire...) 
+		\item but du projet, "répartition" du travail, diagramme de gantt (en annexe)
+	\end{enumerate}
+	
+	\section{Some interesting properties on the Lorenz System}
+	
+	\begin{enumerate}[label=\textbullet]
+		\item Théorie du chaos (définition + comment lorenz l'a découvert)
+		\item Présentations points fixes + déf attracteur
+	\end{enumerate}
+	
+	\section{First part : Numerical resolution with different methods}
+		
+	We consider $f : [0; T] \times \mathbb{R}^n \rightarrow \mathbb{R}^n$ a continuous function. For $X_0\in \mathbb{R}^n$, the problem is to find  $X\in C^1([0,T],\mathbb{R}^n)$ a solution for the differential equation:
+	
+	$$\left\{\begin{aligned}
+		X'&=f(t,X) \\
+		X(0)&=X_0
+	\end{aligned}\right.$$
+	
+	\noindent To solve the Lorenz problem we will have:
+	
+	$$X'=\begin{pmatrix}
+		x' \\
+		y' \\
+		z'
+	\end{pmatrix}, \quad X=\begin{pmatrix}
+		x \\
+		y \\
+		z
+	\end{pmatrix} \quad et \quad f(t,X)=\begin{pmatrix}
+		\sigma(y-x) \\
+		x(r-z)-y \\
+		xy-bz
+	\end{pmatrix}$$
+
+	\noindent After discretizing the problem in time, we can implement different methods of solving the ODE. The methods are the following and will be described in more detail in the following parts : explicit Euler, implicit Euler and Runge Kutta (order 4). We will also use a scipy function and finally compare all our methods.
+
+	\subsection{Discretization}
+	
+	To solve the problem, we will use the finite difference method. We will start by slicing the interval $[0,T]$ in $N+1$ discretization points (so $N$ intervals). Let $t_n=n\Delta t$ the discretization timed with $\Delta t=T/N$ the time step. Then, we denote by $X_n=X(t_n)$ the discretization points. So for $n=\{0,\dots,N\}$, we will have:
+	
+	$$\left\{\begin{aligned} 
+		x_n&=x(t_n)=x(n\Delta t) \\
+		y_n&=y(t_n)=y(n\Delta t) \\
+		z_n&=z(t_n)=z(n\Delta t)
+	\end{aligned}\right.$$
+	
+	\noindent By Taylor's theorem, we get :
+	
+	$$\begin{aligned}
+		&&X(t+\Delta t)&=X(t)+\Delta t X'(t) + O(\Delta t^2) \\
+		\Rightarrow&& \quad X'(t)&=\frac{X(t+\Delta t)-X(t)}{\Delta t} + O(\Delta t) \\
+		\Rightarrow&& \quad \partial_t X_n&\approx\frac{X_{n+1}-X_n}{\Delta t} \\
+	\end{aligned}
+	$$	
+	
+	\subsection{Explicit Euler}
+	
+	The explicit Euler method is written :
+	
+	$$X_{n+1}=X_n+\Delta t f(t_n,X_n)$$
+	
+	\noindent which will give us:
+	
+	$$\left\{\begin{aligned} 
+		x_{n+1}&=\sigma\Delta t y_n+(1-\sigma\Delta t) x_n \\
+		y_{n+1}&=\Delta t x_n(r-z_n)(1-\Delta t)y_n \\
+		z_{n+1}&=\Delta t x_ny_n+(1-b\Delta t)z_n
+	\end{aligned}\right.$$
+	
+	\subsection{Implicit Euler}
+	
+	The implicit Euler method is written :
+	
+	$$X_{n+1}=X_n+\Delta t f(t_{n+1},X_{n+1})$$
+	
+	\noindent which will give us:
+	
+	$$\left\{\begin{aligned} 
+		x_{n+1}&=x_n+\Delta t\sigma(y_{n+1}-x_{n+1}) \\
+		y_{n+1}&=y_n+\Delta t x_{n+1}(r-z_{n+1})-y_{n+1} \\
+		z_{n+1}&=z_n+\Delta tx_{n+1}y_{n+1}-\Delta tbz_{n+1}
+	\end{aligned}\right.$$
+	
+	\begin{enumerate}[label=\textbullet]
+		\item First, we isolate the $n+1$ terms on the left and the $n$ terms on the right:
+		
+		$$\left\{\begin{aligned} 
+			(1+\Delta t\sigma)x_{n+1}-\Delta t\sigma y_{n+1}&=x_n \\
+			-\Delta t(r-z_{n+1})x_{n+1}+(1+\Delta t)y_{n+1}&=y_n \\
+			-\Delta ty_{n+1}x_{n+1}+(1+\Delta tb)z_{n+1}&=z_n
+		\end{aligned}\right.$$
+	
+		\item We can then linearize the terms 
+		
+		$$\begin{aligned}
+			x_{n+1}y_{n+1}&\approx x_{n+1,k+1}y_{n+1,k} \\
+			x_{n+1}z_{n+1}&\approx x_{n+1,k+1}z_{n+1,k}
+		\end{aligned}$$ 		
+		\noindent Then, we get :
+		
+		$$\left\{\begin{aligned} 
+			(1+\Delta t\sigma)x_{n+1,k+1}-\Delta t\sigma y_{n+1,k+1}&=x_n \\
+			-\Delta t(r-z_{n+1,k})x_{n+1,k+1}+(1+\Delta t)y_{n+1,k+1}&=y_n \\
+			-\Delta ty_{n+1,k}x_{n+1,k+1}+(1+\Delta tb)z_{n+1,k+1}&=z_n
+		\end{aligned}\right.$$
+	
+		\item We can then put in matrix form  $M(X_{n+1,k})X_{n+1,k+1}=X_n$ with :
+		
+		$$M(X_{n+1,k})=\begin{pmatrix}
+			1+\Delta t\sigma & -\Delta t\sigma & 0 \\
+			-\Delta t(r-z_{n+1,k}) & 1+\Delta t & 0 \\
+			-\Delta ty_{n+1,k} & 0 & 1+\Delta tb
+		\end{pmatrix},$$
+		$$X_{n+1,k+1}=\begin{pmatrix}
+			x_{n+1,k+1} \\
+			y_{n+1,k+1} \\
+			z_{n+1,k+1}
+		\end{pmatrix} \quad et \quad X_n=\begin{pmatrix}
+			x_n \\
+			y_n \\
+			z_n
+		\end{pmatrix} $$
+	\end{enumerate}
+	
+	\subsection{Runge Kutta}
+	
+	\begin{enumerate}[label=\textbullet]
+		\item \textbf{Runge Kutta (order 4th) :} \\
+		The Runge Kutta method of order 4 is written :
+		
+		$$X_{n+1}=X_n+\frac{\Delta t}{6}\left(K_1+2K_2+2K_3+K_4\right)$$
+		
+		\noindent where 
+		
+		$$\left\{\begin{aligned}
+			K_1&=f(t_n,X_n) \\
+			K_2&=f\left(t_n+\frac{\Delta t}{2},X_n+\frac{1}{2} K_1\Delta t\right) \\
+			K_3&=f\left(t_n+\frac{\Delta t}{2},X_n+\frac{1}{2} K_2\Delta t\right) \\
+			K_4&=f\left(t_n+\Delta t,X_n+K_3\Delta t\right)
+		\end{aligned}\right.$$
+		\item \textbf{Scipy function :} \href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html#scipy.integrate.solve_ivp}{scipy.integrate.solve\_ivp}
+	\end{enumerate}
+
+	\subsection{Comparing methods}
+	
+	\begin{enumerate}[label=\textbullet]
+		\item First, we had to implement a function allowing to plot a 2D graph representing x versus y, then a 2D graph representing x versus z and finally a 3D graph of the solution. Then, we implemented the different methods described above and we checked visually that they worked correctly. Here are the graphs obtained with the following parameters :
+		\begin{center}
+			$\sigma=10,\quad \beta=8/3 \quad r=9/10$ \\
+			$X_0=(-10,10,5)$ \\
+			$N=5000, \quad T=100$
+		\end{center}
+		\includegraphics[width=\textwidth]{"images/euler_explicit.png"}
+		\includegraphics[width=\textwidth]{"images/euler_explicit_dt2.png"}
+		\includegraphics[width=\textwidth]{"images/euler_implicit.png"}
+		\includegraphics[width=\textwidth]{"images/RK4_Lorenz.png"}
+		\includegraphics[width=\textwidth]{"images/scipy.png"}
+		\item Then, we compared the execution times of these different methods. Here is what we get with the same parameters : \\
+		\includegraphics[width=0.7\textwidth]{"images/execution_times.jpg"} \\
+		It seems that the explicit Euler method is the fastest, followed by the scipy function.
+	\end{enumerate}
+	
+\end{document}

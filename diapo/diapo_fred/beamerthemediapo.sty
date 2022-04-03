@@ -72,3 +72,11 @@
   \setbeamertemplate{frametitle}{\vskip0.2\paperheight\insertframetitle} 
   \setbeamerfont{frametitle}{size=\LARGE,series=\mdseries}
 }
+
+\addtobeamertemplate{navigation symbols}{}{%
+	\usebeamerfont{footline}%
+	\usebeamercolor[fg]{footline}%
+	\vspace{-4em}\hfill\insertframenumber\hspace{1em}\null
+}
+\setbeamercolor{footline}{fg=titre}
+\setbeamerfont{footline}{series=\bfseries,size=\normalsize}

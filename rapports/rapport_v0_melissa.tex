@@ -35,18 +35,20 @@
 		\item $b$ relates to the physical dimensions of the layer
 	\end{enumerate}
 	
-   We can see that this system is non-linear , because in the second differential equation $\frac{dy}{dt}$ we can see a $xy$ and in the third differential equation $\frac{dz}{dt}$ we have a $xy$ . So the evolution of these three differential equations are all related.
+   \noindent We can see that this system is non-linear , because in the second differential equation( $\frac{dy}{dt}$) we can see a $xz$ and in the third differential equation ($\frac{dz}{dt}$) we have a $xy$ . So the evolution of these three differential equations are all related.
    
-   For the organization we have chosen to make a glove diagram with the different parts and the deadlines we have set (which can change during the time). The first part consists on understanding the system of Lorenz and to make the implementation of the resolution, since this part is essential, we worked together during this. For the rest of the project, we divided the work, one person will take care of the para-real part and the other on the part with the data assimilation.
+   \noindent For the organization we have chosen to make a gant diagram with the different parts and the deadlines we have set (which can change during the time). The first part consists on understanding the system of Lorenz and to make the implementation of the resolution, since this part is essential for the rest, we worked together during this. For the remainder of the project, we divided the work, one person will take care of the para-reel part and the other on the part with the data assimilation.
 
 
 
 	
 	
 	\section{Some interesting properties on the Lorenz System}
-	\subsection{theorie of chaos}
-	
-	While calculating this model, Lorenz discovered a rare fact. After entering slightly different input values, he obtained completely different results. This effect was later named "butterfly effect". The "butterfly effect" represents a system that is very sensitive to the initial condition, which is why these systems are very difficult to predict over time. This idea gave birth to the notion of a butterfly flapping its wings in a region of the world and causing a tornado.
+	\subsection{Theorie of chaos}
+	In 1961, Lorenz was working with a simplified system that represented the atmosphere, with 12 variables. 
+    They use a computer to calculated the values for each moments in time by applying the equations to the values from the previous moment. In some case, Lorenz’s team needed to re-start the simulation. Since the equations was the same, they expected to see the same results but sometimes they didn’t. At first, they think that the problem was coming from the computer ,but actually the error came from the fact that the computer was storing numbers with six decimal places but it was only printing the number with 3 decimal places, so the values that Lorenz put into the computer had tiny errors. So he discovered that in some systems, tiny changes in the initial conditions can lead to big changes in time.
+    
+	\noindent This effect was later named "butterfly effect". The "butterfly effect" represents a system that is very sensitive to the initial condition, which is why these systems are very difficult to predict over time. This idea gave birth to the notion of a butterfly flapping its wings in a region of the world and causing a tornado.
     This is why we call the Lorenz equations a chaotic system. This means that this type of system is roughly defined by sensitivity to initial conditions: infinitesimal differences in initial conditions of the system result in large differences in behavior.
 
 	\subsection{ Présentations points fixes + déf attracteur}

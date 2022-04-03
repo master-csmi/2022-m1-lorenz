@@ -68,17 +68,23 @@
 
 \section{Some interesting properties}
 
-\begin{frame}{Chaos theory}
-
-    Some examples of commonly used commands and features are included, to help you get started.
-    \begin{itemize}
-      \item Your introduction goes here!
-      \item Use \texttt{itemize} to organize your main points.
-    \end{itemize}
-
+\begin{frame}{Lorenz Attractor}
+	
+	\begin{figure}[h]
+		\begin{minipage}[c]{.46\linewidth}
+			\centering
+			\includegraphics[width=\textwidth]{images/butterfly.jpg}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[c]{.46\linewidth}
+			\centering
+			\includegraphics[width=\textwidth]{images/butterfly3D.jpg}
+		\end{minipage}
+	\end{figure}
+	
 \end{frame}
 
-\begin{frame}{Fixed points}
+\begin{frame}{Chaos theory}
 
     Some examples of commonly used commands and features are included, to help you get started.
     \begin{itemize}
@@ -121,7 +127,7 @@
     
     \begin{itemize}
         \item Discretization : \\
-        \quad \includegraphics[width=0.4\textwidth]{discretization.jpg} \\ 
+        \quad \includegraphics[width=0.4\textwidth]{images/discretization.jpg} \\ 
         Let \quad $t_n=n\Delta t$ \quad with \quad $\Delta t=T/N$ \quad and \quad $X_n=X(t_n)$ \\ \; \\
         \item Euler explicit :
         $$X_{n+1}=X_n+\Delta t f(t_n,X_n)$$
@@ -144,13 +150,52 @@
 
 \end{frame}
 
-\begin{frame}{Some results (with Python)}
+\begin{frame}[allowframebreaks]{Some results (with Python)}
 
-    Some examples of commonly used commands and features are included, to help you get started.
-    \begin{itemize}
-      \item Your introduction goes here!
-      \item Use \texttt{itemize} to organize your main points.
-    \end{itemize}
+    \includegraphics[width=\textwidth]{images/N1000.png} \\ 
+    \begin{center}
+    	\begin{minipage}[c]{0.5\linewidth}
+    		$\sigma=10,\quad \beta=8/3, \quad r=28$ \\
+    		$X_0=(-10,10,5)$ 
+    	\end{minipage}
+    	$T=100, N = 1000 \Rightarrow \Delta t=0.1$
+    \end{center}
+
+	\newpage
+	
+	\includegraphics[width=\textwidth]{images/N5000.png} \\ 
+	\begin{center}
+		\begin{minipage}[c]{0.5\linewidth}
+			$\sigma=10,\quad \beta=8/3, \quad r=28$ \\
+			$X_0=(-10,10,5)$ 
+		\end{minipage}
+		$T=100, N = 5000 \Rightarrow \Delta t=0.0.02$
+	\end{center}
+
+	\newpage
+	
+	\includegraphics[width=\textwidth]{images/N100000.png} \\ 
+	\begin{center}
+		\begin{minipage}[c]{0.5\linewidth}
+			$\sigma=10,\quad \beta=8/3, \quad r=28$ \\
+			$X_0=(-10,10,5)$ 
+		\end{minipage}
+		$T=100, N = 100000 \Rightarrow \Delta t=0.001$
+	\end{center}
+
+	\newpage
+	
+	\begin{block}{Execution time}
+		\; \\
+		\begin{center}
+			\begin{tabular}{ll}
+				Explicit Euler :&  0.003834 \\
+				Implicit Euler :&  0.351176 \\
+				Runge Kutta :& 0.228595 \\
+				Scipy function :&  0.030235
+			\end{tabular}
+		\end{center}
+	\end{block}
     
 \end{frame}
 

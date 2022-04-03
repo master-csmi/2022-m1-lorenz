@@ -1,7 +1,11 @@
 %% Requires compilation with XeLaTeX or LuaLaTeX
 \documentclass[10pt,xcolor={table,dvipsnames},t]{beamer}
-\usetheme{diapo}
+\usetheme{UCBerkeley}
 \usepackage{amsmath}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+
 
 \title[Your Short Title]{Lorenz System Project}
 \subtitle{Presentation (version 0)}
@@ -33,16 +37,6 @@
 \section{Introduction}
 
 
-\begin{frame}{Examples of application}
-    
-    Some examples of commonly used commands and features are included, to help you get started.
-    \begin{itemize}
-      \item Your introduction goes here!
-      \item Use \texttt{itemize} to organize your main points.
-    \end{itemize}
-
-\end{frame}
-
 \begin{frame}{Lorenz system}
     
     The system :
@@ -51,27 +45,30 @@
     y'&=x(r-z)-y \\
     z'&=xy-bz
     \end{aligned}\right.$$
+    
+    \begin{enumerate}
+		\item Non-lineary- two nonlinearities: $xy$ and $xz$
+		\item symmetry - invarient under $(x,y)\rightarrow(-x,-y) $
+		\item 3 fixed points- $(0,0,0) ,(\sqrt{b(r-1)},\sqrt{b(r-1)},r-1)$ and $(-\sqrt{b(r-1)},-\sqrt{b(r-1)},r-1)$
+	\end{enumerate}
 
 \end{frame}
 \begin{frame}{Goals of the project}
     
-    \pgfimage[width=1.\textwidth]{gantt}
+    \pgfimage[height=4.5cm,width=10.0cm]{gantt}
 
 \end{frame}
 
 
 \section{Some interesting properties}
-
 \begin{frame}{Chaos theory}
-
-    Some examples of commonly used commands and features are included, to help you get started.
-    \begin{itemize}
-      \item Your introduction goes here!
-      \item Use \texttt{itemize} to organize your main points.
-    \end{itemize}
-
+    \pgfimage[height=4.0cm,width=10.0cm]{chaos1}
 \end{frame}
-
+\begin{frame}
+     \begin{center}
+        \pgfimage[height=4cm,width=10.0cm]{chaos2}
+    \end{center}
+\end{frame}
 \begin{frame}{Fixed points}
 
     Some examples of commonly used commands and features are included, to help you get started.

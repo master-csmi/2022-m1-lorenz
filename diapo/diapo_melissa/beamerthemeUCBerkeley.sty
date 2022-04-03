@@ -1,5 +1,6 @@
-% beamertheme.sty
-\ProvidesPackage{beamertheme}
+% beamerthemeUCBerkeley.sty v1.2 (January 5, 2021)
+% by Overleaf (LianTze Lim, Ryan Looney)
+\ProvidesPackage{beamerthemeUCBerkeley}
 
 \RequirePackage{silence}
 \WarningsOff[mathdesign/mdbch]
@@ -16,12 +17,22 @@
 \setromanfont{Georgia}
 \setsansfont[Scale=MatchLowercase]{Open Sans}
 
-% couleurs utilisées
 \RequirePackage{tikz}
 
 \definecolor{titre}{RGB}{111, 76, 91}
 \definecolor{sous-titre}{RGB}{158, 119, 119}
 \definecolor{triangle}{RGB}{245, 232, 199}
+
+\definecolor{BerkeleyGold}{RGB}{255,0,0}
+\definecolor{Medalist}{HTML}{C4820E}
+\definecolor{BerkeleyBlueText}{RGB}{48,99,126}
+\definecolor{FoundersRock}{HTML}{3B7EA1}
+%entete du tableau
+\definecolor{BerkeleyTableGold}{RGB}{222,157,46}
+%\definecolor{CaliforniaGold}{RGB}{255,0,0}
+\definecolor{BerkeleyTableBlue1}{RGB}{207,226,234}
+\definecolor{BerkeleyTableBlue2}{RGB}{232,241,245}
+\definecolor{BerkeleyBlue}{HTML}{003262}
 
 \setbeamertemplate{title page}[default][left]
 \setbeamerfont{title}{family=\rmfamily,size=\Huge}
@@ -29,7 +40,7 @@
 
 \setbeamersize{text margin left=2em, text margin right=2em}
 
-\setbeamertemplate{frametitle}{\vskip0.1\paperheight\insertframetitle} 
+\setbeamertemplate{frametitle}{\vskip0.2\paperheight\insertframetitle} 
 \setbeamerfont{frametitle}{family=\rmfamily,series=\mdseries,size=\LARGE}
 \setbeamerfont{block title}{family=\rmfamily,size=\large}
 
@@ -39,7 +50,7 @@
 \setbeamercolor{institute}{fg=sous-titre}
 \setbeamercolor{date}{fg=sous-titre}
 \setbeamercolor{normal text}{fg=black}
-\setbeamercolor{structure}{fg=black}
+\setbeamercolor{structure}{fg=BerkeleyBlue}
 \setbeamercolor{block title}{fg=titre}
 
 \setbeamertemplate{itemize item}{\textbullet}
@@ -72,3 +83,9 @@
   \setbeamertemplate{frametitle}{\vskip0.2\paperheight\insertframetitle} 
   \setbeamerfont{frametitle}{size=\LARGE,series=\mdseries}
 }
+
+\renewcommand{\arraystretch}{1.2}
+\newcommand{\tableheadrow}{\rowcolor{BerkeleyTableGold}}
+\newcommand{\tableheadcol}[1]{{\bfseries\color{white}#1}}
+\rowcolors{2}{BerkeleyTableBlue1}{BerkeleyTableBlue2}
+\AtBeginEnvironment{tabular}{\color{black}}

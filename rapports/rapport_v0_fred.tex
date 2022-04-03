@@ -8,6 +8,7 @@
 \newcommand{\vect}[1]{\hat{\boldsymbol{#1}}}
 
 \begin{document}
+	\nocite{*}
 	AYDOGDU Melissa \\
 	LECOURTIER Frédérique \hfill 01 april 2022
 	\begin{center}
@@ -23,13 +24,60 @@
 		\item présentation du système + propriétés mathématiques (non linéaire...) 
 		\item but du projet, "répartition" du travail, diagramme de gantt (en annexe)
 	\end{enumerate}
+
+	\noindent Let us now determine the fixed points of the Lorenz system. These are the points such that $X'=0$. 
+	
+	$$
+	\left\{\begin{aligned}
+		x'=&\sigma(y-x) &&=0 \\
+		y'=&x(r-z)-y  &&=0\\
+		z'=&xy-bz &&=0
+	\end{aligned}\right. 
+	\quad \Rightarrow \quad 
+	\left\{\begin{aligned}
+		&x=y \\
+		&(r-1-z)x=0\\
+		&x^2=bz
+	\end{aligned}\right.
+	$$
+	
+	\begin{enumerate}[label=\textbullet]
+		\item If $x=0$ : \quad  $y=0$ and $z=0$.
+		\item If $x\ne 0$ and $r>1$ : \quad $\left\{\begin{aligned}
+			&z=r-1\\
+			&x=y=\pm\sqrt{b(r-1)}
+		\end{aligned}\right.
+		$
+	\end{enumerate}
+	
+	\noindent We deduce that the fixed points of the Lorenz system are : $(0,0,0)$ for all values of the parameters. And for $r>1$, there is also a pair of fixed points $(\sqrt{b(r-1)},\sqrt{b(r-1)},r-1)$ and $(-\sqrt{b(r-1)},-\sqrt{b(r-1)},r-1)$.
 	
 	\section{Some interesting properties on the Lorenz System}
 	
+	\subsection{Lorenz Attractor}
+		
+	The Lorenz system is also called Lorenz Attractor. Let's try to undestand why. Lorenz discovered that an incredible structure emerges when $x(t)$ is plotted against $z(t)$. The famous butterfly wing pattern appears :
+	\begin{center}
+		\includegraphics[width=0.5\textwidth]{"images/butterfly.jpg"}
+	\end{center}
 	\begin{enumerate}[label=\textbullet]
-		\item Théorie du chaos (définition + comment lorenz l'a découvert)
-		\item Présentations points fixes + déf attracteur
+		\item The trajectory seems to cross several times, but this is just an illusion of the projection of the trajectory in three dimensions on a plane in two dimensions. In 3D, there are no crossings!
+		\item The number of circuits made on either side varies unpredictably from one cycle to the next. The sequence of the number of circuits in each lobe has many of the characteristics of a random sequence!
+		\item When the trajectory is viewed in 3 dimensions, it appears to settle onto a thin set that looks like a pair of butterfly wings. We call this attractor a strange attractor and it can be shown schematically as :
+		\begin{center}
+			\includegraphics[width=0.5\textwidth]{"images/butterfly3D.jpg"}
+		\end{center}
 	\end{enumerate}
+	
+	\noindent The uniqueness theorem means that trajectories cannot cross or merge, hence the two surfaces of the strange attractor can only appear to merge. Lorenz concluded that “there is an infinite
+	complex of surfaces” where they appear to merge. Today this “infinite complex of surfaces” would be called a fractal which is a set of points with zero volume but infinite surface area.
+	
+	\noindent The term attractor is also difficult to define in a rigorous way. Loosely, an attractor is a set of points to which all neighbouring trajectories converge. Stable fixed points and
+	stable limit cycles are examples. Nobody has yet proved that the Lorenz attractor is truly an attractor. Finally we define a strange attractor to be an attractor that exhibits sensitive dependence
+	on initial conditions.
+	
+	\subsection{Theory of chaos}
+	
 	
 	\section{First part : Numerical resolution with different methods}
 		
@@ -183,5 +231,8 @@
 		\includegraphics[width=0.7\textwidth]{"images/execution_times.jpg"} \\
 		It seems that the explicit Euler method is the fastest, followed by the scipy function.
 	\end{enumerate}
+	
+	\bibliographystyle{plain}
+	\bibliography{biblio}
 	
 \end{document}

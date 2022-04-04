@@ -28,6 +28,11 @@
 		\end{frame}
 	}
 	
+	\begin{frame}{Goals of the project}
+		
+		\pgfimage[height=5.5cm,width=11cm]{images/gantt}
+		
+	\end{frame}
 	
 	
 	\section{Introduction}
@@ -42,19 +47,12 @@
 		\end{aligned}\right.$$
 		
 		\begin{enumerate}
-			\item Non-lineary- two nonlinearities: $xy$ and $xz$
+			\item Non-linear - two nonlinearities : $xy$ and $xz$
 			\item symmetry - invarient under $(x,y)\rightarrow(-x,-y) $
-			\item 3 fixed points- $(0,0,0) ,(\sqrt{b(r-1)},\sqrt{b(r-1)},r-1)$ and $(-\sqrt{b(r-1)},-\sqrt{b(r-1)},r-1)$
+			\item 3 fixed points - $(0,0,0) ,(\sqrt{b(r-1)},\sqrt{b(r-1)},r-1)$ and $(-\sqrt{b(r-1)},-\sqrt{b(r-1)},r-1)$
 		\end{enumerate}
 		
 	\end{frame}
-	
-	\begin{frame}{Goals of the project}
-		
-		\pgfimage[height=5.5cm,width=11cm]{images/gantt}
-		
-	\end{frame}
-	
 	
 	\section{Some interesting properties}
 	
@@ -129,9 +127,9 @@
 			\item Discretization : \\
 			\quad \includegraphics[width=0.4\textwidth]{images/discretization.jpg} \\ 
 			Let \quad $t_n=n\Delta t$ \quad with \quad $\Delta t=T/N$ \quad and \quad $X_n=X(t_n)$ \\ \; \\
-			\item Euler explicit :
+			\item Explicit Euler :
 			$$X_{n+1}=X_n+\Delta t f(t_n,X_n)$$
-			\item Euler implicit
+			\item Implicit Euler :
 			$$X_{n+1}=X_n+\Delta t f(t_{n+1},X_{n+1})$$
 			
 			\newpage
@@ -163,17 +161,6 @@
 		
 		\newpage
 		
-		\includegraphics[width=\textwidth]{images/N5000.png} \\ 
-		\begin{center}
-			\begin{minipage}[c]{0.5\linewidth}
-				$\sigma=10,\quad \beta=8/3, \quad r=28$ \\
-				$X_0=(-10,10,5)$ 
-			\end{minipage}
-			$T=100, N = 5000 \Rightarrow \Delta t=0.0.02$
-		\end{center}
-		
-		\newpage
-		
 		\includegraphics[width=\textwidth]{images/N100000.png} \\ 
 		\begin{center}
 			\begin{minipage}[c]{0.5\linewidth}
@@ -186,7 +173,7 @@
 		\newpage
 		
 		\begin{block}{Execution time}
-			\; \\
+			Until $T=100$ : \\
 			\begin{center}
 				\begin{tabular}{ll}
 					Explicit Euler :&  0.003834 \\

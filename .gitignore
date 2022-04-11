@@ -1,10 +1,18 @@
-diapos/diapo_v0/main*
-!diapos/diapo_v0/main.tex
+diapos/diapo_v0_alpha/main*
+!diapos/diapo_v0_alpha/main.tex
+
+diapos/diapo_v0_beta/main*
+!diapos/diapo_v0_beta/main.tex
 
 gantt/gantt*
 !gantt/gantt.tex
 
-rapports/rapport_v0/rapport_v0*
-!rapports/rapport_v0/rapport_v0.tex
+rapports/rapport_v0_alpha/rapport_v0*
+!rapports/rapport_v0_alpha/rapport_v0.tex
+
+rapports/rapport_v0_beta/rapport_v0*
+!rapports/rapport_v0_beta/rapport_v0.tex
 
 .ipynb_checkpoints/
+
+.DS_Store

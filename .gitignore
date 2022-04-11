@@ -1,23 +1,10 @@
-diapo/main*
-!diapo/main.tex
-
-diapo/diapo_fred/main*
-!diapo/diapo_fred/main.tex
-
-diapo/diapo_melissa/main*
-diapo/diapo_melissa/main.tex
-
+diapos/diapo_v0/main*
+!diapos/diapo_v0/main.tex
 
 gantt/gantt*
 !gantt/gantt.tex
 
-rapports/rapport_v0*
-!rapports/rapport_v0.tex
-
-rapports/rapport_v0_fred*
-!rapports/rapport_v0_fred.tex
-
-rapports/rapport_v0_melissa*
-!rapports/rapport_v0_melissa.tex
+rapports/rapport_v0/rapport_v0*
+!rapports/rapport_v0/rapport_v0.tex
 
 .ipynb_checkpoints/

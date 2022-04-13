@@ -3,7 +3,7 @@
 \usetheme{diapo}
 \usepackage{amsmath}
 
-\title[Your Short Title]{Lorenz System Project}
+\title[Your Short Title]{Data assimilation for the Lorenz system}
 \subtitle{Presentation (version 0)}
 \author[name]{AYDOGDU Melissa, LECOURTIER Frédérique}
 \institute{\large Strasbourg University}
@@ -28,7 +28,7 @@
 		\end{frame}
 	}
 
-	\section{Goals of the project}
+
 
 	\begin{frame}{Cemosis}
 		
@@ -36,6 +36,7 @@
 			\pgfimage[width=\linewidth]{images/logo-cemosis.pdf}
 		\end{minipage} \quad
 		\begin{minipage}{0.5\hsize}
+		Cemosis is hosted by the Institute of Advanced Mathematical Research (IRMA) and was created in January 2013. They use and develop toals in the fields of: 
 			\begin{enumerate}[\textbullet]
 				\item \textbf{MSO} \\
 				Modeling Simulation and Optimization
@@ -48,37 +49,34 @@
 				Signal and Image processing
 			\end{enumerate}
 		\end{minipage}
-		
 	\end{frame}
 
 	\begin{frame}{Objectives}
 		
 		 \begin{enumerate}[\textbullet]
 			\item \textbf{para-real method} - \quad to accelerate the simulation of ODE
-			\item \textbf{data assimilation}, specially
+			\item \textbf{data assimilation}, especially
 			\begin{itemize}
 				\item understanding Kalman Filter
-				\item understanding Ensemble Kalman Filter
+				\item understanding and using Ensemble Kalman Filter
 			\end{itemize}
 		\end{enumerate}	 	
 		
 	\end{frame}
 	
-	\begin{frame}{Gantt chart}
+	\begin{frame}{Roadmap}
 		
 		\pgfimage[height=5.5cm,width=11cm]{images/gantt}
-		
 	\end{frame}
 	
-	\section{Some interesting properties}
 	
 	\begin{frame}[allowframebreaks]{Lorenz system}
 		
 		The system :
 		$$\left\{\begin{aligned} 
-			x'&=\sigma(y-x) \\
-			y'&=x(r-z)-y \\
-			z'&=xy-bz
+			x'&=\sigma(y(t)-x(t)) \\
+			y'&=x(t)(r-z(t))-y(t) \\
+			z'&=x(t)y(t)-bz(t)
 		\end{aligned}\right.$$
 	
 		where
@@ -88,49 +86,9 @@
 			\item $r > 0$  relates to the Rayleigh
 			\item $b > 0$ is a geometric factor
 		\end{enumerate}
-	
-		\newpage 
-		
-		Some interesting properties of the system :
-		
-		\begin{enumerate}[\textbullet]
-			\item Non-linear - two nonlinearities : $xy$ and $xz$
-			\item symmetry - invarient under $(x,y)\rightarrow(-x,-y) $
-			\item 3 fixed points - $(0,0,0) ,(\sqrt{b(r-1)},\sqrt{b(r-1)},r-1)$ and $(-\sqrt{b(r-1)},-\sqrt{b(r-1)},r-1)$
-		\end{enumerate}
 		
 	\end{frame}
 	
-	\begin{frame}{Lorenz Attractor}
-		
-		\begin{figure}[h]
-			\begin{minipage}[c]{.46\linewidth}
-				\centering
-				\includegraphics[width=0.8\textwidth]{images/butterfly.jpg}
-				\caption{Butterfly wing pattern - in 2D}
-			\end{minipage}
-			\hfill
-			\begin{minipage}[c]{.46\linewidth}
-				\centering
-				\includegraphics[width=\textwidth]{images/butterfly3D.jpg}
-				\caption{Strange attractor - in 3D \qquad\qquad
-					(THREE DIMENSIONAL SYSTEMS, \qquad\qquad
-					Lecture 6 : The Lorenz Equations)}
-			\end{minipage}
-		\end{figure}
-		
-	\end{frame}
-	
-	\begin{frame}{Chaos theory}
-		
-		\begin{center}
-			\begin{minipage}[c]{.99\linewidth}
-				\centering
-				\includegraphics[width=\linewidth]{images/chaos.png}
-			\end{minipage}
-		\end{center}
-		
-	\end{frame}
 	
 	\section{Numerical resolution with different methods}
 	

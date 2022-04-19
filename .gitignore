@@ -1,17 +1,11 @@
-diapos/diapo_v0_alpha/main*
-!diapos/diapo_v0_alpha/main.tex
-
-diapos/diapo_v0_beta/main*
-!diapos/diapo_v0_beta/main.tex
+presentation/presentation*
+!presentation/presentation.tex
 
 gantt/gantt*
 !gantt/gantt.tex
 
-rapports/rapport_v0_alpha/rapport_v0*
-!rapports/rapport_v0_alpha/rapport_v0.tex
-
-rapports/rapport_v0_beta/rapport_v0*
-!rapports/rapport_v0_beta/rapport_v0.tex
+report/report*
+!report/report.tex
 
 .ipynb_checkpoints/
 

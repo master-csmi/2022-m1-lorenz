@@ -8,21 +8,81 @@
 \usepackage[colorlinks]{hyperref}
 \usepackage{graphicx}
 \usepackage{appendix}
+\usepackage{color}
 \newcommand{\vect}[1]{\hat{\boldsymbol{#1}}}
+
+\newcommand{\reporttitle}{Project Report : Data assimilation for the Lorenz system}
+\newcommand{\reportauthorOne}{Melissa Aydogdu}
+\newcommand{\reportauthorTwo}{Frédérique Lecourtier}
+\newcommand{\reportsupervisorOne}{Christophe Prudhomme}
+\newcommand{\reportsupervisorTwo}{Luca Berti}
+\newcommand{\reporttype}{Coursework}
+
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=cyan,
+}
 
 \begin{document}
 	\nocite{*}
-	AYDOGDU Melissa \\
-	LECOURTIER Frédérique \hfill 01 april 2022
-	\begin{center}
-		\Large\textbf{Project Report : Lorenz system}\\
-	\end{center}
+	
+	\input{titlepage}
 	
 	\tableofcontents
 	
+    \newpage
+	\section{Roadmap}
+	    \label{diag}
+	    
+	\begin{center}
+		\includegraphics[angle=90,width=0.80\textwidth]{../gantt/gantt.pdf}
+	\end{center}
+	
+	\noindent For the organization we have chosen to make a Gantt diagram (section~\ref{diag}) with the different parts and the deadlines we have set (which can change during the time). The first part consists in understanding the Lorenz system and to make the implementation of the resolution, since this part is essential for the rest, we worked together during this.
+	We tried to understand the Lorenz system in order to do a climate system modelling and to implement it with different methods in order to choose one of them for the other two parts. 
+	
+	
+	\noindent For these two other parts we decided to work each one on one part. One person will take care of the para-real part in order to make a parallel simulation in time and to have a much more efficient and fast implementation.
+	
+	
+    \noindent And the other person will take care of understanding the basic principle of data assimilation, it means how to combine the observations and the mathematical model, the different operators and describe them.For this, it is necessary to understand the two methods of data assimilation Kalman filter and 3DVar, and also the link between them, but it is better to use the Ensemble Kalman filter method because this one works on non-linear systems.
+
+
+	\section{Introduction}
+	
+	\subsection{Presentation of Cemosis}
+	
+	This project is managed by Cemosis which is the "Centre de Modélisation et de Simulation de Strasbourg" (Strasbourg Modeling and Simulation Center). Cemosis is hosted by the Institute of Advanced Mathematical Research (IRMA) and was created in January 2013. Cemosis relies currently on the team Modeling and Control of the IRMA. Their work is focused on the numarical simulation and mathematical modelling of different phenomene. They use and develop toals in the fields of:
+	
+	\begin{enumerate}[label=\textbullet]
+		\item \textbf{MSO} - Modeling Simulation and Optimization
+		\item \textbf{DS} -	Data Science, Big Data, Smart Data
+		\item \textbf{HPC} - High Performance Computing, Parallel Computing, Cloud Computing
+		\item \textbf{SI} - Signal and Image processing
+	\end{enumerate}
+	\noindent They work with researchers and engineers of other research centers and companies.
+	
+	\noindent For more informations, refer to the \href{http://www.cemosis.fr/}{cemosis website}. 
+	
+	\subsection{Goals of the project}
+	
+	 The main 2 objectives of the project are :
+	 \begin{enumerate}[label=\textbullet]
+	 	\item The first part concerns the fast solution of a mathematical/computational model using parallel computing techniques. In particular we will focus on the implementation of the para-real method, a parallel algorithm that can be used jointly with other parallelisation  techniques(like mesh partitioning-based techniques in PDEs) or alone for ODEs.
+	 	\item The second part concerns data assimilation techniques for non-linear systems. In particular we will focus on the usage of filtering techniques( like Ensemble Kalman Filter) to assimilate synthetic data and correct a computational, inaccurate model.
+	  
+	 \end{enumerate}
+	 	 	
+	
+	
+	
 	\newpage
 	
-	\section{Introduction}
+	\section{The Lorenz System}
+	
+	\subsection{Introduction to the system}
 	
 	For centuries, humans have used math and science to make predictions about the universe. Scientist were able to predict an eclipse a century in advance. We are now able to make predictions about asteroids impact in earth. But why can we only predict the weather about a week or two in advance? Why scientists cannot predict the temperature for long periods of time? There have been many times when the weather predictions the day before were completely different from the ones you expected. But it is important to know that weather prediction is a very complicated and difficult task to achieve. The complexity is strongly related to the earth's atmosphere, which can be considered as a fluid. 
 	Around 1960 Edward Lorenz, an MIT meteorologist, started to work with a set of equations that represented a simplified version of the atmosphere, with 12 variables that changed over time. After two years of research, in 1963 he developed the Lorenz system, a simplified three-variable model to investigate atmospheric convection. This system defines a 3 dimensional trajectory by differential equations with 3 parameters.
@@ -36,7 +96,7 @@
 	\end{cases}
 	$$
 	
-	Here, $x$ is proportional to the rate of convection, $y$ is related to the horizontal temperature variation, and $z$ is the vertical temperature variation.
+	\noindent Here, $x$ is proportional to the rate of convection, $y$ is related to the horizontal temperature variation, and $z$ is the vertical temperature variation.
 	We have also three parameters all strictly positive:
 	\begin{enumerate}[label=\textbullet]
 		\item $\sigma > 0$  relates to the Prandtl number. This number is a dimensionless quantity that puts the viscosity of a fluid in correlation with the thermal conductivity.
@@ -49,7 +109,7 @@
 	\noindent Let us now determine the fixed points of the Lorenz system. These are the points such that $X'=0$. 
 	
 	$$
-		X'=(x',y',z')=0
+	X'=(x',y',z')=0
 	\quad \Rightarrow \quad 
 	\left\{\begin{aligned}
 		x'=&\sigma(y-x) &&=0 \\
@@ -73,11 +133,7 @@
 		$
 	\end{enumerate}
 	
-	\noindent We deduce that the fixed points of the Lorenz system are: $(0,0,0)$ for all values of the parameters. And for $r>1$, there is also a pair of fixed points $(\sqrt{b(r-1)},\sqrt{b(r-1)},r-1)$ and $(-\sqrt{b(r-1)},-\sqrt{b(r-1)},r-1)$. 
-	
-	\noindent For the organization we have chosen to make a Gantt diagram (section~\ref{diag}) with the different parts and the deadlines we have set (which can change during the time). The first part consists in understanding the Lorenz system and to make the implementation of the resolution, since this part is essential for the rest, we worked together during this. For the remainder of the project, we divided the work: one person will take care of the para-real algorithm and the other on the part with the data assimilation.
-	
-	\section{Some interesting properties of the Lorenz System}
+	\noindent We deduce that the fixed points of the Lorenz system are: $(0,0,0)$ for all values of the parameters. And for $r>1$, there is also a pair of fixed points $(\sqrt{b(r-1)},\sqrt{b(r-1)},r-1)$ and $(-\sqrt{b(r-1)},-\sqrt{b(r-1)},r-1)$.
 	
 	\subsection{Lorenz Attractor}
 	
@@ -266,15 +322,8 @@
 		We can see that implicit Euler is longer than the others. This is probably due to the loop on k for each n. \\
 	\end{enumerate}
 
-	\noindent For the next part of the project, we choose to work with the scipy function because as we see before, we don't have to chosse the number of discretization points $N$. Before using this function in more complex case, it can be usefool to understand how it works.
+	\noindent For the next part of the project, we choose to work with the Runge kutta method.
 		
-	\newpage
-	
-	\section{Gantt chart}
-	\label{diag}
-	
-	\centering
-	\includegraphics[angle=90,width=0.78\textwidth]{gantt.pdf}
 	
 	\newpage	
 	\bibliographystyle{plain}

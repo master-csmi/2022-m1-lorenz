@@ -40,7 +40,7 @@
 		\gantttitlecalendar{month=name, week} \\
 		
 		%PART 1
-		\ganttgroup[progress=75]{Part 1 : Introduction to the Lorenz system}{2022-03-14}{2022-04-03} \\
+		\ganttgroup[progress=100]{Part 1 : Introduction to the Lorenz system}{2022-03-14}{2022-04-03} \\
 		
 		\ganttbar[bar/.append style={fill=lecture}]{Reading references (introduction to the problem)}{2022-03-14}{2022-03-20}  \\
 		\ganttbar[bar/.append style={fill=implementation}]{Euler explicit method}{2022-03-14}{2022-03-20}  \\
@@ -51,7 +51,7 @@
 		\ganttbar[bar/.append style={fill=implementation}]{Resolution with OpenModelica}{2022-04-04}{2022-04-10}  \\
 		
 		%PART 2
-		\ganttgroup[progress=0]{Part 2 : Para-real method}{2022-04-04}{2022-05-15} \\
+		\ganttgroup[progress=5]{Part 2 : Para-real method}{2022-04-04}{2022-05-15} \\
 		
 		\ganttbar[bar/.append style={fill=lecture,dashed}]{Reading references (comprehension)}{2022-04-04}{2022-04-17}  \\
 		\ganttbar[bar/.append style={fill=lecture,dashed}]{Pseudo-code on paper}{2022-04-11}{2022-04-24}  \\
@@ -60,7 +60,7 @@
 		\ganttbar[bar/.append style={fill=implementation,dashed}]{Test scaling with difficult case}{2022-05-09}{2022-05-15}  \\
 		
 		%PART 3
-		\ganttgroup[progress=0]{Part 3 : Data assimilation}{2022-04-04}{2022-06-05} \\
+		\ganttgroup[progress=3]{Part 3 : Data assimilation}{2022-04-04}{2022-06-05} \\
 		
 		\ganttbar[bar/.append style={fill=lecture,dotted}]{Reading references on data assimilation}{2022-04-04}{2022-04-17}  \\
 		\ganttbar[bar/.append style={fill=lecture,dotted}]{Understanding Kalman Filter}{2022-04-18}{2022-04-24}  \\
@@ -72,6 +72,7 @@
 		
 		%Version 0
 		\ganttvrule{v0}{2022-04-05}
+		\ganttvrule{v0-$\beta$}{2022-04-19}
 		
 		%LEGEND
 		\node (a) [fill=lecture,line width=1pt,anchor=west] at ([xshift=-40pt,yshift=-20pt]current bounding box.north east){Read/Understand};
@@ -81,7 +82,8 @@
 		\node[fill=white,draw,anchor=west,dashed] at ([yshift=-15pt]d.south west){Frédérique};
 		
 		%Titre
-		\node[fill=white,draw=none] at ([xshift=120pt,yshift=-25pt]current bounding box.north west){\large\textbf{Lorenz System Project}};
+		\node[fill=white,draw=none] at ([xshift=120pt,yshift=-20pt]current bounding box.north west){\large\textbf{Data assimilation for}};
+		\node[fill=white,draw=none] at ([xshift=120pt,yshift=-40pt]current bounding box.north west){\large\textbf{the Lorenz system}};
 		
 		%Link
 		%\ganttlink{elem1}{elem6}

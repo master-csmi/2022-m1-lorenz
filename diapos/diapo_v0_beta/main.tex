@@ -33,10 +33,15 @@
 	\begin{frame}{Cemosis}
 		
 		\begin{minipage}{0.4\hsize}
+			\centering
 			\pgfimage[width=\linewidth]{images/logo-cemosis.pdf}
+			\begin{enumerate}[$\rightarrow$]
+				\item created in January 2013
+				\item hosted by the Institute of Advanced Mathematical Research (IRMA)
+			\end{enumerate}
 		\end{minipage} \quad
 		\begin{minipage}{0.5\hsize}
-		Cemosis is hosted by the Institute of Advanced Mathematical Research (IRMA) and was created in January 2013. They use and develop toals in the fields of: 
+			They use and develop toals in the fields of : 
 			\begin{enumerate}[\textbullet]
 				\item \textbf{MSO} \\
 				Modeling Simulation and Optimization
@@ -49,6 +54,7 @@
 				Signal and Image processing
 			\end{enumerate}
 		\end{minipage}
+	
 	\end{frame}
 
 	\begin{frame}{Objectives}
@@ -70,13 +76,13 @@
 	\end{frame}
 	
 	
-	\begin{frame}[allowframebreaks]{Lorenz system}
+	\begin{frame}{Lorenz system}
 		
 		The system :
 		$$\left\{\begin{aligned} 
-			\frac{\partial x}{\partial t} &=\sigma(y(t)-x(t))\\
-			\frac{\partial y}{\partial t}&=x(t)(r-z(t))-y(t) \\
-			\frac{\partial z}{\partial t}&=x(t)y(t)-bz(t)
+			\frac{\partial x(t)}{\partial t} &=\sigma(y(t)-x(t))\\
+			\frac{\partial y(t)}{\partial t}&=x(t)(r-z(t))-y(t) \\
+			\frac{\partial z(t)}{\partial t}&=x(t)y(t)-bz(t)
 		\end{aligned}\right.$$
 	
 		where
@@ -88,9 +94,6 @@
 		\end{enumerate}
 		
 	\end{frame}
-	
-	
-	\section{Numerical resolution with different methods}
 	
 	\begin{frame}{Methods used to solve Lorenz system}
 		

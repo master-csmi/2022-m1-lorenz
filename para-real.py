@@ -30,16 +30,19 @@ def RK4(X0,dt,t0,T,fct,gamma=None):
     return X
 
 
+def diff_solutions(y_k,y_knext,eps=1e-9): #y_knext = y_{k=1}
+    return np.max(np.abs(y_knext-y_k))
+
 # P = number of processing units ; j in {0,...,P-1} 
-def parareal_method(X0_t0,t0,T,P,fct,gamma=None): 
+def parareal_method(X0_t0,t0,T,P,fct,dt_G,dt_F,gamma=None): 
     # time between t_j and t_{j+1}
     dt_P = (T-t0)/P 
-    # dt for the fine integrator
-    NF = 1000
-    dt_F = dt_P/NF
-    # dt for the coarse integrator
-    NG = 15
-    dt_G = dt_P/NG
+    # # dt for the fine integrator
+    # NF = 100
+    # dt_F = dt_P/NF
+    # # dt for the coarse integrator
+    # NG = 15
+    # dt_G = dt_P/NG
 
     # we initialize the time intervals for each processing units
     times = [t0]
@@ -48,7 +51,7 @@ def parareal_method(X0_t0,t0,T,P,fct,gamma=None):
 
     # fine integrator
     def F(initial_point,t_j1,t_j2):
-        return RK4(initial_point,dt_F,t0,T,fct,gamma) 
+        return RK4(initial_point,dt_F,t_j1,t_j2,fct,gamma) 
     # coarse intergator
     def G(initial_point,t_j1,t_j2):
         return RK4(initial_point,dt_G,t_j1,t_j2,fct,gamma)
@@ -64,23 +67,37 @@ def parareal_method(X0_t0,t0,T,P,fct,gamma=None):
 
     # 2ème étape : calculer la solution sur chaque sous-intervalle
     # On utilise l'intégrateur fin
-    sol = np.array([X0_t0]) 
+    solk = np.array([X0_t0]) # solk = sol0
     for j in range(1,P+1):
-        sol_j = F(X0[j-1],times[j-1],times[j])[-1]
-        sol = np.append(sol,[sol_j],axis=0)
+        sol0_j = F(X0[j-1],times[j-1],times[j])
 
-    # x,y,z=X0[:,0],X0[:,1],X0[:,2]
-    # plt.plot(times,x,'.-k',label="grossier")
-    # x,y,z=sol[:,0],sol[:,1],sol[:,2]
-    # plt.plot(times,x,'.r',label="fin")
-    # plt.legend()
-    # plt.show()
+        timesk_j = np.arange(times[j-1],times[j]+1e-6,dt_F)
+        plt.plot(timesk_j,sol0_j[:,0],label=f"fin pour j={j}")
+        
+        solk = np.append(solk,[sol0_j[-1]],axis=0)
+
+    # Itérations suivantes (jusqu'à ce que la solution converge)
+
+    #while
+    #X0 = np.array([])
+    #for j in range(1,P+1):
+    #    X0_j = 
+    #    X0 = np.append(X0,[X0_j],axis=0)
+
+    x,y,z=X0[:,0],X0[:,1],X0[:,2]
+    plt.plot(times,x,'.-k',label="grossier")
+    x,y,z=solk[:,0],solk[:,1],solk[:,2]
+    plt.plot(times,x,'.g',label="fin")
+    plt.legend()
+    plt.show()
 
     
 gamma=(10.,8./3,9./10) #(σ,b,r)
-X0=(-10.,10.,5.) #(x0,y0,z0)
+X0=(2.,5.,5.) #(x0,y0,z0)
 t0=0.
-T=10
+T=1
 P=5
+dt_G=0.1
+dt_F=0.01
 
-parareal_method(X0,t0,T,P,lorenz,gamma)
+parareal_method(X0,t0,T,P,lorenz,dt_G,dt_F,gamma)

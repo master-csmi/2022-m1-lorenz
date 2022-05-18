@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 
-k = 1
+k = 6
 
 plt.title('Solution itération k='+str(k))
 plt.xlabel("t")
@@ -17,7 +17,7 @@ with open('donnees_para_real/solution_rk4.csv', newline='') as csvfile:
         t.append(float(row[0]))
         x.append(float(row[1]))
 
-plt.plot(t,x,label="sol_rk4")
+plt.plot(t,x,linewidth=3,label="sol_rk4")
 
 # Pour lire le fichier "solution_k.csv"
 t=[]
@@ -28,7 +28,7 @@ with open('donnees_para_real/solution_'+str(k)+'.csv', newline='') as csvfile:
         t.append(float(row[0]))
         sol_k.append(float(row[1]))
 
-plt.plot(t,sol_k,".",label="sol_k")
+plt.plot(t,sol_k,label="sol_k")
 
 
 # Pour lire le fichier "X0_k.csv"

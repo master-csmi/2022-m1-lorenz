@@ -1,0 +1,25 @@
+Pour avoir un point final qui sert à rien :
+
+gamma=(10.,8./3,28.) #(σ,b,r)
+X0=[5.,5.,5.] #(x0,y0,z0)
+t0=0.
+T=20.
+P=6
+dt_G=0.1
+dt_F=0.01
+
+Pour la théorie du chaos :
+gamma=(10.,8./3,28.) #(σ,b,r)
+X0=[5.,5.,5.] #(x0,y0,z0)
+t0=0.
+T=20.
+P=5
+dt_G=0.1
+dt_F=0.01
+
+parareal_method(X0,t0,T,P,lorenz,dt_G,dt_F,gamma)
+
+# avec RK4
+dt = 0.001
+t = np.arange(t0,T+1e-9,dt)
+x=RK4(X0,dt,t0,T,lorenz,gamma)[:,0]

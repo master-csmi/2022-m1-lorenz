@@ -19,7 +19,7 @@ with open('donnees_para_real/sol_rk4.csv', newline='') as csvfile:
 def read_sol(nom_fichier):
     t=[]
     sol_k=np.array([])
-    with open('donnees_para_real/solx.csv', newline='') as csvfile:
+    with open(nom_fichier, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         legend=True
         nb_val=0

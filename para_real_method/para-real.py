@@ -40,19 +40,18 @@ def lorenz(t, X, gamma): #X=(x,y,z)
     f_3 = x*y-b*z
     return np.array([f_1,f_2,f_3])
 
-
 # Runge Kutta order 4
 def RK4(X0,dt,t0,T,fct,gamma=None):
     X=np.array([X0])  
     
     t=t0 #=t_0
-    while(not np.isclose(t,T)):
+    while((t+dt)<=T or (np.isclose(t+dt,T))):
         K1=fct(t, X[-1],gamma)
         K2=fct(t+dt/2., X[-1] + 1./2. * K1 * dt,gamma)
         K3=fct(t+dt/2., X[-1] + 1./2. * K2 * dt,gamma)
         K4=fct(t+dt, X[-1]+ K3 * dt,gamma)
         
-        X=np.append(X,[X[-1]+ dt/6.* (K1+2.*K2+2.*K3+K4)],axis=0)
+        X=np.append(X,[X[-1]+ dt/6.* (K1+2.*K2+2.*K3+K4)],axis=0) #X au t suivant
         t+=dt
     return X
 
@@ -61,17 +60,30 @@ def sol_converge(x0_k,x0_knext,eps=1e-6):
     return (np.max(np.abs(x0_knext-x0_k)) < eps)
 
 # P = number of processing units ; j in {0,...,P} 
+# on part du principe que dt_G est un multiple de dt_F 
 def parareal_method(X0_t0,t0,T,P,fct,dt_G,dt_F,gamma=None): 
     # time between t_j and t_{j+1}
     dt_P = (T-t0)/P 
+    # nb points
+    nb_pts = dt_P//dt_G
 
     # time between 0 and T for the fine integrator
     t = np.arange(t0,T+1e-6,dt_F)
 
     # we initialize the time intervals for each processing units
+    times_exact = [t0]
+    for j in range(1,P+1):
+        times_exact.append(times_exact[-1] + dt_P)
+    times_exact[-1]=T
+
     times = [t0]
-    for _ in range(1,P+1):
-        times.append(times[-1] + dt_P)
+    for i in range(1,P+1):
+        exact=times_exact[i-1]+dt_P
+        approche=times[i-1]+dt_G*nb_pts
+        if(exact-approche<=abs(exact-(approche+dt_G))): #arrondi inférieur
+            times.append(times[i-1] + dt_G*nb_pts)
+        else: #arrondi supérieur
+            times.append(times[i-1] + dt_G*(nb_pts+1))
     times[-1]=T
 
     solutions_x = panda.DataFrame(t,columns=['t'],dtype=np.float64)
@@ -107,9 +119,6 @@ def parareal_method(X0_t0,t0,T,P,fct,dt_G,dt_F,gamma=None):
     init_pts_y.insert(len(init_pts_y.columns),'k=0',X0_k[:,1])
     init_pts_z.insert(len(init_pts_z.columns),'k=0',X0_k[:,2])
 
-
-    # ecriture_csv("donnees_para_real/X0_0.csv",times,X0_k[:,0])
-
     # 2ème étape : calculer la solution sur chaque sous-intervalle
     # On utilise l'intégrateur fin
     solk = np.array([X0_t0]) # solk = sol0
@@ -127,6 +136,8 @@ def parareal_method(X0_t0,t0,T,P,fct,dt_G,dt_F,gamma=None):
     k=1
     converge=False
 
+    print(X0_k)
+
     # pour rentrer dans la boucle
     X0_kp = np.copy(X0_k)+np.ones((len(X0_k),len(X0))) 
     while(not converge):
@@ -134,6 +145,10 @@ def parareal_method(X0_t0,t0,T,P,fct,dt_G,dt_F,gamma=None):
         X0_kp = np.copy(X0_k)
         X0_kp[0] = X0_k[0]
         for j in range(1,P+1):
+            print("j :",j)
+            print("g_k :",G(X0_kp[j-1],times[j-1],times[j])[-1])
+            print("fin[j-1] :",fin[j-1])
+            print("grossier[j-1]",grossier[j-1])
             g_k=G(X0_kp[j-1],times[j-1],times[j])[-1]
             X0_kp[j] = g_k + (fin[j-1]-grossier[j-1])
 
@@ -146,6 +161,7 @@ def parareal_method(X0_t0,t0,T,P,fct,dt_G,dt_F,gamma=None):
             solkp = np.concatenate((solkp,solk_j[1:]))
         
         converge = sol_converge(X0_k,X0_kp)
+        print(X0_kp)
         X0_k = np.copy(X0_kp)
 
         init_pts_x.insert(len(init_pts_x.columns),'k='+str(k),X0_kp[:,0])
@@ -174,7 +190,7 @@ t0=0.
 T=20.
 
 # avec la méthode para-real
-P=5
+P=3
 dt_G=0.1
 dt_F=0.01
 

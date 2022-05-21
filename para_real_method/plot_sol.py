@@ -46,6 +46,8 @@ def read_init_pt(nom_fichier,nb_iter):
         x0 = np.reshape(x0,[-1,nb_iter])
     return times,x0
 
+
+
 def plot(entree,t_rk4,sol_rk4,t,sol,times,pt0):
     fig,axs=plt.subplots(int(np.ceil(nb_iter/3)),3,sharex=True,sharey=True,figsize=(10,6))
 
@@ -55,13 +57,24 @@ def plot(entree,t_rk4,sol_rk4,t,sol,times,pt0):
     for k in range(nb_iter):
         ligne=k//3
         colonne=k%3
-        axs[ligne,colonne].set_title("k="+str(k))
 
-        axs[ligne,colonne].plot(t_rk4,sol_rk4,linewidth=2,label="rk4")
-        axs[ligne,colonne].plot(t,sol[:,k],linewidth=0.8,label=entree,alpha=0.9)
-        axs[ligne,colonne].plot(times,pt0[:,k],".k",label=entree+"0")
+        if(nb_iter<=3):
+            ax=axs[colonne]
+        else:
+            ax=axs[ligne,colonne]
+        
+        ax.set_title("k="+str(k))
 
-    lines_labels = [axs[0,0].get_legend_handles_labels()]
+        ax.plot(t_rk4,sol_rk4,linewidth=2,label="rk4")
+        ax.plot(t,sol[:,k],linewidth=0.8,label=entree,alpha=0.9)
+        ax.plot(times,pt0[:,k],".k",label=entree+"0")
+
+    if(nb_iter<=3):
+        ax0=axs[0]
+    else:
+        ax0=axs[0,0]
+
+    lines_labels = [ax0.get_legend_handles_labels()]
     lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
     fig.legend(lines, labels)
 

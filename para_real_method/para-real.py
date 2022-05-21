@@ -1,7 +1,6 @@
 import numpy as np
 import os
 import pandas as panda
-import mpi4py
 
 #### TO CLEAN ####
 

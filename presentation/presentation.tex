@@ -57,17 +57,44 @@
 	
 	\end{frame}
 
-	\begin{frame}{Objectives}
+	\begin{frame}[allowframebreaks]{Objectives}
 		
-		 \begin{enumerate}[\textbullet]
-			\item \textbf{para-real method} - \quad to accelerate the simulation of ODE
-			\item \textbf{data assimilation}, especially
+		\begin{enumerate}[\textbullet]
+			\item \textbf{to read the following articles :}
 			\begin{itemize}
-				\item understanding Kalman Filter
-				\item understanding and using Ensemble Kalman Filter
+				\item Common part : introduction to the Lorenz system \\
+				\quad https://docs.dart.ucar.edu/en/latest/guide/lorenz-63-model.html \\
+				\quad https://www2.physics.ox.ac.uk/sites/default/files/profiles/read/lect6-43147.pdf \\
+				\quad https://ftp.emc.ncep.noaa.gov/mmb/sref/Doc/lorenz\_fcst.pdf
+				\item Para-real method \\
+				\quad https://en.wikipedia.org/wiki/Parareal\#Parallel-in-time\_integration\_methods \\
+				\quad https://hal.archives-ouvertes.fr/hal-00798372/file/CRAS\_01\_lions\_maday\_turinici.pdf \\
+				\quad https://www.ljll.math.upmc.fr/publications/2008/R08030.pdf
+				\item Data assimilation \\
+				\quad https://team.inria.fr/airsea/files/2012/03/Nodet\_Intro\_DataAssimilation.pdf \\
+				\quad https://www.eccorev.fr/IMG/pdf/Assimilationdonnees\_EBlayo.pdf
 			\end{itemize}
 		\end{enumerate}	 	
 		
+		\newpage
+		
+		\begin{enumerate}[\textbullet]
+			\item \textbf{to implement methods} 
+			\begin{itemize}
+				\item Common part : introduction to the Lorenz system \\
+				\quad Implementation of ODE resolution methods with Python
+				\item Para-real method \\
+				\quad Implementation of the para-real method with \textit{mpi4py}
+				\item Data assimilation \\
+				\quad data assimilation with the Ensemble Kalman Filter using \textit{FilterPy}
+			\end{itemize}
+			\item \textbf{to do an oral presentation and to write a report :}
+			\begin{itemize}
+				\item presentation of the Lorenz system
+				\item presentation of the para-real method and the data assimilation methods
+				\item presentation of the results
+			\end{itemize}
+		\end{enumerate}
 	\end{frame}
 	
 	\begin{frame}{Roadmap}

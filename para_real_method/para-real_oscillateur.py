@@ -39,14 +39,20 @@ if(rank == 0):
 #### TO SOLVE ####
 
 # function that represents the Lorenz system
-def lorenz(t, X, gamma): #X=(x,y,z)
-    (sigma,b,r)=gamma
-    (x,y,z)=X
-    
-    f_1 = sigma*(y-x)
-    f_2 = x*(r-z)-y
-    f_3 = x*y-b*z
-    return np.array([f_1,f_2,f_3])
+def oscillateur_harmonique(t, X, gamma): #X=(x,y,z)
+    (x,v)=X
+    w0=gamma[0]
+
+    f_1 = v
+    f_2 = -w0**2*x
+    return np.array([f_1,f_2])
+
+# solution exacte
+def sol_exacte(t,gamma):
+    (w0,x0,phi0)=gamma
+    sol_x=x0*np.cos(w0*t+phi0)
+    sol_v=np.ones(len(sol_x))*(-x0*x0*np.sin(phi0))
+    return np.array([sol_x,sol_v]).T
 
 # Runge Kutta order 4
 def RK4(X0,dt,t0,T,fct,gamma=None):
@@ -97,40 +103,41 @@ def csv_files(t0,T,dt_F,times,k,solution,init_pts,reshape_size,fct,gamma=None):
     # init
     init_pts_x = panda.DataFrame(times[:-1],columns=['t'],dtype=np.float64)
     init_pts_y = panda.DataFrame(times[:-1],columns=['t'],dtype=np.float64)
-    init_pts_z = panda.DataFrame(times[:-1],columns=['t'],dtype=np.float64)
+    # init_pts_z = panda.DataFrame(times[:-1],columns=['t'],dtype=np.float64)
 
     solutions_x = panda.DataFrame(t,columns=['t'],dtype=np.float64)
     solutions_y = panda.DataFrame(t,columns=['t'],dtype=np.float64)
-    solutions_z = panda.DataFrame(t,columns=['t'],dtype=np.float64)
+    # solutions_z = panda.DataFrame(t,columns=['t'],dtype=np.float64)
 
     # write
     for k in range(k):
         X0_k = init_pts[k,:]
         init_pts_x.insert(len(init_pts_x.columns),'k='+str(k),X0_k[:,0])
         init_pts_y.insert(len(init_pts_y.columns),'k='+str(k),X0_k[:,1])
-        init_pts_z.insert(len(init_pts_z.columns),'k='+str(k),X0_k[:,2])
+        # init_pts_z.insert(len(init_pts_z.columns),'k='+str(k),X0_k[:,2])
 
         sol_k = solution[k,:]
         sol_k = sol_k.reshape((-1,reshape_size))
         solutions_x.insert(len(solutions_x.columns),'k='+str(k),sol_k[:,0])
         solutions_y.insert(len(solutions_y.columns),'k='+str(k),sol_k[:,1])
-        solutions_z.insert(len(solutions_z.columns),'k='+str(k),sol_k[:,2])
+        # solutions_z.insert(len(solutions_z.columns),'k='+str(k),sol_k[:,2])
 
     # to convert dataframe to csv files
     init_pts_x.to_csv('donnees_para_real/init_pt_x.csv')
     init_pts_y.to_csv('donnees_para_real/init_pt_y.csv')
-    init_pts_z.to_csv('donnees_para_real/init_pt_z.csv')
+    # init_pts_z.to_csv('donnees_para_real/init_pt_z.csv')
     solutions_x.to_csv('donnees_para_real/solx.csv')
     solutions_y.to_csv('donnees_para_real/soly.csv')
-    solutions_z.to_csv('donnees_para_real/solz.csv')
+    # solutions_z.to_csv('donnees_para_real/solz.csv')
 
     # avec RK4
-    sol = RK4(init_pts[0,:][0],dt_F,t0,T,fct,gamma)
+    sol = sol_exacte(t,gamma)
+    print(sol)
 
     sol_rk4 = panda.DataFrame(t,columns=['t'],dtype=np.float64)
     sol_rk4.insert(len(sol_rk4.columns),'x',sol[:,0])
     sol_rk4.insert(len(sol_rk4.columns),'y',sol[:,1])
-    sol_rk4.insert(len(sol_rk4.columns),'z',sol[:,2])
+    # sol_rk4.insert(len(sol_rk4.columns),'z',sol[:,2])
     sol_rk4.to_csv('donnees_para_real/sol_rk4.csv')
 
     print("Fichiers csv créés")
@@ -206,7 +213,7 @@ def parareal_method(X0_t0,t0,T,fct,dt_G,dt_F,gamma=None,write_csv=True):
     converge=False
 
     # pour rentrer dans la boucle
-    X0_kp = np.copy(X0_k)+np.ones((len(X0_k),len(X0))) 
+    X0_kp = np.copy(X0_k)+np.ones((len(X0_k),len(X0_t0))) 
     while(not converge):      
         X0_kp = np.zeros((P,len(X0_t0)))
         
@@ -255,13 +262,12 @@ def parareal_method(X0_t0,t0,T,fct,dt_G,dt_F,gamma=None,write_csv=True):
     MPI.Finalize()
 
 
-gamma=(10.,8./3,28.) #(σ,b,r)
-X0=[5.,5.,5.] #(x0,y0,z0)
+gamma=(5.,-1./5.,np.pi/2.) #=(w0,x0,phi0)
+phi_0=[1.,1.] #(x0,y0,z0)
 t0=0.
-T=20.
+T=10.
 
-dt_G=0.01
-dt_F=0.001
+dt_G=0.1
+dt_F=0.01
 
-sol=parareal_method(X0,t0,T,lorenz,dt_G,dt_F,gamma,True)
-
+sol=parareal_method(phi_0,t0,T,oscillateur_harmonique,dt_G,dt_F,gamma,True)

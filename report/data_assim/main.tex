@@ -185,10 +185,21 @@ Grave to Sherman-Morrison-Woodbury identity,
 $$K^*=(B^{-1}+H^TR^{-1}H)^{-1}H^TR^{-1}=BH^T(R+HBH^T)^{-1}$$
 Therefore, we have that our solution $x$ of the minimization problem coincides with the BLUE optimal analysis $x^a$
 \section{Ensemble Kalman Filter}
-\noindent We have seen so far two methods to do data assimilation, these methods are valid only for linear systems, but the Lorenz system is non-linear, that's why we will introduce the Ensemble Kalman Filter method which works well for non-linear systems. The ENKF method consists in using the Kalman filter method in high dimension and replace P by a set of states $x_1,x_2,..,x_{N_e}$. So we can approximate the moments of the error by the moments of the sample.
+\noindent We have seen so far two methods to do data assimilation, these methods are valid only for linear systems, but the Lorenz system is non-linear, that's why we will introduce the Ensemble Kalman Filter method which works well for non-linear systems. The ENKF method consists in using the Kalman filter method in high dimension and replace P by a set of states $x_1,x_2,..,x_{m}$. So we can approximate the moments of the error by the moments of the sample.
 The we have:
 $$x_i^a=x_i^f+K[y-h(x_i^f)]$$
-
-
+We can also define the Kalman gains: 
+$$K=P^f H^T(HP^f H^T+R)^{-1}$$
+To begin with we can estimate the
+forecast error covariance matrix as:
+$$P^f=\frac{1}{m-1}\sum_{i=1}^{m}(x_i^f-\bar{x}^f)(x_i^f-\bar{x}^f)^T~~with~~\bar{x}^f=\frac{1}{m}\sum_{i=1}^{m}x_i^f $$ 
+We can factorized the forecast error covariance matrix by:
+$$P^f=X_f X_f^T$$
+where $X_f$ is an $n \times m$ matrix whose columns are the normalized anomalies or normalized perturbations,
+$$[X_f]_i=\frac{x_i^f-\bar{x}^f}{\sqrt{m-1}}$$
+In addition, we have:
+$$
+\bar{x}^a=\frac{1}{m}\sum_{i=1}^mx_i^a~~,~~~~[X_a]_i=\frac{x_i^a-\bar{x}^a}{\sqrt{m-1}} $$
 
 \end{document}
+

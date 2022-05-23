@@ -108,13 +108,15 @@ def assimilation_oscillateur_harmonique():
     t=0
     tab_etat=[]
     tab_temps=[]
+    tab_temps.append(t)
+    tab_etat.append(f.x[0])
     while (t<T):
         z = read_sensor(t,w)
         f.predict()
         f.update(z)
-        tab_etat.append(f.x[0])
-        tab_temps.append(t)
         t=t+dt
+        tab_temps.append(t)
+        tab_etat.append(f.x[0])
     return np.array(tab_etat),np.array(tab_temps)
         
 def f(t_n,X_n,σ, b, r):

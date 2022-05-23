@@ -53,7 +53,8 @@ def RK4(X0,dt,t0,T,fct,gamma=None):
     X=np.array([X0])  
     
     t=t0 #=t_0
-    while(not np.isclose(t,T)):
+    while((t+dt)<=T or (np.isclose(t+dt,T))):
+    # while(not np.isclose(t,T)):
         K1=fct(t, X[-1],gamma)
         K2=fct(t+dt/2., X[-1] + 1./2. * K1 * dt,gamma)
         K3=fct(t+dt/2., X[-1] + 1./2. * K2 * dt,gamma)

@@ -51,7 +51,7 @@ def oscillateur_harmonique(t, X, gamma): #X=(x,y,z)
 def sol_exacte(t,gamma):
     (w0,x0,phi0)=gamma
     sol_x=x0*np.cos(w0*t+phi0)
-    sol_v=np.ones(len(sol_x))*(-x0*x0*np.sin(phi0))
+    sol_v=-x0*w0*np.sin(w0*t+phi0)
     return np.array([sol_x,sol_v]).T
 
 # Runge Kutta order 4
@@ -263,9 +263,9 @@ def parareal_method(X0_t0,t0,T,fct,dt_G,dt_F,gamma=None,write_csv=True):
 
 
 gamma=(5.,-1./5.,np.pi/2.) #=(w0,x0,phi0)
-phi_0=[1.,1.] #(x0,y0,z0)
+phi_0=[0.,1.] #(x0,y0,z0)
 t0=0.
-T=10.
+T=50.
 
 dt_G=0.1
 dt_F=0.01

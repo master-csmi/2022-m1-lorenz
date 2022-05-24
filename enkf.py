@@ -65,7 +65,17 @@ def RK4_Lorenz_harmonique(w,X0,N,T): #we have N+1 discretization points
         t+=dt
         
     return X[:,0],X[:,1],T_tab
-
+def euler_explicit_harmonique(w,X0,N,T): #on a N+1 points de discrétisation
+    dt=T/N
+    X = np.zeros( (N+1, len(X0)) )
+    T_tab=np.zeros(N+1)
+    X[0] = X0
+    t=0. 
+    for n in range(1,N+1):
+        X[n]=[X[n-1,0]+(dt)*X[n-1,1],X[n-1,1]-w**2*X[n-1,0]*(dt)]
+        T_tab[n]=t+dt
+        t+=dt
+    return X[:,0],X[:,1],T_tab
 
 
 def assimilation_oscillateur_harmonique():
@@ -118,7 +128,54 @@ def assimilation_oscillateur_harmonique():
         tab_temps.append(t)
         tab_etat.append(f.x[0])
     return np.array(tab_etat),np.array(tab_temps)
-        
+def assimilation_oscillateur_harmonique_2():
+    def hx(x):
+       return  np.array([x[0]])
+
+
+    def fx(x, dt,w):
+        def f(t,X_n,w): #X_n=(x_n,y_n,z_n)
+            (u,v)=X_n
+            f_1 = v
+            f_2 =-w**2*u
+            return np.array([f_1,f_2])
+        V=f(dt,x,w)
+        X_next=[x[0]+V[0]*dt,x[1]+V[1]*dt]
+        return X_next
+
+    w=2
+    P = 2*np.pi/w
+    dt= P/20
+    T = 3*P
+    N = int(round(T/dt))
+
+    x = np.array([2,0])#(x0,y0,z0)
+    P = np.eye(2) * 2.
+
+    f = EnsembleKalmanFilter (x=x, P=P, dim_z=1, dt=dt, N=40,
+             hx=hx, fx=lambda x,dt:fx(x,dt,w))
+
+    std_noise = np.eye(1)*0.001
+    f.R *= std_noise # matrice de cov associer a la mesure
+    f.Q=np.eye(2)*0.01
+    #f.Q = Q_discrete_white_noise(2, dt, .01) #bruit blanc centree en 0
+
+    def read_sensor(t,w):
+         2*np.cos(w*t)
+    t=0
+    tab_etat=[]
+    tab_temps=[]
+    tab_temps.append(t)
+    tab_etat.append(f.x[0])
+    while (t<T):
+        z = read_sensor(t,w)
+        f.predict()
+        f.update(z)
+        t=t+dt
+        tab_temps.append(t)
+        tab_etat.append(f.x[0])
+    return np.array(tab_etat),np.array(tab_temps)
+
 def f(t_n,X_n,σ, b, r):
     (x,y,z)=X_n
     
@@ -163,14 +220,14 @@ def assimilation_donnée(x,read_sensor,P,Q,R,T,dimz,dt,N,nb_echantillon,hx,fx,γ
     tab_etat.append(f.x)
     tab_temps.append(t)
     tab_cov.append(f.P_post.diagonal())
-    while (t<T-dt):
+    while (t<T):#-dt
         z = read_sensor(index)
         f.predict()
         f.update(z)
-        diag_cov=f.P_post.diagonal()
-        tab_cov.append(diag_cov)
         index+=N
         t=t+dt
+        diag_cov=f.P_post.diagonal()
+        tab_cov.append(diag_cov)
         tab_etat.append(f.x)
         tab_temps.append(t)
     return(np.array(tab_etat),np.array(tab_temps),np.array(tab_cov))

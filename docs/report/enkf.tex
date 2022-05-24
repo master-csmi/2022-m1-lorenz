@@ -1,22 +1,6 @@
-\documentclass{article}
-\usepackage[utf8]{inputenc}
-% !TeX document-id = {0beb03b8-2a83-45f5-aca6-99def446a6e3}
-% !TEX TS-program = pdflatexmk
+\section{Data assimilation}
 
-\usepackage{a4wide}
-\usepackage{amsmath,amssymb}
-\usepackage{bm}
-\usepackage{enumitem}
-\usepackage[colorlinks]{hyperref}
-\usepackage{graphicx}
-\usepackage{appendix}
-\usepackage{color}
-\title{data assimilation}
-\author{melissaaydogdu_99 }
-\date{May 2022}
-
-\begin{document}
-\section{Intro}
+\subsection{Intro}
 \noindent Data assimilation is nowadays widely used to make predictions in complex systems, for example in weather forecasting or ocean prediction. Data assimilation is a method that combines observations with the output of a model to improve a prediction. 
 The main idea is to combine information from our model and from observations, in order to have a more reliable analysis. Sometimes what you are trying to improve in your model may not be in the same space as what you observe this is something that you need to consider while doing your assimilation. It is also important to control our output, it is up to us to decide which input is responsible for the error in our output. This means that there will be uncertainties coming from the model or from the observations, these uncertainties coming from our input will also translate into uncertainties in our output.
 At the end of this data assimilation we will have obtained an output which will be an estimate of the unknown quantity called the state variables.
@@ -27,8 +11,8 @@ $$x^a=Lx^b+Ky^0$$
 
 \noindent Data assimilation methods are often split into two families: variational methods and statistical methods.
 The first method, called variational methods, consists in minimizing a cost function with the least squares approach. 
-\section{statistical approach}
-\subsection{Kalman filter}
+\subsection{statistical approach}
+\subsubsection{Kalman filter}
 The Kalman filter method consists in looking for $x^a$ an analysis, this analysis will be a linear combination of what we already know, our model and our observations.
 To explain this method let's consider that we observe a single quantity, an estimation of a scalar quantity at a point in space.For example we are observing the temperature in the middle of the room, and the model also simulate the temperature in the middle of the room.  We will then have :
 $$x^a=x^b+K(y-x^b)$$
@@ -74,7 +58,7 @@ We do the estimation in two steps:
 		\item Correction of the prediction from the measurements
 	\end{enumerate}
 
-\subsection{Kalman filter algorithm}
+\subsubsection{Kalman filter algorithm}
 For the notations we will use:
 
 \noindent Vector:
@@ -112,8 +96,8 @@ $$\begin{aligned}
 
 
 
-\section{Variational approach}
-\subsection{Minimizing a cost function}
+\subsection{Variational approach}
+\subsubsection{Minimizing a cost function}
 \noindent In the previous part we have seen that there is a method called kalman filter which purpose is to make prediction with a model and observations, but there is also other method to make data assimilation like the variational assimilation, which solves the analysis problem through an optimisation (minimisation of a cost-function). This allows to solve the global problem in one go, and it is now widely used in the meteorological community. So variational data assimilation methods lead to the minimization of a cost function involving quadratic forms based on the both the background and observation covariance matrices. When the observation operator is linear the formulation of the cost function leads to the best the Best Linear Unbiased Estimation.An alternative way to define the analysis is to consider it as the maximum of the a posteriori p.d.f of the state given the observation and the background:
 $$x^a=\arg\max_{x}p(x|y ~ and ~ x^b)$$
 Using bayesian appreach $p(x|y)~\alpha~ p(y|x)p(x)$ we can simplify our probability by:
@@ -131,7 +115,7 @@ $$p(y|x)=(2\pi)^{-m/2}|R|^{-1/2}\exp({-\frac{1}{2}(y-H(x)})^TR^{-1}(y-H(x)))$$
 Which will lead us to:
 $$J(x)=\frac{1}{2}(x^b-x)^TB^{-1}(x^b-x)+\frac{1}{2}(y-H(x))^TR^{-1}(y-H(x))$$
 This is called the cost function of 3D-Var Approach.
-\subsection{Generalisation of the 3D-Var Approach}
+\subsubsection{Generalisation of the 3D-Var Approach}
 \noindent Let's go back to the notations:
 \noindent Vector:
  \begin{enumerate}[label=\textbullet]
@@ -165,7 +149,7 @@ Here is a diagram that illustrates the 3D Var method
 \begin{center}
 		\includegraphics[width=0.8\textwidth]{"images/schema_3D_Var.png"}
 	\end{center}
-\subsection{From 3DVar to BLUE}
+\subsubsection{From 3DVar to BLUE}
 \noindent We have are 3D-Var cost function:
 $$J(x)=\frac{1}{2}\|x-x^b\|_B^2+\frac{1}{2}\|H(x)-y\|_{R}^2 $$
  Let us minimize J and compute the variation of $J(x)$ with respect to
@@ -184,7 +168,7 @@ $$x^*=x^b+(B^{-1}+H^TR^{-1}H)^{-1}H^TR^{-1}(y-Hx^b)$$
 Grave to Sherman-Morrison-Woodbury identity,
 $$K^*=(B^{-1}+H^TR^{-1}H)^{-1}H^TR^{-1}=BH^T(R+HBH^T)^{-1}$$
 Therefore, we have that our solution $x$ of the minimization problem coincides with the BLUE optimal analysis $x^a$
-\section{Ensemble Kalman Filter}
+\subsection{Ensemble Kalman Filter}
 \noindent We have seen so far two methods to do data assimilation, these methods are valid only for linear systems, but the Lorenz system is non-linear, that's why we will introduce the Ensemble Kalman Filter method which works well for non-linear systems. The ENKF method consists in using the Kalman filter method in high dimension and replace P by a set of states $x_1,x_2,..,x_{m}$. So we can approximate the moments of the error by the moments of the sample.
 The we have:
 $$x_i^a=x_i^f+K[y-h(x_i^f)]$$
@@ -200,6 +184,3 @@ $$[X_f]_i=\frac{x_i^f-\bar{x}^f}{\sqrt{m-1}}$$
 In addition, we have:
 $$
 \bar{x}^a=\frac{1}{m}\sum_{i=1}^mx_i^a~~,~~~~[X_a]_i=\frac{x_i^a-\bar{x}^a}{\sqrt{m-1}} $$
-
-\end{document}
-

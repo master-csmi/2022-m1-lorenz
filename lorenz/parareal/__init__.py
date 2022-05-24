@@ -1,2 +1,2 @@
 def toto():
-    print("Hi")
+    print("Hi parareal")

@@ -1,11 +1,11 @@
-presentation/presentation*
-!presentation/presentation.tex
+docs/presentation/presentation*
+!docs/presentation/presentation.tex
 
-gantt/gantt*
-!gantt/gantt.tex
+docs/gantt/gantt*
+!docs/gantt/gantt.tex
 
-report/report*
-!report/report.tex
+docs/report/report*
+!docs/report/report.tex
 
 .ipynb_checkpoints/
 

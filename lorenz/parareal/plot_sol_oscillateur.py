@@ -110,11 +110,7 @@ def cvg(k,n,nb_pts,solx,solx_exacte,x0):
     sol_k_j = sol_k[nb1:nb2]
     sol_ex_k = solx_exacte[nb1:nb2]
     err = erreur(sol_k_j,sol_ex_k)
-    # print("err :",err)
     diff = np.abs(x0[n,k]-sol_ex_k[0])
-    # print(x0[n,k])
-    # print(sol_ex_k[-1])
-    # print("diff :",diff)
     return diff + err
 
 nb_proc = len(nb_pts)

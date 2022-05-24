@@ -1,6 +1,5 @@
 import pytest
-from lorenz import parareal
+from lorenz.parareal import lorenz
 
-def test_parareal_1():
-    print("Hello Melissa and Frédérique\n")
-    parareal.toto()
+def test_lorenz():
+    lorenz.lorenz(t, X, gamma)

@@ -12,8 +12,10 @@ rank = comm.Get_rank()
 
 #### TO CLEAN ####
 
-# to delete old files
+# 
 def supprimer_ancien_fichiers():
+    """delete old csv data files
+    """    
     if(os.path.isfile("donnees_para_real/solx.csv")):
         os.remove("donnees_para_real/solx.csv")
     if(os.path.isfile("donnees_para_real/soly.csv")):
@@ -38,8 +40,18 @@ if(rank == 0):
 
 #### TO SOLVE ####
 
-# function that represents the Lorenz system
+# 
 def lorenz(t, X, gamma): #X=(x,y,z)
+    """function that represents the Lorenz system
+
+    Args:
+        t (_type_): current time
+        X (_type_): state vector of size 3 at previous time
+        gamma (_type_): parameters of the system
+
+    Returns:
+        _type_: the derivative at current tume
+    """    
     (sigma,b,r)=gamma
     (x,y,z)=X
     
@@ -65,6 +77,16 @@ def RK4(X0,dt,t0,T,fct,gamma=None):
     return X
 
 def compute_time(t0,T,dt_G):
+    """_summary_
+
+    Args:
+        t0 (_type_): _description_
+        T (_type_): _description_
+        dt_G (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """    
     # time between t_j and t_{j+1}
     dt_P = (T-t0)/P 
     # nb points

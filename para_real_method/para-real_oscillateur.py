@@ -14,22 +14,14 @@ rank = comm.Get_rank()
 
 # to delete old files
 def supprimer_ancien_fichiers():
-    if(os.path.isfile("donnees_para_real/solx.csv")):
-        os.remove("donnees_para_real/solx.csv")
-    if(os.path.isfile("donnees_para_real/soly.csv")):
-        os.remove("donnees_para_real/soly.csv")
-    if(os.path.isfile("donnees_para_real/solz.csv")):
-        os.remove("donnees_para_real/solz.csv")
+    if(os.path.isfile("donnees_para_real/solx_oscillateur.csv")):
+        os.remove("donnees_para_real/solx_oscillateur.csv")
 
-    if(os.path.isfile("donnees_para_real/sol_rk4.csv")):
-        os.remove("donnees_para_real/sol_rk4.csv")
+    if(os.path.isfile("donnees_para_real/sol_exacte_oscillateur.csv")):
+        os.remove("donnees_para_real/sol_exacte_oscillateur.csv")
     
-    if(os.path.isfile("donnees_para_real/init_pt_x.csv")):
-        os.remove("donnees_para_real/init_pt_x.csv")
-    if(os.path.isfile("donnees_para_real/init_pt_y.csv")):
-        os.remove("donnees_para_real/init_pt_y.csv")
-    if(os.path.isfile("donnees_para_real/init_pt_z.csv")):
-        os.remove("donnees_para_real/init_pt_z.csv")
+    if(os.path.isfile("donnees_para_real/init_pt_oscillateur.csv")):
+        os.remove("donnees_para_real/init_pt_oscillateur.csv")
 
     print("Anciens fichiers supprimés")
 
@@ -51,15 +43,20 @@ def oscillateur_harmonique(t, X, gamma): #X=(x,y,z)
 def sol_exacte(t,gamma):
     (w0,x0,phi0)=gamma
     sol_x=x0*np.cos(w0*t+phi0)
-    sol_v=-x0*w0*np.sin(w0*t+phi0)
-    return np.array([sol_x,sol_v]).T
+    return sol_x
+
+def d_sol_exacte(t,gamma):
+    (w0,x0,phi0)=gamma
+    sol_v=-x0*w0*np.sin(w0*t+phi0) # dérivée de sol_x
+    return sol_v
 
 # Runge Kutta order 4
 def RK4(X0,dt,t0,T,fct,gamma=None):
     X=np.array([X0])  
     
     t=t0 #=t_0
-    while(not np.isclose(t,T)):
+    while((t+dt)<=T or (np.isclose(t+dt,T))):
+    # while(not np.isclose(t,T)):
         K1=fct(t, X[-1],gamma)
         K2=fct(t+dt/2., X[-1] + 1./2. * K1 * dt,gamma)
         K3=fct(t+dt/2., X[-1] + 1./2. * K2 * dt,gamma)
@@ -92,53 +89,41 @@ def compute_time(t0,T,dt_G):
     return times
 
 # to check if initial points converge
-def sol_converge(x0_k,x0_knext,eps=1e-6):
-    return (np.max(np.abs(x0_knext-x0_k)) < eps)
+def sol_converge(x0_k,x0_knext,eps=1e-15):
+    print(np.max(np.abs(x0_knext-x0_k))/np.max(np.abs(x0_knext)))
+    return (np.max(np.abs(x0_knext-x0_k))/np.max(np.abs(x0_knext))) < eps
 
 #to create and write in the csv files
-def csv_files(t0,T,dt_F,times,k,solution,init_pts,reshape_size,fct,gamma=None):
+def csv_files(t0,T,dt_F,times,nb_tj,k,solution,init_pts,reshape_size,fct,gamma=None):
     # time between t0 and T for the fine integrator ##
     t = np.arange(t0,T+1e-6,dt_F)
 
     # init
     init_pts_x = panda.DataFrame(times[:-1],columns=['t'],dtype=np.float64)
-    init_pts_y = panda.DataFrame(times[:-1],columns=['t'],dtype=np.float64)
-    # init_pts_z = panda.DataFrame(times[:-1],columns=['t'],dtype=np.float64)
+
+    init_pts_x.insert(len(init_pts_x.columns),'nb_pts',nb_tj)
 
     solutions_x = panda.DataFrame(t,columns=['t'],dtype=np.float64)
-    solutions_y = panda.DataFrame(t,columns=['t'],dtype=np.float64)
-    # solutions_z = panda.DataFrame(t,columns=['t'],dtype=np.float64)
 
     # write
     for k in range(k):
         X0_k = init_pts[k,:]
         init_pts_x.insert(len(init_pts_x.columns),'k='+str(k),X0_k[:,0])
-        init_pts_y.insert(len(init_pts_y.columns),'k='+str(k),X0_k[:,1])
-        # init_pts_z.insert(len(init_pts_z.columns),'k='+str(k),X0_k[:,2])
 
         sol_k = solution[k,:]
         sol_k = sol_k.reshape((-1,reshape_size))
         solutions_x.insert(len(solutions_x.columns),'k='+str(k),sol_k[:,0])
-        solutions_y.insert(len(solutions_y.columns),'k='+str(k),sol_k[:,1])
-        # solutions_z.insert(len(solutions_z.columns),'k='+str(k),sol_k[:,2])
 
     # to convert dataframe to csv files
-    init_pts_x.to_csv('donnees_para_real/init_pt_x.csv')
-    init_pts_y.to_csv('donnees_para_real/init_pt_y.csv')
-    # init_pts_z.to_csv('donnees_para_real/init_pt_z.csv')
-    solutions_x.to_csv('donnees_para_real/solx.csv')
-    solutions_y.to_csv('donnees_para_real/soly.csv')
-    # solutions_z.to_csv('donnees_para_real/solz.csv')
+    init_pts_x.to_csv('donnees_para_real/init_pt_oscillateur.csv')
+    solutions_x.to_csv('donnees_para_real/solx_oscillateur.csv')
 
     # avec RK4
     sol = sol_exacte(t,gamma)
-    print(sol)
 
-    sol_rk4 = panda.DataFrame(t,columns=['t'],dtype=np.float64)
-    sol_rk4.insert(len(sol_rk4.columns),'x',sol[:,0])
-    sol_rk4.insert(len(sol_rk4.columns),'y',sol[:,1])
-    # sol_rk4.insert(len(sol_rk4.columns),'z',sol[:,2])
-    sol_rk4.to_csv('donnees_para_real/sol_rk4.csv')
+    sol_ex = panda.DataFrame(t,columns=['t'],dtype=np.float64)
+    sol_ex.insert(len(sol_ex.columns),'x',sol)
+    sol_ex.to_csv('donnees_para_real/sol_exacte_oscillateur.csv')
 
     print("Fichiers csv créés")
 
@@ -154,7 +139,7 @@ def compute_sol_k(fin,X0_k_j):
         sol_k = np.empty(sum(nb_tj))
     comm.Gatherv(sendbuf=sol_k_j, recvbuf=(sol_k, nb_tj), root=0)
 
-    return sol_k
+    return nb_tj,sol_k
 
 
 # P = number of processing units ; j in {0,...,P} 
@@ -203,7 +188,7 @@ def parareal_method(X0_t0,t0,T,fct,dt_G,dt_F,gamma=None,write_csv=True):
     fin_k = np.array(comm.gather(fin_k_j, 0))
 
     if(write_csv):
-        sol_k = compute_sol_k(fin,X0_k_j)
+        nb_tj,sol_k = compute_sol_k(fin,X0_k_j)
         if(rank==0):
             solution = [sol_k]
             init_pts = [X0_k]
@@ -235,7 +220,7 @@ def parareal_method(X0_t0,t0,T,fct,dt_G,dt_F,gamma=None,write_csv=True):
         fin_k = np.array(comm.gather(fin_k_j, 0))
 
         if(write_csv):
-            sol_k = compute_sol_k(fin,X0_k_j)
+            nb_tj,sol_k = compute_sol_k(fin,X0_k_j)
             if(rank==0):
                 solution = np.concatenate((solution,[sol_k]),axis=0)
                 init_pts = np.concatenate((init_pts,[X0_kp]),axis=0)
@@ -253,10 +238,10 @@ def parareal_method(X0_t0,t0,T,fct,dt_G,dt_F,gamma=None,write_csv=True):
     if(rank==0):
         print(k," itérations")
         if(csv_files):
-            csv_files(t0,T,dt_F,times,k,solution,init_pts,len(X0_t0),fct,gamma)
+            csv_files(t0,T,dt_F,times,nb_tj/2,k,solution,init_pts,len(X0_t0),fct,gamma)
             return solution[k-1,:].reshape((-1,len(X0_t0)))
         else:
-            sol_k = compute_sol_k(fin,X0_k_j)
+            nb_tj,sol_k = compute_sol_k(fin,X0_k_j)
             return sol_k
         
     MPI.Finalize()
@@ -267,7 +252,7 @@ phi_0=[0.,1.] #(x0,y0,z0)
 t0=0.
 T=50.
 
-dt_G=0.1
-dt_F=0.01
+dt_G=0.01
+dt_F=0.001
 
 sol=parareal_method(phi_0,t0,T,oscillateur_harmonique,dt_G,dt_F,gamma,True)

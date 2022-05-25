@@ -1,0 +1,96 @@
+\documentclass[tikz]{standalone}
+
+\usepackage{pgfgantt}
+\usepackage{xcolor}
+\usepackage[utf8]{inputenc}
+
+\definecolor{lecture}{RGB}{249, 208, 196}
+\definecolor{implementation}{RGB}{212, 197, 249}
+
+\definecolor{groupblue}{RGB}{197, 222, 245}
+\definecolor{barblue}{RGB}{51,102,254}
+\definecolor{linkred}{RGB}{165,0,33} 
+
+\begin{document}
+	
+	\begin{ganttchart}[
+		y unit title=0.8cm,
+		y unit chart=0.8cm,
+		x unit=2.5mm,
+		title/.append style={draw=none,fill=groupblue},
+		title label font=\sffamily\bfseries\color{white},
+		title label node/.append style={below=-2ex},
+		title left shift=.05,
+		title right shift=-.05,
+		group right shift=0,
+		group top shift=.6,
+		group height=.3,
+		group peaks height=.2,
+		bar/.append style={line width=1pt,fill=barblue},
+		bar height=.6,
+		bar label font=\normalsize\color{black!50},
+		bar incomplete/.append style={fill=green}
+		time slot unit=week,
+		time slot format=isodate,
+		%today=2022-04-03,
+		%today label=Today,
+		vrule/.style={very thick, blue},
+		vrule label font=\bfseries
+	]{2022-03-14}{2022-06-05}
+		\gantttitlecalendar{month=name, week} \\
+		
+		%PART 1
+		\ganttgroup[progress=100]{Part 1 : Introduction to the Lorenz system}{2022-03-14}{2022-04-03} \\
+		
+		\ganttbar[bar/.append style={fill=lecture}]{Reading references (introduction to the problem)}{2022-03-14}{2022-03-20}  \\
+		\ganttbar[bar/.append style={fill=implementation}]{Euler explicit method}{2022-03-14}{2022-03-20}  \\
+		\ganttbar[bar/.append style={fill=implementation}]{Euler implicit method}{2022-03-21}{2022-03-27}  \\
+		\ganttbar[bar/.append style={fill=implementation}]{Runge Kutta method (order 4th)}{2022-03-21}{2022-03-27}  \\
+		\ganttbar[bar/.append style={fill=implementation}]{Scipy function (using Runge Kutta)}{2022-03-28}{2022-04-03}  \\
+		\ganttbar[bar/.append style={fill=lecture}]{Comparing different methods}{2022-03-28}{2022-04-10}  \\
+		\ganttbar[bar/.append style={fill=implementation}]{Resolution with OpenModelica}{2022-04-04}{2022-04-10}  \\
+		
+		%PART 2
+		\ganttgroup[progress=5]{Part 2 : Para-real method}{2022-04-04}{2022-05-15} \\
+		
+		\ganttbar[bar/.append style={fill=lecture,dashed}]{Reading references (comprehension)}{2022-04-04}{2022-04-17}  \\
+		\ganttbar[bar/.append style={fill=lecture,dashed}]{Pseudo-code on paper}{2022-04-11}{2022-04-24}  \\
+		\ganttbar[bar/.append style={fill=implementation,dashed}]{Method implementation with Python}{2022-04-18}{2022-05-01}  \\
+		\ganttbar[bar/.append style={fill=implementation,dashed}]{Test scaling with simple case}{2022-05-02}{2022-05-15}  \\
+		\ganttbar[bar/.append style={fill=implementation,dashed}]{Test scaling with difficult case}{2022-05-09}{2022-05-15}  \\
+		
+		%PART 3
+		\ganttgroup[progress=3]{Part 3 : Data assimilation}{2022-04-04}{2022-06-05} \\
+		
+		\ganttbar[bar/.append style={fill=lecture,dotted}]{Reading references on data assimilation}{2022-04-04}{2022-04-17}  \\
+		\ganttbar[bar/.append style={fill=lecture,dotted}]{Understanding Kalman Filter}{2022-04-18}{2022-04-24}  \\
+		\ganttbar[bar/.append style={fill=lecture,dotted}]{Understanding 3DVar}{2022-04-24}{2022-05-01}  \\
+		\ganttbar[bar/.append style={fill=lecture,dotted}]{Understanding link between Kalman filter and 3DVar}{2022-04-18}{2022-05-01}  \\
+		\ganttbar[bar/.append style={fill=lecture,dotted}]{Understanding EnKF (Ensemble Kalman Filter)}{2022-05-02}{2022-05-15}  \\
+		\ganttbar[bar/.append style={fill=lecture}]{Pseudo-code of EnKF on paper}{2022-05-16}{2022-05-29}  \\
+		\ganttbar[bar/.append style={fill=implementation}]{Algorithm with FilterPy}{2022-05-30}{2022-06-05}  \\
+		
+		%Version 0
+		\ganttvrule{v0}{2022-04-05}
+		\ganttvrule{v0-$\beta$}{2022-04-19}
+		
+		%LEGEND
+		\node (a) [fill=lecture,line width=1pt,anchor=west] at ([xshift=-40pt,yshift=-20pt]current bounding box.north east){Read/Understand};
+		\node (b) [fill=implementation,line width=1pt,anchor=west] at ([yshift=-15pt]a.south west){Resolve/Implement};
+		\node (c) [fill=white,draw,line width=1pt,anchor=west] at ([yshift=-25pt]b.south west){In group};
+		\node (d) [fill=white,draw,line width=1pt,anchor=west,dotted] at ([yshift=-15pt]c.south west){Melissa};
+		\node[fill=white,draw,anchor=west,dashed] at ([yshift=-15pt]d.south west){Frédérique};
+		
+		%Titre
+		\node[fill=white,draw=none] at ([xshift=120pt,yshift=-20pt]current bounding box.north west){\large\textbf{Data assimilation for}};
+		\node[fill=white,draw=none] at ([xshift=120pt,yshift=-40pt]current bounding box.north west){\large\textbf{the Lorenz system}};
+		
+		%Link
+		%\ganttlink{elem1}{elem6}
+		%\ganttlink{elem2}{elem6}
+		%\ganttlink{elem3}{elem6}
+		%\ganttlink{elem4}{elem6}
+		%\ganttlink{elem5}{elem6}
+		
+	\end{ganttchart}
+\end{document}

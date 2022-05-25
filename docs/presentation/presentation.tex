@@ -1,0 +1,154 @@
+%% Requires compilation with XeLaTeX or LuaLaTeX
+\documentclass[10pt,xcolor={table,dvipsnames},t]{beamer}
+\usetheme{diapo}
+\usepackage{amsmath}
+
+\title[Lorenz]{Data assimilation for the Lorenz system}
+\subtitle{Presentation (version 0)}
+\author[name]{AYDOGDU Melissa, LECOURTIER Frédérique}
+\institute{\large Strasbourg University}
+\date{\today}
+
+\useoutertheme{miniframes}
+
+\begin{document}
+	
+	\begin{frame}
+		\titlepage
+	\end{frame}
+	
+	\AtBeginSection[]{
+		\begin{frame}
+			\vfill
+			\centering
+			\begin{beamercolorbox}[sep=5pt,shadow=true,rounded=true]{subtitle}
+				\usebeamerfont{title}\insertsectionhead\par%
+			\end{beamercolorbox}
+			\vfill
+		\end{frame}
+	}
+
+
+
+	\begin{frame}{Cemosis}
+		
+		\begin{minipage}{0.4\hsize}
+			\centering
+			\pgfimage[width=\linewidth]{images/logo-cemosis.pdf}
+			\begin{enumerate}[$\rightarrow$]
+				\item created in January 2013
+				\item hosted by the Institute of Advanced Mathematical Research (IRMA)
+			\end{enumerate}
+		\end{minipage} \quad
+		\begin{minipage}{0.5\hsize}
+			They use and develop toals in the fields of : 
+			\begin{enumerate}[\textbullet]
+				\item \textbf{MSO} \\
+				Modeling Simulation and Optimization
+				\item \textbf{DS} \\
+				Data Science, Big Data, Smart Data
+				\item \textbf{HPC} \\
+				High Performance Computing, \\
+				Parallel Computing, Cloud Computing
+				\item \textbf{SI} \\
+				Signal and Image processing
+			\end{enumerate}
+		\end{minipage}
+	
+	\end{frame}
+
+	\begin{frame}[allowframebreaks]{Objectives}
+		
+		\begin{enumerate}[\textbullet]
+			\item \textbf{to read the following articles :}
+			\begin{itemize}
+				\item Common part : introduction to the Lorenz system \\
+				\quad https://docs.dart.ucar.edu/en/latest/guide/lorenz-63-model.html \\
+				\quad https://www2.physics.ox.ac.uk/sites/default/files/profiles/read/lect6-43147.pdf \\
+				\quad https://ftp.emc.ncep.noaa.gov/mmb/sref/Doc/lorenz\_fcst.pdf
+				\item Para-real method \\
+				\quad https://en.wikipedia.org/wiki/Parareal\#Parallel-in-time\_integration\_methods \\
+				\quad https://hal.archives-ouvertes.fr/hal-00798372/file/CRAS\_01\_lions\_maday\_turinici.pdf \\
+				\quad https://www.ljll.math.upmc.fr/publications/2008/R08030.pdf
+				\item Data assimilation \\
+				\quad https://team.inria.fr/airsea/files/2012/03/Nodet\_Intro\_DataAssimilation.pdf \\
+				\quad https://www.eccorev.fr/IMG/pdf/Assimilationdonnees\_EBlayo.pdf
+			\end{itemize}
+		\end{enumerate}	 	
+	
+		\newpage
+		
+		\newpage
+
+		\begin{enumerate}[\textbullet]
+			\item \textbf{to implement methods} 
+			\begin{itemize}
+				\item Common part : introduction to the Lorenz system \\
+				\quad Implementation of ODE resolution methods with Python
+				\item Para-real method \\
+				\quad Implementation of the para-real method with \textit{mpi4py}
+				\item Data assimilation \\
+				\quad data assimilation with the Ensemble Kalman Filter using \textit{FilterPy}
+			\end{itemize}
+			\item \textbf{to do an oral presentation and to write a report :}
+			\begin{itemize}
+				\item presentation of the Lorenz system
+				\item presentation of the para-real method and the data assimilation methods
+				\item presentation of the results
+			\end{itemize}
+		\end{enumerate}
+	\end{frame}
+	
+	\begin{frame}{Roadmap}
+		
+		\pgfimage[height=5.5cm,width=11cm]{../gantt/gantt.pdf}
+	\end{frame}
+	
+	
+	\begin{frame}{Lorenz system}
+		
+		The system :
+		$$\left\{\begin{aligned} 
+			\frac{\partial x(t)}{\partial t} &=\sigma(y(t)-x(t))\\
+			\frac{\partial y(t)}{\partial t}&=x(t)(r-z(t))-y(t) \\
+			\frac{\partial z(t)}{\partial t}&=x(t)y(t)-bz(t)
+		\end{aligned}\right.$$
+	
+		where
+		
+		\begin{enumerate}[\textbullet]
+			\item $\sigma > 0$  relates to the Prandtl number
+			\item $r > 0$  relates to the Rayleigh
+			\item $b > 0$ is a geometric factor
+		\end{enumerate}
+		
+	\end{frame}
+	
+	\begin{frame}{Methods used to solve Lorenz system}
+		
+		\begin{itemize}
+			\item Discretization : \\
+			\qquad \includegraphics[width=0.4\textwidth]{images/discretization.jpg} \\
+			\item Explicit Euler
+			\item Implicit Euler			
+			\item Runge Kutta order 4th			
+			\item Scipy function : \qquad \textit{scipy.integrate.solve\_ivp}
+		\end{itemize}
+		
+	\end{frame}
+	
+	\begin{frame}{Some results (with Python)}
+		
+		\includegraphics[width=\textwidth]{images/N100000.png} \\ 
+		\begin{center}
+			\begin{minipage}[c]{0.5\linewidth}
+				$\sigma=10,\quad \beta=8/3, \quad r=28$ \\
+				$X_0=(-10,10,5)$ 
+			\end{minipage}
+			$T=100, N = 100000 \Rightarrow \Delta t=0.001$
+		\end{center}
+		
+	\end{frame}
+	
+\end{document}
+

@@ -90,7 +90,7 @@ t,solx,nb_iter=read_sol('donnees_para_real/solx_oscillateur.csv')
 times,nb_pts,x0=read_init_pt('donnees_para_real/init_pt_oscillateur.csv',nb_iter)
 
 # Pour plot pour x
-plot('x',t_exact,solx_exacte,t,solx,times,x0)
+# plot('x',t_exact,solx_exacte,t,solx,times,x0)
 
 
 
@@ -111,25 +111,39 @@ def cvg(k,n,nb_pts,solx,solx_exacte,x0):
     sol_ex_k = solx_exacte[nb1:nb2]
     err = erreur(sol_k_j,sol_ex_k)
     diff = np.abs(x0[n,k]-sol_ex_k[0])
-    return diff + err
+    return (diff,err)
 
 nb_proc = len(nb_pts)
-dt_G=0.1
-convergence = []
+dt_G=0.01
+diff = []
+err = []
 for k in range(nb_iter):
-    cvg_k = []
+    diff_k = []
+    err_k = []
     for n in range(nb_proc):
-        cvg_k.append(cvg(k,n,nb_pts,solx,solx_exacte,x0))
-    convergence.append(cvg_k)
+        diff_,err_=cvg(k,n,nb_pts,solx,solx_exacte,x0)
+        diff_k.append(diff_)
+        err_k.append(err_)
+    diff.append(diff_k)
+    err.append(err_k)
 
-print(np.array(convergence))
+print("diff :",np.array(diff))
+print("err :",np.array(err))
 
-k=np.arange(0,np.shape(convergence)[0],1)
+max_diff=np.max(diff,axis=1)
+max_err=np.max(err,axis=1)
+print("max_diff : ",max_diff)
+print("max_err : ",max_err)
 
-erreur=np.max(convergence,axis=1)
-print(erreur)
+delta_t = []
+for k in range(nb_iter):
+    delta_t.append(dt_G**k)
 
-plt.semilogy(k,erreur)
+tab_k=np.arange(0,np.shape(diff)[0],1)
+print(tab_k)
+
+plt.semilogy(tab_k,max_diff,label="|Y_k^n-y(T^n)|")
+plt.semilogy(tab_k,max_err,label="max sur T^n T^{n+1}")
+plt.semilogy(tab_k,delta_t,label="delta_t^k")
+plt.legend()
 plt.show()
-
-# print("cv : ",cvg(0,0,nb_pts,solx,solx_exacte,x0))

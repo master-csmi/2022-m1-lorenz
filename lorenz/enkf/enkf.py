@@ -7,6 +7,24 @@ import time
 
 
 def plot_1_fig(lorenz1,lorenz2,ind,tab_temps,tab_cov,diff,tab_x_y_z,labelx,labely):
+    """
+    Parameters:
+        -lorenz1: observations,an array of vectors where each vector is of size 3, representing [x,y,z] 
+        -lorenz2: model,an array of vectors where each vector is of size 3, representing [x,y,z] 
+        -ind:a real representing the index we want to plot (x, y or z)
+        -tab_temps:real type array representing time
+        -tab_cov:an array of vectors where each vector is of size 3, representing variances 
+         (diag of the cov matrix associated to the state obtained through data assimilation)
+        -diff:represent the distance to create our standart deviation variance
+        -tab_x_y_z:represente an array of vectors where each vector is of size 3,array after data assimilation,
+         representing [x,y,z] 
+        -labelx:legend of the x-curve
+        -labely:legend of the y-curve
+    Returns:
+        -return nothing but plot 3 curves as a function of ind(either x,y or z) as a function of time
+
+    
+    """
     fig=plt.figure(figsize=(18,5))
     ax1 = fig.add_subplot(1,3,1)
     ax1.plot(lorenz1[3],lorenz1[ind],label="observation (0.01)")
@@ -18,6 +36,19 @@ def plot_1_fig(lorenz1,lorenz2,ind,tab_temps,tab_cov,diff,tab_x_y_z,labelx,label
     ax1.legend()
     
 def plot(lorenz1,lorenz2,tab_temps,tab_x_y_z):
+    """
+    Parameters:
+        -lorenz1: observations,an array of vectors where each vector is of size 3, representing [x,y,z] 
+        -lorenz2: model,an array of vectors where each vector is of size 3, representing [x,y,z] 
+        -tab_temps:real type array representing time
+        -tab_x_y_z:represente an array of vectors where each vector is of size 3,array after data assimilation,
+         representing [x,y,z] 
+    Returns:
+        -return nothing but makes three different plot, in each one we will have 
+         3 curves (observations,model and stade after data assimilation) as a function of time
+
+    
+    """
     fig=plt.figure(figsize=(18,6))
     ax1 = fig.add_subplot(1,3,1)
     ax1.plot(lorenz1[3],lorenz1[0],label="observation (0.01)")
@@ -25,7 +56,7 @@ def plot(lorenz1,lorenz2,tab_temps,tab_x_y_z):
     ax1.plot(tab_temps,tab_x_y_z[:,0],label="apres l'assimilation de donnée")
     plt.xlabel("t")
     plt.ylabel("x")
-    ax1.legend()
+    ax1.legend(loc='upper right')
     
     ax2 = fig.add_subplot(1,3,2)
     ax2.plot(lorenz1[3],lorenz1[1],label="observation (0.01)")
@@ -33,7 +64,7 @@ def plot(lorenz1,lorenz2,tab_temps,tab_x_y_z):
     ax2.plot(tab_temps,tab_x_y_z[:,1],label="apres l'assimilation de donnée")
     plt.xlabel("t")
     plt.ylabel("y")
-    ax1.legend()
+    ax1.legend(loc='upper right')
     
     ax3 = fig.add_subplot(1,3,3)
     ax3.plot(lorenz1[3],lorenz1[2],label="observation (0.01)")
@@ -41,7 +72,7 @@ def plot(lorenz1,lorenz2,tab_temps,tab_x_y_z):
     ax3.plot(tab_temps,tab_x_y_z[:,2],label="apres l'assimilation de donnée")
     plt.xlabel("t")
     plt.ylabel("z")
-    ax1.legend()
+    ax1.legend(loc='upper right')
 def f_orcillateur(t,X_n,w): #X_n=(x_n,y_n,z_n)
     (u,v)=X_n
     
@@ -66,6 +97,20 @@ def RK4_Lorenz_harmonique(w,X0,N,T): #we have N+1 discretization points
         
     return X[:,0],X[:,1],T_tab
 def euler_explicit_harmonique(w,X0,N,T): #on a N+1 points de discrétisation
+    """
+    Parameters: 
+        -w: a real that represente the first parameter of the hamonic oscillator
+        -X0:a size 2 array with the initial constition, initial point.
+        -N: a real that represents the number of discritisation
+        -T: a real that represents the time interval
+    Returns:
+        this fonction return resolution with euler
+        -X[:,0]: array of x
+        -X[:,1]: array of y
+        -T_tab: array of the time
+    
+    
+    """
     dt=T/N
     X = np.zeros( (N+1, len(X0)) )
     T_tab=np.zeros(N+1)
@@ -190,23 +235,31 @@ def assimilation_donnée(x,read_sensor,P,Q,R,T,dimz,dt,N,nb_echantillon,hx,fx,γ
     f.R = R # matrice de cov associer a la mesure
     f.Q =Q   #bruit blanc  centree en 0
     t=0
-    index=N
+    index=0*N
     tab_etat=[]
     tab_temps=[]
     tab_cov=[]
-    tab_etat.append(f.x)
-    tab_temps.append(t)
-    tab_cov.append(f.P_post.diagonal())
-    while (t<T):#-dt
+    #tab_etat.append(f.x)
+    #tab_temps.append(t)
+    #tab_cov.append(f.P_post.diagonal())
+    while (t<T):#
+        tab_temps.append(t)
         z = read_sensor(index)
+        tab_etat.append(f.x)
+        #print("z",z)
         f.predict()
         f.update(z)
+        #print("t",t)
+        #print("ind",index)
+        #print("x",f.x)
+        
         index+=N
         t=t+dt
         diag_cov=f.P_post.diagonal()
         tab_cov.append(diag_cov)
-        tab_etat.append(f.x)
-        tab_temps.append(t)
+        
+        
+        
     return(np.array(tab_etat),np.array(tab_temps),np.array(tab_cov))
 
 def fx(x,t, dt,σ,b,r):

@@ -4,36 +4,36 @@ import pandas as panda
 
 # to delete old files
 def delete_old_files_lorenz():
-    if(os.path.isfile("donnees_para_real/solx.csv")):
-        os.remove("donnees_para_real/solx.csv")
-    if(os.path.isfile("donnees_para_real/soly.csv")):
-        os.remove("donnees_para_real/soly.csv")
-    if(os.path.isfile("donnees_para_real/solz.csv")):
-        os.remove("donnees_para_real/solz.csv")
+    if(os.path.isfile("data_parareal/solx.csv")):
+        os.remove("data_parareal/solx.csv")
+    if(os.path.isfile("data_parareal/soly.csv")):
+        os.remove("data_parareal/soly.csv")
+    if(os.path.isfile("data_parareal/solz.csv")):
+        os.remove("data_parareal/solz.csv")
 
-    if(os.path.isfile("donnees_para_real/sol_rk4.csv")):
-        os.remove("donnees_para_real/sol_rk4.csv")
+    if(os.path.isfile("data_parareal/sol_rk4.csv")):
+        os.remove("data_parareal/sol_rk4.csv")
     
-    if(os.path.isfile("donnees_para_real/init_pt_x.csv")):
-        os.remove("donnees_para_real/init_pt_x.csv")
-    if(os.path.isfile("donnees_para_real/init_pt_y.csv")):
-        os.remove("donnees_para_real/init_pt_y.csv")
-    if(os.path.isfile("donnees_para_real/init_pt_z.csv")):
-        os.remove("donnees_para_real/init_pt_z.csv")
+    if(os.path.isfile("data_parareal/init_pt_x.csv")):
+        os.remove("data_parareal/init_pt_x.csv")
+    if(os.path.isfile("data_parareal/init_pt_y.csv")):
+        os.remove("data_parareal/init_pt_y.csv")
+    if(os.path.isfile("data_parareal/init_pt_z.csv")):
+        os.remove("data_parareal/init_pt_z.csv")
 
     print("Old files deleted")
 
 def delete_olf_files_oscillator():
-    if(os.path.isfile("donnees_para_real/solx_oscillateur.csv")):
-        os.remove("donnees_para_real/solx_oscillateur.csv")
+    if(os.path.isfile("data_parareal/solx_oscillateur.csv")):
+        os.remove("data_parareal/solx_oscillateur.csv")
 
-    if(os.path.isfile("donnees_para_real/sol_exacte_oscillateur.csv")):
-        os.remove("donnees_para_real/sol_exacte_oscillateur.csv")
+    if(os.path.isfile("data_parareal/sol_exacte_oscillateur.csv")):
+        os.remove("data_parareal/sol_exacte_oscillateur.csv")
     
-    if(os.path.isfile("donnees_para_real/init_pt_oscillateur.csv")):
-        os.remove("donnees_para_real/init_pt_oscillateur.csv")
+    if(os.path.isfile("data_parareal/init_pt_oscillateur.csv")):
+        os.remove("data_parareal/init_pt_oscillateur.csv")
 
-    print("Anciens fichiers supprimés")
+    print("Old files deleted")
 
 def compute_time(t0,T,dt_G,P):
     # time between t_j and t_{j+1}
@@ -92,12 +92,12 @@ def csv_files_lorenz(t0,T,dt_F,times,nb_tj,k,solution,init_pts,reshape_size,fct,
         solutions_z.insert(len(solutions_z.columns),'k='+str(k),sol_k[:,2])
 
     # to convert dataframe to csv files
-    init_pts_x.to_csv('donnees_para_real/init_pt_x.csv')
-    init_pts_y.to_csv('donnees_para_real/init_pt_y.csv')
-    init_pts_z.to_csv('donnees_para_real/init_pt_z.csv')
-    solutions_x.to_csv('donnees_para_real/solx.csv')
-    solutions_y.to_csv('donnees_para_real/soly.csv')
-    solutions_z.to_csv('donnees_para_real/solz.csv')
+    init_pts_x.to_csv('data_parareal/init_pt_x.csv')
+    init_pts_y.to_csv('data_parareal/init_pt_y.csv')
+    init_pts_z.to_csv('data_parareal/init_pt_z.csv')
+    solutions_x.to_csv('data_parareal/solx.csv')
+    solutions_y.to_csv('data_parareal/soly.csv')
+    solutions_z.to_csv('data_parareal/solz.csv')
 
     # avec RK4
     sol = fct_res(init_pts[0,:][0],dt_F,t0,T,fct,gamma)
@@ -106,7 +106,7 @@ def csv_files_lorenz(t0,T,dt_F,times,nb_tj,k,solution,init_pts,reshape_size,fct,
     sol_rk4.insert(len(sol_rk4.columns),'x',sol[:,0])
     sol_rk4.insert(len(sol_rk4.columns),'y',sol[:,1])
     sol_rk4.insert(len(sol_rk4.columns),'z',sol[:,2])
-    sol_rk4.to_csv('donnees_para_real/sol_rk4.csv')
+    sol_rk4.to_csv('data_parareal/sol_rk4.csv')
 
     print("Fichiers csv créés")
 
@@ -132,15 +132,15 @@ def csv_files_oscillator(t0,T,dt_F,times,nb_tj,k,solution,init_pts,reshape_size,
         solutions_x.insert(len(solutions_x.columns),'k='+str(k),sol_k[:,0])
 
     # to convert dataframe to csv files
-    init_pts_x.to_csv('donnees_para_real/init_pt_oscillateur.csv')
-    solutions_x.to_csv('donnees_para_real/solx_oscillateur.csv')
+    init_pts_x.to_csv('data_parareal/init_pt_oscillator.csv')
+    solutions_x.to_csv('data_parareal/solx_oscillator.csv')
 
     # with exact solution
     sol = fct_res(t,gamma)
 
     sol_exacte = panda.DataFrame(t,columns=['t'],dtype=np.float64)
     sol_exacte.insert(len(sol_exacte.columns),'x',sol)
-    sol_exacte.to_csv('donnees_para_real/sol_exacte_oscillateur.csv')
+    sol_exacte.to_csv('data_parareal/sol_exacte_oscillator.csv')
 
     print("Fichiers csv créés")
 

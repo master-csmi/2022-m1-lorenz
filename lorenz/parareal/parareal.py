@@ -1,6 +1,6 @@
 import numpy as np
 from mpi4py import MPI
-import utils
+from lorenz.parareal import utils
 
 # python3 para-real.py | grep truc
 # mpiexec -n 3 python3 para-real_parallele.py
@@ -127,45 +127,45 @@ def parareal_method(X0_t0,t0,T,prob,fct_res,fct_write,dt_G,dt_F,gamma=None,
         
     MPI.Finalize()
 
-## Lorenz
+# ## Lorenz
 
-# rk4
+# # rk4
+
+# # gamma=(10.,8./3,28.) #(σ,b,r)
+# # X0=[5.,5.,5.] #(x0,y0,z0)
+# # t0=0.
+# # T=200.
+# # dt=0.001
+
+# # sol = utils.RK4(X0,dt,t0,T,utils.lorenz,gamma)
+
+# # paralele
 
 # gamma=(10.,8./3,28.) #(σ,b,r)
 # X0=[5.,5.,5.] #(x0,y0,z0)
 # t0=0.
-# T=200.
-# dt=0.001
+# T=20.
 
-# sol = utils.RK4(X0,dt,t0,T,utils.lorenz,gamma)
-
-# paralele
-
-gamma=(10.,8./3,28.) #(σ,b,r)
-X0=[5.,5.,5.] #(x0,y0,z0)
-t0=0.
-T=20.
-
-dt_G=0.1
-dt_F=0.01
-
-if(rank==0):
-    utils.delete_old_files_lorenz()
-sol=parareal_method(X0,t0,T,utils.lorenz,utils.RK4,utils.csv_files_lorenz,
-        dt_G,dt_F,gamma,True)
-
-## Oscillateur
-
-# gamma=(5.,-1./5.,np.pi/2.) #=(w0,x0,phi0)
-# phi_0=[0.,1.] #(x0,y0,z0)
-# t0=0.
-# T=50.
-
-# dt_G=0.01
-# dt_F=0.001
+# dt_G=0.1
+# dt_F=0.01
 
 # if(rank==0):
-#     utils.delete_olf_files_oscillator()
-# sol=parareal_method(phi_0,t0,T,utils.oscillator,utils.sol_ex,utils.csv_files_oscillator,
+#     utils.delete_old_files_lorenz()
+# sol=parareal_method(X0,t0,T,utils.lorenz,utils.RK4,utils.csv_files_lorenz,
 #         dt_G,dt_F,gamma,True)
+
+# ## Oscillateur
+
+# # gamma=(5.,-1./5.,np.pi/2.) #=(w0,x0,phi0)
+# # phi_0=[0.,1.] #(x0,y0,z0)
+# # t0=0.
+# # T=50.
+
+# # dt_G=0.01
+# # dt_F=0.001
+
+# # if(rank==0):
+# #     utils.delete_olf_files_oscillator()
+# # sol=parareal_method(phi_0,t0,T,utils.oscillator,utils.sol_ex,utils.csv_files_oscillator,
+# #         dt_G,dt_F,gamma,True)
 

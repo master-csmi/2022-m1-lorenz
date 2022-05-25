@@ -13,7 +13,40 @@ $$\left\{\begin{aligned}
 
 \noindent Parareal method need a decomposition of the time interval $[t_0,T]$ into $P$ slices $[t_j,t_{j+1}]$ with  $j\in\{0,\dots,P-1\}$ where $P$ is the number of process units. We also try to parallelize the algorithm so each time slice is assigned to one process. We denote by $F$ a function which is of high accuracy and and $G$ which is of low accuracy. That is to say that $F$ will be very expensive in terms of calculation but very accurate and $G$ will be very cheap.  \\
 
-\includegraphics[width=\textwidth]{"images/schema_parareal.jpg"}
+\begin{figure}
+	\captionsubfigure
+	\fbox{
+		\centering \qquad
+	\begin{minipage}[c]{\linewidth}
+	\begin{subfigure}[t]{.30\linewidth}       
+		\includegraphics[width=\linewidth]{"images/parareal_1.jpg"}
+		\captionof{figure}{Step 1}
+	\end{subfigure} 
+	\begin{subfigure}[t]{.30\linewidth}       
+		\includegraphics[width=\linewidth]{"images/parareal_2.jpg"}
+		\captionof{figure}{Step 2}
+	\end{subfigure} 
+	\begin{subfigure}[t]{.30\linewidth}       
+		\includegraphics[width=\linewidth]{"images/parareal_3.jpg"}
+		\captionof{figure}{Step 3}
+	\end{subfigure} 
+	
+	\begin{subfigure}[t]{.30\linewidth}       
+		\includegraphics[width=\linewidth]{"images/parareal_4.jpg"}
+		\captionof{figure}{Step 4}
+	\end{subfigure} 
+	\begin{subfigure}[t]{.30\linewidth}  
+		\includegraphics[width=\linewidth]{"images/parareal_5.jpg"}
+		\captionof{figure}{Step 5}
+	\end{subfigure} 
+	\begin{subfigure}[t]{.30\linewidth}      
+		\includegraphics[width=\linewidth]{"images/parareal_6.jpg"}
+		\captionof{figure}{Step 6}
+	\end{subfigure}
+	\end{minipage}}
+	\caption{Parareal method}
+	
+\end{figure}
 
 \subsection{Application to the Lorenz system}
 

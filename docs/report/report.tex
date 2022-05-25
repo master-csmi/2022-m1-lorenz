@@ -9,7 +9,9 @@
 \usepackage{graphicx}
 \usepackage{appendix}
 \usepackage{color}
+\usepackage{caption}
 \newcommand{\vect}[1]{\hat{\boldsymbol{#1}}}
+\usepackage{subcaption}
 
 \newcommand{\reporttitle}{Project Report : Data assimilation for the Lorenz system}
 \newcommand{\reportauthorOne}{Melissa Aydogdu}
@@ -18,12 +20,24 @@
 \newcommand{\reportsupervisorTwo}{Luca Berti}
 \newcommand{\reporttype}{Coursework}
 
+\usepackage{chngcntr}
+
 \hypersetup{
 	colorlinks=true,
 	linkcolor=blue,
 	filecolor=magenta,      
 	urlcolor=cyan,
 }
+
+\counterwithin{figure}{section}
+
+\makeatletter
+\usepackage[labelformat=simple]{subcaption}
+\newcommand\captionsubfigure{%
+	%\renewcommand\p@subfigure{}
+	\renewcommand\thesubfigure{Figure \thefigure.\alph{subfigure}:}
+}
+\makeatother
 
 \begin{document}
 	\nocite{*}

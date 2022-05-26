@@ -184,3 +184,57 @@ $$[X_f]_i=\frac{x_i^f-\bar{x}^f}{\sqrt{m-1}}$$
 In addition, we have:
 $$
 \bar{x}^a=\frac{1}{m}\sum_{i=1}^mx_i^a~~,~~~~[X_a]_i=\frac{x_i^a-\bar{x}^a}{\sqrt{m-1}} $$
+\subsection{Presentation of the results}
+\subsubsection{harmonic oscillator}
+\noindent After the implementation for the data assimilation, to test it the ideal was to find a function which we know the exact result. That's why we chose to test it with the harmonic oscillator equation:
+
+
+
+For the first case we chose to take a model that will be solved with RK4 and as observation we chose to take the exact solution. We must also choose $P$, $R$ and $Q$ with $Q$ covariance matrix associated with the models, $R$ covariance matrix associated with the observations and $P$ covariance matrix associated with the forecast state.
+The observation operator will only take the first value because we only observe .
+Let's take :
+
+\begin{lstlisting}
+w=2
+x = np.array([2,0])
+Pe = 2*np.pi/w
+dt= Pe/20
+T = 3*Pe
+N = int(round(T/dt))
+def hx(x):
+       return  np.array([x[0]])
+def read_sensor(t):
+        2*np.cos(2*t)
+\end{lstlisting}
+\begin{center}
+		\includegraphics[width=0.3\textwidth]{"images/oscillator1.png"}
+		\includegraphics[width=0.3\textwidth]{"images/oscillator2.png"}
+		\includegraphics[width=0.3\textwidth]{"images/oscillator3.png"}
+	\end{center}
+We have 3 different cases, we tried to vary the covariance matrices associated with the error in order to understand their impact in the algorithm. For the first case we took a covariance matrix associated to the observation R smaller than the other matrices. This comes from the fact that our observations are very precise, they correspond to the exact solution. For Q, the covariance matrix associated to the measure, we have also chosen an id matrix, with in the diagonal the 0.1, since we solve it with the method of RK4 this one remains nevertheless quite accurate. And for P, this one in this case is a real because we observe only one component and is equal to 0.1.
+In the second case we have exactly the same value for R and Q, but we choose to take a P much higher than the one before to see if we have a difference. And we can see that the green curve does not assimilate correctly, it is much too far from our model and observation curve. This is because P represents the error between the analysis and the true state is very large, taking this large value tells us that we should not trust the value of the state after the assimilation.
+In the last case we choose to set the P and Q matrix to zero, so in fact we want to assimilate only our model ignoring the observations. In this case we expect the curve after assimilation to be superimposed on the model curve, which is indeed the case. We will have that our $K=BH^T(HBH^T+R)^{-1}$ will be equal to 0.
+\subsubsection{Lorenz system}
+Now that we have tried the hamonic oscillator case, we can now look at the Lorenz system. Normally to do data assimilation we need a model in this case it will be the Lorenz system solved with RK4, and we also need observations. In most of the cases these observations/data come from the sensors, but for this project we chose to create the observations ourselves thanks to RK4 by changing the parameters for example, or the precision. 
+For the first case we chose to take exactly the same initial point and the same parameters for the observations and the model.
+For $\gamma$ we have chosen to take (12.,6.,12.) and for the initial point we take (-10.,-10.,25.). But to differentiate the observations and the model we prefer to deal with the time step. For the model we have chosen $dt=N/0.1$ and for the observations we have chosen $dt=N/0.01$ which means that when we make the assimilation of the data we will do it every 0.1, our observations that we will take every 10 times will be more precise.
+\begin{center}
+		\includegraphics[width=1\textwidth]{"images/dt.png"}
+\end{center}
+We also chose to take a fairly small R because our observations are very precise.
+\begin{center}
+		\includegraphics[width=1\textwidth]{"images/lorenz1.png"}
+\end{center}
+We can notice that our curve after data assimilation is very close to our two other curves, we can see that our curve is very close to the model, which is totally normal, since we do the assimilation on each dt=N/0.1, it only take the observations every 10 steps (because our observations in them a time step of dt=N/0.01). But we can still see that the green curve is between the observations curve and the model curve.
+\vspace*{5mm}
+ let's try to change our parameters for the observations and the model. For $\gamma$ that we use in the observation we have chosen to take (12.,6.,12.), for for the model $\gamma$=(10.,6.,10.) and for the initial point we take (-10.,-10.,25.)for both of them.
+ \begin{center}
+		\includegraphics[width=1\textwidth]{"images/lorenz2.png"}
+\end{center}
+This time we take a small Q which means that we trust the model much more than the observation. We notice that our data assimilation curve is quite close to the one of the model, which approves the hypothesis we made when we chose Q and R.
+ \begin{center}
+		\includegraphics[width=1\textwidth]{"images/lorenz3.png"}
+\end{center}
+Now we have inverted the values of R and Q and we have not changed our P. We expect to see that our green curve is close to the blue curve which corresponds to the observations. On the other hand we notice that the values of the states after the data assimilation are very close almost similar to the observation ones.
+\end{document}
+

@@ -29,13 +29,14 @@
 	urlcolor=cyan,
 }
 
+% captions
 \counterwithin{figure}{section}
 
 \makeatletter
 \usepackage[labelformat=simple]{subcaption}
 \newcommand\captionsubfigure{%
-	%\renewcommand\p@subfigure{}
-	\renewcommand\thesubfigure{Figure \thefigure.\alph{subfigure}:}
+	\renewcommand\p@subfigure{}
+	\renewcommand\thesubfigure{\thefigure.\alph{subfigure}}
 }
 \makeatother
 
@@ -348,9 +349,13 @@
 		We can see that implicit Euler is longer than the others. This is probably due to the loop on k for each n. \\
 	\end{enumerate}
 
-	\noindent For the next part of the project, we choose to work with the Runge kutta method.
+	%\noindent For the next part of the project, we choose to work with the Runge kutta method.
+	
+	\newpage
 	
 	\input{parareal.tex}
+	
+	\newpage
 	
 	\input{enkf.tex}	
 	

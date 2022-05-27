@@ -30,6 +30,17 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install flake8 pytest
         python -m pip install numpy
+        python -m pip install filterpy
+        python -m pip install matplotlib
+        python -m pip install mpl_toolkits
+        python -m pip install scipy
+        python -m pip install time
+        python -m pip install mpi4py
+        python -m pip install csv
+        python -m pip install math
+        python -m pip install os
+        python -m pip install pandas
+        python -m pip install sys
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: |

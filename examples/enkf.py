@@ -260,7 +260,6 @@ def assimilation_donnée(x,read_sensor,P,Q,R,T,dimz,dt,N,nb_echantillon,hx,fx,γ
         -hx:Measurement function. Convert state x into a measurement
         -fx:State transition function
         -γ: an array of real that represente the three parameter of the lorenz system (σ, b, r)
-        -N: a real that represents the number of discritisation
     Returns:
         this function do the data assimilation using the ensemble kalman filter
         -tab_etat: an array with the state mean after data assimilation

@@ -204,7 +204,7 @@ $$
 
 
 For the first case we chose to take a model that will be solved with RK4 and as observation we chose to take the exact solution. We must also choose $P$, $R$ and $Q$ with $Q$ covariance matrix associated with the models, $R$ covariance matrix associated with the observations and $P$ covariance matrix associated with the forecast state.
-The observation operator will only take the first value because we only observe .
+The observation operator will only take the first value which is $\frac{\partial x}{\partial t}=v$ because we only observe the exact value of $v$ .
 Let's take :
 
 \begin{lstlisting}

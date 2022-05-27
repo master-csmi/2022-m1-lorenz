@@ -338,7 +338,9 @@
 	
 	\input{parareal.tex}
 	
-	\input{enkf.tex}	
+	\input{enkf.tex}
+	\section{Conclusion}
+	\noindent To conclude all this and to summarize everything, we had as main goal to implement a parallel time resolution method for the Lorenz system, and to realize the data assimilation using the EnKF method. But to achieve these goals we had to understand the Lorenz system and try to implement several numerical resolutions to find a solution. Part explanation para-real. And finally for the data assimilation part we had to understand the principles of methods such as the Kalman filter and 3DVAR, it was also important to understand the link between these two methods in order to understand the method to use in the case where the differential equation system is nonlinear and to implement the method using EnKF with FilterPy. We noticed that during the data assimilation the covariance matrices associated with the error of our states had a very large impact on the analyses. Changing one of these parameters or reversing the covariance matrix associated with the error of the observations with the one associated with the model could seriously change our final analysis. For the future it would be interesting to explain the phenomenon seen in the part (cf. \ref{assimilation}), to understand why when we give a little more accuracy to the observation we observe that the curve of our states after data assimilation sticks much more to the observations.	
 	
 	\newpage	
 	\bibliographystyle{plain}

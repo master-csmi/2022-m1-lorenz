@@ -73,13 +73,32 @@ def plot(lorenz1,lorenz2,tab_temps,tab_x_y_z):
     plt.xlabel("t")
     plt.ylabel("z")
     ax1.legend(loc='upper right')
-def f_orcillateur(t,X_n,w): #X_n=(x_n,y_n,z_n)
+def f_orcillateur(t,X_n,w):
+    """
+    Parameters:
+        -X_n:un tableau de reel de taille 2 
+        -w: a real that represente the first parameter of the hamonic oscillator
+    
+    """
     (u,v)=X_n
     
     f_1 = v
     f_2 =-w**2*u
     return np.array([f_1,f_2])
-def RK4_Lorenz_harmonique(w,X0,N,T): #we have N+1 discretization points
+def RK4_harmonique(w,X0,N,T): 
+    """
+    Parameters: 
+        -w: a real that represente the first parameter of the hamonic oscillator
+        -X0:a size 2 array with the initial constition, initial point.
+        -N: a real that represents the number of discritisation
+        -T: a real that represents the time interval
+    Returns:
+        this fonction return resolution with RK4 
+        -X[:,0]: array of x
+        -X[:,1]: array of y
+        -T_tab: array of the time
+    
+    """
     dt=T/N
     X = np.zeros( (N+1, len(X0)) )
     T_tab=np.zeros(N+1)
@@ -96,7 +115,7 @@ def RK4_Lorenz_harmonique(w,X0,N,T): #we have N+1 discretization points
         t+=dt
         
     return X[:,0],X[:,1],T_tab
-def euler_explicit_harmonique(w,X0,N,T): #on a N+1 points de discrétisation
+def euler_explicit_harmonique(w,X0,N,T):
     """
     Parameters: 
         -w: a real that represente the first parameter of the hamonic oscillator
@@ -132,7 +151,22 @@ def f(t_n,X_n,σ, b, r):
     f_3 = x*y-b*z
     return np.array([f_1,f_2,f_3])
 
-def RK4_Lorenz(γ,X0,N,T): #we have N+1 discretization points
+def RK4_Lorenz(γ,X0,N,T): 
+    """
+    Parameters: 
+        -γ: an array of real that represente the three parameter of the lorenz system (σ, b, r)
+        -X0:a size 3 array with the initial constition, initial point (x,y,z)
+        -N: a real that represents the number of discritisation
+        -T: a real that represents the time interval
+    Returns:
+        this fonction return resolution with RK4
+        -X[:,0]: array of x
+        -X[:,1]: array of y
+        -X[:,2]: array of z
+        -T_tab: array of the time
+    
+    
+    """
     (σ,b,r)=γ
     dt=T/N
     X = np.zeros( (N+1, len(X0)) )
@@ -154,7 +188,7 @@ def RK4_Lorenz(γ,X0,N,T): #we have N+1 discretization points
     return X[:,0],X[:,1],X[:,2],T_tab
 
 def fx(x,t, dt,γ):
-    def f(t_n,X_n,γ): #X_n=(x_n,y_n,z_n)
+    def f(t_n,X_n,γ): 
         (x,y,z)=X_n
         f_1 = γ[0]*(y-x)
         f_2 = x*(γ[2]-z)-y
@@ -168,25 +202,42 @@ def fx(x,t, dt,γ):
     return X_next
     
     
-def test_():
-    X_0 = [2,0]
-    omega = 2
-    P = 2*np.pi/omega
-    dt = P/50
-    T = 3*P
-    N_t = int(round(T/dt))
+def test_enkf_harmonique():
+    w=2
+    x = np.array([2,0])
+    Pe = 2*np.pi/w
+    dt= Pe/20
+    T = 3*Pe
+    N = int(round(T/dt))
+    def fx_rk4(x,t, dt,w):
+        def f(t,X_n,w): #X_n=(x_n,y_n,z_n)
+            (u,v)=X_n
+            f_1 = v
+            f_2 =-w**2*u
+            return np.array([f_1,f_2])
+        K1=f(t, x,w)
+        K2=f(t+dt/2., x + 1./2. * K1 * dt,w)
+        K3=f(t+dt/2., x + 1./2. * K2 * dt,w)
+        K4=f(t, x+ K3 * dt,w)
+        X_next=x+ dt/6.* (K1+2.*K2+2.*K3+K4)
+        return X_next
 
-    P_2 = 2*np.pi/omega
-    dt_2= P_2/20
-    T_2 = 3*P_2
-    N_2 = int(round(T_2/dt_2))
+    P = np.eye(2) * 0.0
+    R = np.eye(1)*0.001 # matrice de cov associer a la mesure
+    Q=np.eye(2)*0.0
+    def hx(x):
+        return  np.array([x[0]])
 
-    oscillateur_2=RK4_Lorenz_harmonique(omega,X_0,N_2,T_2)
-    tab_etat_oscillateur,tab_temps_oscillateur=assimilation_oscillateur_harmonique()
+
+    def read_sensor(t):
+            2*np.cos(2*t)
+    oscillateur=RK4_harmonique(w,x,N,T)
+
+    tab_etat_oscillateur,tab_temps_oscillateur,tab_cov=assimilation_donnée(x,read_sensor,P,Q,R,T,1,dt,1,40,hx,fx_rk4,w)
     taille_tab_etat=len(tab_etat_oscillateur)
     compteur=0
     for i in range (taille_tab_etat):
-        if ((tab_etat_oscillateur[i]-oscillateur_2[0][i])<0.5):
+        if ((tab_etat_oscillateur[i][0]-oscillateur[0][i])<1e-5):
             compteur+=1;
     if(compteur==taille_tab_etat):
         print("test oke pour enkf")
@@ -194,6 +245,28 @@ def test_():
         print("test ne passe pas pour enkf")
 
 def assimilation_donnée(x,read_sensor,P,Q,R,T,dimz,dt,N,nb_echantillon,hx,fx,γ):
+    """
+    Parameters: 
+        -x:a size 3 array with the initial constition, initial point (x,y,z)
+        -read_sensor: a function that will read the observation every time
+        -P:covariance matrix  associated with the forecast state error
+        -Q:covariance matrix associated with the model error
+        -R:covariance matrix associated with the observations error
+        -T:a real that represents the time interval
+        -dimz: a real that represent the dimention of the observations
+        -dt:a real that represent the time for each discretisation
+        -N: a real that represents the index difference between the observations and the model
+        -nb_echantillon: a real that represents the index difference between the observations and the model
+        -hx:Measurement function. Convert state x into a measurement
+        -fx:State transition function
+        -γ: an array of real that represente the three parameter of the lorenz system (σ, b, r)
+        -N: a real that represents the number of discritisation
+    Returns:
+        this function do the data assimilation using the ensemble kalman filter
+        -tab_etat: an array with the state mean after data assimilation
+        -tab_temps: an array with the time
+        -tab_cov: an array with the diagonal of the state covarience matrix pour each time
+    """
     f = EnsembleKalmanFilter (x=x, P=P, dim_z=dimz, dt=dt, N=nb_echantillon,hx=hx, fx=lambda x,dt:fx(x,t,dt,γ))
     f.R = R # matrice de cov associer a la mesure
     f.Q =Q   #bruit blanc  centree en 0

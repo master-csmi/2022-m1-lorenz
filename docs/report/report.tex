@@ -51,24 +51,7 @@
 	
 	\tableofcontents
 	
-    \newpage
-	\section{Roadmap}
-	    \label{diag}
-	    
-	\begin{center}
-		\includegraphics[angle=90,width=0.80\textwidth]{../gantt/gantt.pdf}
-	\end{center}
-	
-	\noindent For the organization we have chosen to make a Gantt diagram (section~\ref{diag}) with the different parts and the deadlines we have set (which can change during the time). The first part consists in understanding the Lorenz system and to make the implementation of its numerical resolution. Since this part is essential for the rest, we worked together during this.
-	We studied the Lorenz system as it is a simple climate system model and to implemented it with different numerical methods, in order to choose one of them for the other two parts. 
-	
-	
-	\noindent For these two other parts we decided to work each one on one part. One person will take care of the para-real part in order to make a parallel simulation in time and to have a much more efficient and fast implementation.
-	
-	
-    \noindent And the other person will take care of understanding the basic principles of data assimilation, which means how to combine the observations and the mathematical model, the different operators and describe them. For this, it is necessary to understand the two methods of data assimilation Kalman filter and 3DVar, and also the link between them, but it is better to use the Ensemble Kalman filter method because this one works on non-linear systems.
-
-
+	\newpage
 	\section{Introduction}
 	
 	\subsection{Presentation of Cemosis}
@@ -85,8 +68,6 @@
 	
 	\noindent For more informations, refer to the \href{http://www.cemosis.fr/}{cemosis website}. 
 	
-	\newpage
-	
 	\subsection{Goals of the project}
 	
 	 The main objective of the project is the Data assimilation for the Lorenz system. For this reason, the following secondary objectives will be necessary :
@@ -94,9 +75,9 @@
  	\begin{enumerate}[label=\textbullet]
  		\item \textbf{to read the following references :}
  		\begin{itemize}
- 			\item Common part : introduction to the Lorenz system  \cite{partie1_ref1},  \cite{partie1_ref2},  \cite{partie1_ref3}
+ 			\item Common part-introduction to the Lorenz system : \cite{partie1_ref1},  \cite{partie1_ref2},  \cite{partie1_ref3}
  			\item Para-real method : \cite{partie2_ref1}, \cite{partie2_ref2},  \cite{partie2_ref3}
- 			\item Data assimilation :\cite{partie3_ref2}
+ 			\item Data assimilation : \cite{partie3_ref2}
  		\end{itemize}
  		\item \textbf{to implement methods:} 
  		\begin{itemize}
@@ -105,9 +86,25 @@
  			\item The third part concerns data assimilation techniques for non-linear systems. In particular we will focus on the usage of filtering techniques (like Ensemble Kalman Filter using \textit{FilterPy}.) to assimilate synthetic data and correct a computational, inaccurate model.
  		\end{itemize}
  	\end{enumerate}
+ 
+ 	\section{Roadmap}
+ 	
+ 	\noindent For the organization we have chosen to make a Gantt diagram (see Figure \ref{gantt}) with the different parts and the deadlines we have set (which can change during the time). The first part consists in understanding the Lorenz system and to make the implementation of its numerical resolution. Since this part is essential for the rest, we worked together during this.
+ 	We studied the Lorenz system as it is a simple climate system model and to implemented it with different numerical methods, in order to choose one of them for the other two parts. 
+ 	
+ 	
+ 	\noindent For these two other parts we decided to work each one on one part. One person will take care of the para-real part in order to make a parallel simulation in time and to have a much more efficient and fast implementation.
+ 	
+ 	
+ 	\noindent And the other person will take care of understanding the basic principles of data assimilation, which means how to combine the observations and the mathematical model, the different operators and describe them. For this, it is necessary to understand the two methods of data assimilation Kalman filter and 3DVar, and also the link between them, but it is better to use the Ensemble Kalman filter method because this one works on non-linear systems.
+ 	
+ 	\begin{figure}[H]
+ 		\includegraphics[width=\textwidth]{../gantt/gantt.pdf}
+ 		\caption{Gantt chart}
+ 		\label{gantt}
+ 	\end{figure}
 	
 	\newpage
-	
 	\section{The Lorenz System}
 	
 	\subsection{Introduction to the system}
@@ -213,7 +210,7 @@
 		x \\
 		y \\
 		z
-	\end{pmatrix} \quad \test{and} \quad f(t,X)=\begin{pmatrix}
+	\end{pmatrix} \quad \text{and} \quad f(t,X)=\begin{pmatrix}
 		\sigma(y-x) \\
 		x(r-z)-y \\
 		xy-bz

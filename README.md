@@ -1,5 +1,6 @@
 # 2022-m1-lorenz
 
+
 We study the Lorenz system with 3 equations
 
 $$

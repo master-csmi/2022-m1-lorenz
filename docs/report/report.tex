@@ -12,6 +12,10 @@
 \usepackage{caption}
 \newcommand{\vect}[1]{\hat{\boldsymbol{#1}}}
 \usepackage{subcaption}
+\usepackage{float}
+\usepackage{multirow}
+
+\usepackage{chngcntr}
 
 \newcommand{\reporttitle}{Project Report : Data assimilation for the Lorenz system}
 \newcommand{\reportauthorOne}{Melissa Aydogdu}
@@ -20,13 +24,12 @@
 \newcommand{\reportsupervisorTwo}{Luca Berti}
 \newcommand{\reporttype}{Coursework}
 
-\usepackage{chngcntr}
-
 \hypersetup{
 	colorlinks=true,
 	linkcolor=blue,
 	filecolor=magenta,      
 	urlcolor=cyan,
+	citecolor=cyan
 }
 
 % captions
@@ -360,6 +363,10 @@
 	\newpage
 	
 	\input{enkf.tex}	
+	
+	\newpage
+	
+	\section{Conclusion}
 	
 	\newpage	
 	\bibliographystyle{plain}

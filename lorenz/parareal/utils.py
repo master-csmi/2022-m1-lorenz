@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import pandas as panda
+import matplotlib.pyplot as plt
 
 # to delete old files
 def delete_old_files_lorenz():
@@ -151,7 +152,6 @@ def RK4(X0,dt,t0,T,fct,gamma=None):
     
     t=t0 #=t_0
     while((t+dt)<=T or (np.isclose(t+dt,T))):
-    # while(not np.isclose(t,T)):
         K1=fct(t, X[-1],gamma)
         K2=fct(t+dt/2., X[-1] + 1./2. * K1 * dt,gamma)
         K3=fct(t+dt/2., X[-1] + 1./2. * K2 * dt,gamma)
@@ -161,27 +161,53 @@ def RK4(X0,dt,t0,T,fct,gamma=None):
         t+=dt
     return X
 
-# function that represents the Lorenz system
-def lorenz(t, X, gamma): #X=(x,y,z)
-    (sigma,b,r)=gamma
-    (x,y,z)=X
-    
-    f_1 = sigma*(y-x)
-    f_2 = x*(r-z)-y
-    f_3 = x*y-b*z
-    return np.array([f_1,f_2,f_3])
+def erreur(solx,solx_exacte):
+    return np.max(np.abs(solx-solx_exacte))
 
-# function that the oscillator
-def oscillator(t, X, gamma): #X=(x,y,z)
-    (x,v)=X
-    w0=gamma[0]
+def E_j_k(j,k,nb_pts,solx,solx_exacte,x0):
+    suite_nb = [-1]
+    for i in range(len(nb_pts)):
+        suite_nb.append(suite_nb[-1]+nb_pts[i])
+    suite_nb[0] = 0
+    suite_nb[-1] += 1
 
-    f_1 = v
-    f_2 = -w0**2*x
-    return np.array([f_1,f_2])
+    nb1=suite_nb[j]
+    nb2=suite_nb[j+1]
 
-# exact solution
-def sol_ex(t,gamma):
-    (w0,x0,phi0)=gamma
-    sol_x=x0*np.cos(w0*t+phi0)
-    return sol_x
+    sol_k = solx[:,k]
+    sol_k_j = sol_k[nb1:nb2]
+    sol_ex_k = solx_exacte[nb1:nb2]
+    err = erreur(sol_k_j,sol_ex_k)
+    diff = np.abs(x0[j,k]-sol_ex_k[0])
+    return (diff,err)
+
+def cvg(t_ex,solx_exacte,t,solx,nb_iter,times,nb_pts,x0):
+    nb_proc = len(nb_pts)
+    dt_G=0.01
+    diff = []
+    err = []
+    for k in range(nb_iter):
+        diff_k = []
+        err_k = []
+        for j in range(nb_proc):
+            diff_,err_=E_j_k(j,k,nb_pts,solx,solx_exacte,x0)
+            diff_k.append(diff_)
+            err_k.append(err_)
+        diff.append(diff_k)
+        err.append(err_k)
+
+    diff = np.array(diff)
+    err = np.array(err)
+
+    delta_t = []
+    for k in range(nb_iter):
+        delta_t.append(dt_G**k)
+
+    tab_k=np.arange(0,np.shape(diff)[0],1)
+
+    plt.semilogy(tab_k,np.max(diff+err,axis=1),label="E_j_k")
+    plt.semilogy(tab_k,delta_t,label="delta_t^k")
+    plt.xticks(tab_k,tab_k)
+    plt.title("Convergence based on iterations")
+    plt.legend()
+    plt.show()

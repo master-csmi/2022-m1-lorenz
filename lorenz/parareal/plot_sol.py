@@ -66,7 +66,7 @@ def plot_sol(entree,t_rk4,sol_rk4,t,sol,nb_iter,times,pt0):
         
         ax.set_title("k="+str(k))
 
-        ax.plot(t_rk4,sol_rk4,linewidth=2,label="rk4")
+        ax.plot(t_rk4,sol_rk4,linewidth=2,label="exact")
         ax.plot(t,sol[:,k],linewidth=0.8,label=entree,alpha=0.9)
         ax.plot(times,pt0[:,k],".k",label=entree+"0")
 
@@ -81,42 +81,35 @@ def plot_sol(entree,t_rk4,sol_rk4,t,sol,nb_iter,times,pt0):
 
     plt.show()
 
+def plot_all(var,n,nom_sol_ex,nom_sol,nom_pts):
+    t_rk4,sol_rk4=read_sol_ex('data_parareal/'+nom_sol_ex)
 
+    # Pour lire le fichier "sol[var].csv"
+    t,sol,nb_iter=read_sol('data_parareal/'+nom_sol)
 
-### Pour x ####
-# t_rk4,sol_rk4=read_sol_ex('../../examples/data_parareal/sol_rk4.csv')
+    # Pour lire le fichier "init_pt_x.csv"
+    times,nb_pts,x0=read_init_pt('data_parareal/'+nom_pts,nb_iter)
 
-# # Pour lire le fichier "solx.csv"
-# t,solx,nb_iter=read_sol('../../examples/data_parareal/solx.csv')
+    # Pour plot pour x
+    plot_sol(var,t_rk4,sol_rk4[:,n],t,sol,nb_iter,times,x0)
 
-# # Pour lire le fichier "init_pt_x.csv"
-# times,x0=read_init_pt('../../examples/data_parareal/init_pt_x.csv',nb_iter)
+    return t_rk4,sol_rk4[:,n],t,sol,nb_iter,times,nb_pts,x0
 
-# # Pour plot pour x
-# plot_sol('x',t_rk4,sol_rk4[:,0],t,solx,times,x0)
-
-
-
-# ### Pour y ####
-
-# # Pour lire le fichier "soly.csv"
-# t,soly,nb_iter=read_sol('donnees_para_real/soly.csv')
-
-# # Pour lire le fichier "init_pt_y.csv"
-# times,y0=read_init_pt('donnees_para_real/init_pt_y.csv',nb_iter)
-
-# # Pour plot pour y
-# plot('y',t_rk4,soly_rk4,t,soly,times,y0)
-
-
-
-# ### Pour z ####
-
-# # Pour lire le fichier "solz.csv"
-# t,solz,nb_iter=read_sol('donnees_para_real/solz.csv')
-
-# # Pour lire le fichier "init_pt_z.csv"
-# times,z0=read_init_pt('donnees_para_real/init_pt_z.csv',nb_iter)
-
-# # Pour plot pour z
-# plot('z',t_rk4,solz_rk4,t,solz,times,z0)
+def plot_3D(solution,X0):
+    x=solution[:,0]
+    y=solution[:,1]
+    z=solution[:,2]
+    fig=plt.figure(figsize=(18,5))
+    
+    #plot 3D
+    ax3 = fig.add_subplot(1,3,3, projection='3d')
+    ax3.plot(x,y,z)
+    ax3.plot(X0[0],X0[1],X0[2],"r.")
+    
+    ax3.set_xlabel("x")
+    ax3.set_ylabel("y")
+    ax3.set_zlabel("z")
+    # ax3.view_init(28,-95)
+    
+    plt.title("3D representation of the solution")
+    plt.show()

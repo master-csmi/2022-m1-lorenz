@@ -1,9 +1,7 @@
 import numpy as np
 from filterpy.kalman import EnsembleKalmanFilter
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 from scipy.integrate import solve_ivp
-import time
 
 
 def plot_1_fig(lorenz1,lorenz2,ind,tab_temps,tab_cov,diff,tab_x_y_z,labelx,labely):

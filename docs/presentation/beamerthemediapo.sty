@@ -53,24 +53,24 @@
 \pgfdeclareimage[height=0.12\paperheight]{logo}{images/logo-cemosis}
 
 \setbeamertemplate{background}{%
-\begin{tikzpicture}[overlay,remember picture]
-  \fill[triangle] (current page.south west) -- +(0, 0.18\paperheight) -- +(\paperwidth, 0.08\paperheight) -- (current page.south east) -- cycle;  
-% \node[anchor=south west,inner sep=0pt,draw=none,yshift=-6pt,xshift=-1pt] at (current page.south west) {\pgfuseimage{blueslope}};%
-\node[anchor=south west,inner sep=0pt,draw=none,xshift=0.055\paperheight,yshift=0.04\paperheight] at (current page.south west) {\pgfuseimage{logo}};%
-\end{tikzpicture}%
+	\begin{tikzpicture}[overlay,remember picture]
+		\fill[triangle] (current page.south west) -- +(0, 0.18\paperheight) -- +(\paperwidth, 0.08\paperheight) -- (current page.south east) -- cycle;  
+		% \node[anchor=south west,inner sep=0pt,draw=none,yshift=-6pt,xshift=-1pt] at (current page.south west) {\pgfuseimage{blueslope}};%
+		\node[anchor=south west,inner sep=0pt,draw=none,xshift=0.055\paperheight,yshift=0.04\paperheight] at (current page.south west) {\pgfuseimage{logo}};%
+	\end{tikzpicture}%
 }
 
 \setbeamertemplate{footline}{%
-\vskip0.15\paperheight
+	\vskip0.15\paperheight
 }
 
 \newcommand{\smallframetitle}{%
-  \setbeamertemplate{frametitle}{\vskip0.15\paperheight\insertframetitle}
-  \setbeamerfont{frametitle}{size=\large,series=\bfseries}
+	\setbeamertemplate{frametitle}{\vskip0.15\paperheight\insertframetitle}
+	\setbeamerfont{frametitle}{size=\large,series=\bfseries}
 }
 \newcommand{\normalframetitle}{%
-  \setbeamertemplate{frametitle}{\vskip0.2\paperheight\insertframetitle} 
-  \setbeamerfont{frametitle}{size=\LARGE,series=\mdseries}
+	\setbeamertemplate{frametitle}{\vskip0.2\paperheight\insertframetitle} 
+	\setbeamerfont{frametitle}{size=\LARGE,series=\mdseries}
 }
 
 \addtobeamertemplate{navigation symbols}{}{%

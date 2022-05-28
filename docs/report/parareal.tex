@@ -51,8 +51,8 @@ $$U_j^k=G(U_{j-1}^k)+(F(U_{j-1}^{k-1})-G(U_{j-1}^{k-1}))$$
 \noindent \underline{\textit{Remarks :}} At iteration k.
 \begin{itemize}[label=-]
 	\item We have : $\qquad U_0^k=U_0^0=X_0 \quad \forall k$.
-	\item Note that the first 2 steps are always done because there can't be convergence with only one value. So, for example, if we take only one process and we apply the parareal method, we will have at the first iteration ($k=0$) only one initial point $U_0^0=X_0$ and we will compute the fine and coarse solution only on this point. We can then go to the next iteration, which will be exactly the same, and the algorithm will stop immediately. Indeed, there will be convergence between $U_0^0$ and $U_0^1$ (because they are equal), moreover there is obviously convergence between the 2 solutions. However, there is still one extra iteration ($k=1$) and the computation of the coarse solution is also useless because it is not used to update the other initial points due to the fact that there is only one.
-	\item We can also notice that the calculations which are done on the last interval $[t_{P-1},t_P]$ are not used because the points $U_P^k$ are not useful for the method. On this interval, one could then compute the fine solution only if there is convergence.
+	\item Note that the first 3 steps are always done because there can't be convergence with only one value. So, for example, if we take only one process and we apply the parareal method, we will have at the first iteration ($k=0$) only one initial point $U_0^0=X_0$ and we will compute the fine and coarse solution only on this point. We can then go to the next iteration, which will be exactly the same, and the algorithm will stop immediately. Indeed, there will be convergence between $U_0^0$ and $U_0^1$ (because they are equal), moreover there is obviously convergence between the 2 solutions. However, there is still one extra iteration ($k=1$) and the computation of the coarse solution is also useless because it is not used to update the other initial points due to the fact that there is only one.
+	\item We can also notice that the calculations which are done on the last interval $[t_{P-1},t_P]$ are not used because the points $U_P^k$ are not useful for the method. On this interval, we could then compute the fine solution only if there is convergence.
 \end{itemize}
 
 \newpage
@@ -262,17 +262,17 @@ $$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5), \quad t_0=0.$$
 		\multirow{2}{1.5 cm}{$\Delta t$} & \multirow{2}{1.5 cm}{Seq} & \multirow{2}{1.5 cm}{1 proc} & \multirow{2}{1.5 cm}{2 proc} & \multirow{2}{1.5 cm}{3 proc} &\multirow{2}{1.5 cm}{4 proc} \\
 		& & & & & \\
 		\hline 
-		F : 0.0025 & \multirow{2}{1.5 cm}{20s} & \multirow{2}{1.5 cm}{24s} & \multirow{2}{1.5 cm}{11s} & \multirow{2}{1.5 cm}{12s} & \multirow{2}{1.5 cm}{15s} \\
+		F : 0.0025 & \multirow{2}{1.5 cm}{30s} & \multirow{2}{1.5 cm}{36s} & \multirow{2}{1.5 cm}{10s} & \multirow{2}{1.5 cm}{9,7s} & \multirow{2}{1.5 cm}{9,4s} \\
 		G : 0.025 & & & & & \\
 		\hline 
-		F : 0.00125 & \multirow{2}{1.5 cm}{1m26} & \multirow{2}{1.5 cm}{1m40} & \multirow{2}{1.5 cm}{1m13} & \multirow{2}{1.5 cm}{47s} & \multirow{2}{1.5 cm}{52s} \\
+		F : 0.00125 & \multirow{2}{1.5 cm}{1m19} & \multirow{2}{1.5 cm}{1m42} & \multirow{2}{1.5 cm}{39s} & \multirow{2}{1.5 cm}{32s} & \multirow{2}{1.5 cm}{29s} \\
 		G : 0.0125 & & & & & \\
 		\hline 
-		F : 0.001 & \multirow{2}{1.5 cm}{1m44} & \multirow{2}{1.5 cm}{2m55} & \multirow{2}{1.5 cm}{1m26} & \multirow{2}{1.5 cm}{1m9} & \multirow{2}{1.5 cm}{1m24} \\
+		F : 0.001 & \multirow{2}{1.5 cm}{1m52} & \multirow{2}{1.5 cm}{3m40} & \multirow{2}{1.5 cm}{1m56} & \multirow{2}{1.5 cm}{1m29} & \multirow{2}{1.5 cm}{1m16} \\
 		G : 0.01 & & & & & \\	 
 		\hline
 	\end{tabular}
-	\caption{Execution time for various time steps.}
+	\caption{Execution time for various time steps ($T=200$).}
 	\label{time}
 \end{table}
 

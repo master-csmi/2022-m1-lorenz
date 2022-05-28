@@ -2,6 +2,7 @@
 \documentclass[10pt,xcolor={table,dvipsnames},t]{beamer}
 \usetheme{diapo}
 \usepackage{amsmath}
+\usepackage[bottom]{footmisc}
 
 \title[Lorenz]{Data assimilation for the Lorenz system}
 \subtitle{Presentation (version 0)}
@@ -28,7 +29,7 @@
 		\end{frame}
 	}
 
-
+	\section{Introduction to the project}
 
 	\begin{frame}{Cemosis}
 		
@@ -123,6 +124,8 @@
 		\end{enumerate}
 		
 	\end{frame}
+
+	\section{Numerical resolution (with differents method)}
 	
 	\begin{frame}{Methods used to solve Lorenz system}
 		
@@ -149,6 +152,14 @@
 		\end{center}
 		
 	\end{frame}
+
+	\section{Parareal method}
+
+	\input{parareal.tex}
+	
+	\section{Data assimilation}
+	
+	\input{enkf.tex}
 	
 \end{document}
 

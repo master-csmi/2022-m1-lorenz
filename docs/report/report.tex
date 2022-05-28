@@ -163,18 +163,23 @@
 	\subsection{Lorenz Attractor}
 	
 	
-	\noindent Lorenz discovered that an particular structure emerges when $x(t)$ is plotted against $z(t)$: the famous butterfly wing pattern.
-	\begin{center}
+	\noindent Lorenz discovered that an particular structure emerges when $x(t)$ is plotted against $z(t)$: the famous butterfly wing pattern :
+	\begin{figure}
+		\centering
 		\includegraphics[width=0.5\textwidth]{"images/butterfly.jpg"}
-	\end{center}
+		\caption{butterfly wing pattern}
+		\label{but_wing}
+	\end{figure}
 	\noindent Few remarks about the attractor:
 	\begin{enumerate}[label=\textbullet]
 		\item The trajectory seems to cross several times, but this is just an illusion of the projection of the three dimensional trajectory on a two dimensional plane. In 3D, there are no crossings.
 		\item The number of circuits made on either side varies unpredictably from one cycle to the next. The sequence of the number of circuits in each lobe has many of the characteristics of a random sequence.
 		\item When the trajectory is viewed in 3 dimensions, it appears to settle onto a thin set that looks like a pair of butterfly wings. We call this attractor a strange attractor and it can be shown schematically as :
-		\begin{center}
+		\begin{figure}
+			\centering
 			\includegraphics[width=0.5\textwidth]{"images/butterfly3D.jpg"}
-		\end{center}
+			\caption{Strange attractor.}
+		\end{figure}
 	\end{enumerate}
 	
 	\noindent The uniqueness theorem \cite{partie1_ref2} means that trajectories cannot cross or merge, hence the two surfaces of the strange attractor can only appear to merge. Lorenz concluded that “there is an infinite
@@ -340,11 +345,15 @@
 			$X_0=(-10,10,5)$ ,\\
 			$N=5000, \quad T=100 .$
 		\end{center}
-		\includegraphics[width=\textwidth]{"images/euler_explicit.png"}
-		\includegraphics[width=\textwidth]{"images/euler_explicit_dt2.png"}
-		\includegraphics[width=\textwidth]{"images/euler_implicit.png"}
-		\includegraphics[width=\textwidth]{"images/RK4_Lorenz.png"}
-		\includegraphics[width=\textwidth]{"images/scipy.png"}
+		\begin{figure}
+			\centering
+			\caption{Comparing results with differents methods.}
+			\includegraphics[width=\textwidth]{"images/euler_explicit.png"}
+			\includegraphics[width=\textwidth]{"images/euler_explicit_dt2.png"}
+			\includegraphics[width=\textwidth]{"images/euler_implicit.png"}
+			\includegraphics[width=\textwidth]{"images/RK4_Lorenz.png"}
+			\includegraphics[width=\textwidth]{"images/scipy.png"}
+		\end{figure}
 		\item Then, we compared the execution times of these different methods (until $T=100$). Here is what we get with the same parameters : \\
 		\includegraphics[width=0.7\textwidth]{"images/execution_times.jpg"} \\
 		It seems that the explicit Euler method is the fastest, followed by the scipy function. \\

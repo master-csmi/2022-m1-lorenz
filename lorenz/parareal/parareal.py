@@ -1,5 +1,6 @@
 import numpy as np
 from mpi4py import MPI
+from pyrsistent import v
 from lorenz.parareal import utils
 
 # python3 para-real.py | grep truc
@@ -10,6 +11,18 @@ P = comm.Get_size()
 rank = comm.Get_rank()
 
 def compute_sol_k(fin,X0_k_j):
+    """Compute the solution at the current iteration and do a gather.
+
+    Args:
+        fin (numpy.ndarray): Fine solution on the current process at the 
+            current iteration.
+        X0_k_j (numpy.ndarray): Initial point on the current process at the 
+            current iteration.
+
+    Returns:
+        tuple: Ndarray with the number of values of solution for each process
+                and the entire solution between t0 and T.
+    """    
     sol_k_j = fin[1:].flatten()
     if(rank==0):
         temp = np.array([X0_k_j])
@@ -27,6 +40,24 @@ def compute_sol_k(fin,X0_k_j):
 # P = number of processing units ; j in {0,...,P} 
 def parareal_method(X0_t0,t0,T,prob,fct_res,fct_write,dt_G,dt_F,gamma=None,
         write_csv=True): 
+    """Parareal method.
+
+    Args:
+        X0_t0 (list): Initial point.
+        t0 (float): Starting time.
+        T (float): Finish time.
+        prob (function): Function which represent the ODE.
+        fct_res (function): Function which represent the integrator.
+        fct_write (function): Function which write the solution in csv files.
+        dt_G (float): Coarse time step.
+        dt_F (float): Time step.
+        gamma (tuple, optional): System parameters. Defaults to None.
+        write_csv (bool, optional): Boolean to true if we want to write the 
+            solutions in a csv file. Defaults to True.
+
+    Returns:
+        numpy.ndarray: Solution at the last iteration.
+    """    
     # fine integrator
     def F(initial_point,t_j1,t_j2):
         return utils.RK4(initial_point,dt_F,t_j1,t_j2,prob,gamma) 
@@ -72,6 +103,10 @@ def parareal_method(X0_t0,t0,T,prob,fct_res,fct_write,dt_G,dt_F,gamma=None,
 
     if(write_csv):
         nb_tj,sol_k = compute_sol_k(fin,X0_k_j)
+        print(type(nb_tj))
+        print(nb_tj)
+        print(type(sol_k))
+        print(sol_k)
         if(rank==0):
             solution = [sol_k]
             init_pts = [X0_k]

@@ -49,7 +49,8 @@ def compute_time(t0,T,dt_G,P):
         P (int): Number of interval (= number of processes).
 
     Returns:
-        list: Times used to the system resolution.
+        list: 
+            Times used to the system resolution.
     """    
     # time between t_j and t_{j+1}
     dt_P = (T-t0)/P 
@@ -81,7 +82,8 @@ def sol_converge(x0_k,x0_knext,eps=1e-15):
         eps (float, optional): Error tolerance. Defaults to 1e-15.
 
     Returns:
-        bool: Boolean to true if the initial points converge.
+        bool: 
+            Boolean to true if the initial points converge.
     """    
     return (np.max(np.abs(x0_knext-x0_k))/np.max(np.abs(x0_knext))) < eps
 
@@ -212,7 +214,8 @@ def RK4(X0,dt,t0,T,fct,gamma=None):
         gamma (tuple, optional): System parameters. Defaults to None.
 
     Returns:
-        numpy.ndarray: Solution calculated by the method.
+        numpy.ndarray: 
+            Solution calculated by the method.
     """    
     X=np.array([X0])  
     
@@ -235,7 +238,8 @@ def erreur(solx,solx_exacte):
         solx_exacte (numpy.ndarray): Exact solution.
 
     Returns:
-        float: The error between the exact and calculated solutions.
+        float: 
+            The error between the exact and calculated solutions.
     """    
     return np.max(np.abs(solx-solx_exacte))
 
@@ -251,7 +255,8 @@ def E_j_k(j,k,nb_pts,solx,solx_exacte,x0):
         x0 (numpy.ndarray): Initial point for each iteration.
 
     Returns:
-        tuple: Two terms of the convergence property.
+        tuple: 
+            Two terms of the convergence property.
     """    
     suite_nb = [-1]
     for i in range(len(nb_pts)):

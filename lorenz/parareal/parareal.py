@@ -20,8 +20,9 @@ def compute_sol_k(fin,X0_k_j):
             current iteration.
 
     Returns:
-        tuple: Ndarray with the number of values of solution for each process
-                and the entire solution between t0 and T.
+        tuple: 
+            Ndarray with the number of values of solution for each process
+            and the entire solution between t0 and T.
     """    
     sol_k_j = fin[1:].flatten()
     if(rank==0):
@@ -56,7 +57,8 @@ def parareal_method(X0_t0,t0,T,prob,fct_res,fct_write,dt_G,dt_F,gamma=None,
             solutions in a csv file. Defaults to True.
 
     Returns:
-        numpy.ndarray: Solution at the last iteration.
+        numpy.ndarray: 
+            Solution at the last iteration.
     """    
     # fine integrator
     def F(initial_point,t_j1,t_j2):

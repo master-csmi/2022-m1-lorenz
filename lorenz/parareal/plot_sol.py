@@ -10,8 +10,9 @@ def read_sol_ex(file_name):
         file_name (str): Name of the csv file where the exaction solution is.
 
     Returns:
-        tuple: Discretisation time between t0 and T for the exact solution
-                and exact solution.
+        tuple: 
+            Discretisation time between t0 and T for the exact solution
+            and exact solution.
     """    
     t_rk4=[]
     sol_rk4=np.array([])
@@ -35,8 +36,9 @@ def read_sol(file_name):
         file_name (str): Name of the csv file where the calculated solution is.
 
     Returns:
-        tuple: Discretisation time between t0 and T for the calculated solution
-                and calculated solution.
+        tuple: 
+            Discretisation time between t0 and T for the calculated solution
+            and calculated solution.
     """ 
     t=[]
     sol_k=np.array([])
@@ -60,7 +62,8 @@ def read_init_pt(file_name,dim):
         dim (int): System dimension.
 
     Returns:
-        tuple: Times for the initial poins, number of value of the solution 
+        tuple: 
+            Times for the initial poins, number of value of the solution 
             for each process and initial points for each process and each iteration.
     """    
     times=[]
@@ -132,13 +135,14 @@ def plot_all(var,n,nom_sol_ex,nom_sol,nom_pts):
         nom_pts (str): Name of the csv file where the initial points are.
 
     Returns:
-        tuple: Discretisation time between t0 and T for the exact solution,
-                exact solution, discretisation time between t0 and T for 
-                the calculated solution, calculated solution (only the variable
-                concerned), number of iteration (until the solution converge),
-                times for the initial poins, number of value of the solution 
-                for each process and initial points for each process 
-                and each iteration.
+        tuple: 
+            Discretisation time between t0 and T for the exact solution,
+            exact solution, discretisation time between t0 and T for
+            the calculated solution, calculated solution (only the variable
+            concerned), number of iteration (until the solution converge),
+            times for the initial poins, number of value of the solution
+            for each process and initial points for each process
+            and each iteration.
     """    
     t_rk4,sol_rk4=read_sol_ex('data_parareal/'+nom_sol_ex)
     t,sol,nb_iter=read_sol('data_parareal/'+nom_sol)

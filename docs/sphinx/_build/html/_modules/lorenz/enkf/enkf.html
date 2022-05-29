@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lorenz.enkf.enkf &mdash; Lorenz 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Lorenz
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">lorenz</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Lorenz</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../enkf.html">lorenz.enkf</a> &raquo;</li>
+      <li>lorenz.enkf.enkf</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lorenz.enkf.enkf</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">filterpy.kalman</span> <span class="kn">import</span> <span class="n">EnsembleKalmanFilter</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">solve_ivp</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<div class="viewcode-block" id="plot_1_fig"><a class="viewcode-back" href="../../../lorenz.enkf.html#lorenz.enkf.enkf.plot_1_fig">[docs]</a><span class="k">def</span> <span class="nf">plot_1_fig</span><span class="p">(</span><span class="n">lorenz1</span><span class="p">,</span><span class="n">lorenz2</span><span class="p">,</span><span class="n">ind</span><span class="p">,</span><span class="n">tab_temps</span><span class="p">,</span><span class="n">tab_cov</span><span class="p">,</span><span class="n">diff</span><span class="p">,</span><span class="n">tab_x_y_z</span><span class="p">,</span><span class="n">labelx</span><span class="p">,</span><span class="n">labely</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters:</span>
+<span class="sd">        -lorenz1: observations,an array of vectors where each vector is of size 3, representing [x,y,z] </span>
+<span class="sd">        -lorenz2: model,an array of vectors where each vector is of size 3, representing [x,y,z] </span>
+<span class="sd">        -ind:a real representing the index we want to plot (x, y or z)</span>
+<span class="sd">        -tab_temps:real type array representing time</span>
+<span class="sd">        -tab_cov:an array of vectors where each vector is of size 3, representing variances </span>
+<span class="sd">         (diag of the cov matrix associated to the state obtained through data assimilation)</span>
+<span class="sd">        -diff:represent the distance to create our standart deviation variance</span>
+<span class="sd">        -tab_x_y_z:represente an array of vectors where each vector is of size 3,array after data assimilation,</span>
+<span class="sd">         representing [x,y,z] </span>
+<span class="sd">        -labelx:legend of the x-curve</span>
+<span class="sd">        -labely:legend of the y-curve</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        -return nothing but plot 3 curves as a function of ind(either x,y or z) as a function of time</span>
+
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+    <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lorenz1</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">lorenz1</span><span class="p">[</span><span class="n">ind</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;observation (0.01)&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lorenz2</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">lorenz2</span><span class="p">[</span><span class="n">ind</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Model (0.1)&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tab_temps</span><span class="p">,</span><span class="n">tab_x_y_z</span><span class="p">[:,</span><span class="n">ind</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;apres l&#39;assimilation de donnée&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">tab_temps</span><span class="p">,</span><span class="n">tab_x_y_z</span><span class="p">[:,</span><span class="n">ind</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">tab_cov</span><span class="p">[:,</span><span class="n">ind</span><span class="p">]</span><span class="o">+</span><span class="n">diff</span><span class="p">),</span><span class="n">tab_x_y_z</span><span class="p">[:,</span><span class="n">ind</span><span class="p">]</span><span class="o">-</span><span class="p">(</span><span class="n">tab_cov</span><span class="p">[:,</span><span class="n">ind</span><span class="p">]</span><span class="o">+</span><span class="n">diff</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">labelx</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">labely</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="plot"><a class="viewcode-back" href="../../../lorenz.enkf.html#lorenz.enkf.enkf.plot">[docs]</a><span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">lorenz1</span><span class="p">,</span><span class="n">lorenz2</span><span class="p">,</span><span class="n">tab_temps</span><span class="p">,</span><span class="n">tab_x_y_z</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters:</span>
+<span class="sd">        -lorenz1: observations,an array of vectors where each vector is of size 3, representing [x,y,z] </span>
+<span class="sd">        -lorenz2: model,an array of vectors where each vector is of size 3, representing [x,y,z] </span>
+<span class="sd">        -tab_temps:real type array representing time</span>
+<span class="sd">        -tab_x_y_z:represente an array of vectors where each vector is of size 3,array after data assimilation,</span>
+<span class="sd">         representing [x,y,z] </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        -return nothing but makes three different plot, in each one we will have </span>
+<span class="sd">         3 curves (observations,model and stade after data assimilation) as a function of time</span>
+
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+    <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lorenz1</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">lorenz1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;observation (0.01)&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lorenz2</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">lorenz2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Model (0.1)&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tab_temps</span><span class="p">,</span><span class="n">tab_x_y_z</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;apres l&#39;assimilation de donnée&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+    
+    <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lorenz1</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">lorenz1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;observation (0.01)&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lorenz2</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">lorenz2</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Model (0.1)&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tab_temps</span><span class="p">,</span><span class="n">tab_x_y_z</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;apres l&#39;assimilation de donnée&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+    
+    <span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lorenz1</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">lorenz1</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;observation (0.01)&quot;</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lorenz2</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">lorenz2</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Model (0.1)&quot;</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tab_temps</span><span class="p">,</span><span class="n">tab_x_y_z</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;apres l&#39;assimilation de donnée&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="f_orcillateur"><a class="viewcode-back" href="../../../lorenz.enkf.html#lorenz.enkf.enkf.f_orcillateur">[docs]</a><span class="k">def</span> <span class="nf">f_orcillateur</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">X_n</span><span class="p">,</span><span class="n">w</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters:</span>
+<span class="sd">        -X_n:un tableau de reel de taille 2 </span>
+<span class="sd">        -w: a real that represente the first parameter of the hamonic oscillator</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span><span class="o">=</span><span class="n">X_n</span>
+    
+    <span class="n">f_1</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="n">f_2</span> <span class="o">=-</span><span class="n">w</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">u</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f_1</span><span class="p">,</span><span class="n">f_2</span><span class="p">])</span></div>
+<div class="viewcode-block" id="RK4_harmonique"><a class="viewcode-back" href="../../../lorenz.enkf.html#lorenz.enkf.enkf.RK4_harmonique">[docs]</a><span class="k">def</span> <span class="nf">RK4_harmonique</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">X0</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">T</span><span class="p">):</span> 
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters: </span>
+<span class="sd">        -w: a real that represente the first parameter of the hamonic oscillator</span>
+<span class="sd">        -X0:a size 2 array with the initial constition, initial point.</span>
+<span class="sd">        -N: a real that represents the number of discritisation</span>
+<span class="sd">        -T: a real that represents the time interval</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        this fonction return resolution with RK4 </span>
+<span class="sd">        -X[:,0]: array of x</span>
+<span class="sd">        -X[:,1]: array of y</span>
+<span class="sd">        -T_tab: array of the time</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dt</span><span class="o">=</span><span class="n">T</span><span class="o">/</span><span class="n">N</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X0</span><span class="p">))</span> <span class="p">)</span>
+    <span class="n">T_tab</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">X0</span>
+    <span class="n">t</span><span class="o">=</span><span class="mf">0.</span> <span class="c1">#=t_0</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        
+        <span class="n">K1</span><span class="o">=</span><span class="n">f_orcillateur</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">K2</span><span class="o">=</span><span class="n">f_orcillateur</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.</span><span class="o">/</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">K1</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">K3</span><span class="o">=</span><span class="n">f_orcillateur</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.</span><span class="o">/</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">K2</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">K4</span><span class="o">=</span><span class="n">f_orcillateur</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span> <span class="n">K3</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">T_tab</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">=</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span>
+        <span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span> <span class="n">dt</span><span class="o">/</span><span class="mf">6.</span><span class="o">*</span> <span class="p">(</span><span class="n">K1</span><span class="o">+</span><span class="mf">2.</span><span class="o">*</span><span class="n">K2</span><span class="o">+</span><span class="mf">2.</span><span class="o">*</span><span class="n">K3</span><span class="o">+</span><span class="n">K4</span><span class="p">)</span>
+        <span class="n">t</span><span class="o">+=</span><span class="n">dt</span>
+        
+    <span class="k">return</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">T_tab</span></div>
+<div class="viewcode-block" id="euler_explicit_harmonique"><a class="viewcode-back" href="../../../lorenz.enkf.html#lorenz.enkf.enkf.euler_explicit_harmonique">[docs]</a><span class="k">def</span> <span class="nf">euler_explicit_harmonique</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">X0</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">T</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters: </span>
+<span class="sd">        -w: a real that represente the first parameter of the hamonic oscillator</span>
+<span class="sd">        -X0:a size 2 array with the initial constition, initial point.</span>
+<span class="sd">        -N: a real that represents the number of discritisation</span>
+<span class="sd">        -T: a real that represents the time interval</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        this fonction return resolution with euler</span>
+<span class="sd">        -X[:,0]: array of x</span>
+<span class="sd">        -X[:,1]: array of y</span>
+<span class="sd">        -T_tab: array of the time</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dt</span><span class="o">=</span><span class="n">T</span><span class="o">/</span><span class="n">N</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X0</span><span class="p">))</span> <span class="p">)</span>
+    <span class="n">T_tab</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">X0</span>
+    <span class="n">t</span><span class="o">=</span><span class="mf">0.</span> 
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span><span class="o">*</span><span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">w</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">dt</span><span class="p">)]</span>
+        <span class="n">T_tab</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">=</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span>
+        <span class="n">t</span><span class="o">+=</span><span class="n">dt</span>
+    <span class="k">return</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">T_tab</span></div>
+
+ 
+
+<div class="viewcode-block" id="f"><a class="viewcode-back" href="../../../lorenz.enkf.html#lorenz.enkf.enkf.f">[docs]</a><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">t_n</span><span class="p">,</span><span class="n">X_n</span><span class="p">,</span><span class="n">σ</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">)</span><span class="o">=</span><span class="n">X_n</span>
+    
+    <span class="n">f_1</span> <span class="o">=</span> <span class="n">σ</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">f_2</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="p">(</span><span class="n">r</span><span class="o">-</span><span class="n">z</span><span class="p">)</span><span class="o">-</span><span class="n">y</span>
+    <span class="n">f_3</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">-</span><span class="n">b</span><span class="o">*</span><span class="n">z</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f_1</span><span class="p">,</span><span class="n">f_2</span><span class="p">,</span><span class="n">f_3</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="RK4_Lorenz"><a class="viewcode-back" href="../../../lorenz.enkf.html#lorenz.enkf.enkf.RK4_Lorenz">[docs]</a><span class="k">def</span> <span class="nf">RK4_Lorenz</span><span class="p">(</span><span class="n">γ</span><span class="p">,</span><span class="n">X0</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">T</span><span class="p">):</span> 
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters: </span>
+<span class="sd">        -γ: an array of real that represente the three parameter of the lorenz system (σ, b, r)</span>
+<span class="sd">        -X0:a size 3 array with the initial constition, initial point (x,y,z)</span>
+<span class="sd">        -N: a real that represents the number of discritisation</span>
+<span class="sd">        -T: a real that represents the time interval</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        this fonction return resolution with RK4</span>
+<span class="sd">        -X[:,0]: array of x</span>
+<span class="sd">        -X[:,1]: array of y</span>
+<span class="sd">        -X[:,2]: array of z</span>
+<span class="sd">        -T_tab: array of the time</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="p">(</span><span class="n">σ</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">r</span><span class="p">)</span><span class="o">=</span><span class="n">γ</span>
+    <span class="n">dt</span><span class="o">=</span><span class="n">T</span><span class="o">/</span><span class="n">N</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X0</span><span class="p">))</span> <span class="p">)</span>
+    <span class="n">T_tab</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">X0</span>
+    <span class="n">T_tab</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
+    
+    <span class="n">t</span><span class="o">=</span><span class="mf">0.</span> <span class="c1">#=t_0</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        
+        <span class="n">K1</span><span class="o">=</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">σ</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">K2</span><span class="o">=</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.</span><span class="o">/</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">K1</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span><span class="n">σ</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">K3</span><span class="o">=</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.</span><span class="o">/</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">K2</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span><span class="n">σ</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">K4</span><span class="o">=</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span> <span class="n">K3</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span><span class="n">σ</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">T_tab</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">=</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span>
+        <span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span> <span class="n">dt</span><span class="o">/</span><span class="mf">6.</span><span class="o">*</span> <span class="p">(</span><span class="n">K1</span><span class="o">+</span><span class="mf">2.</span><span class="o">*</span><span class="n">K2</span><span class="o">+</span><span class="mf">2.</span><span class="o">*</span><span class="n">K3</span><span class="o">+</span><span class="n">K4</span><span class="p">)</span>
+        <span class="n">t</span><span class="o">+=</span><span class="n">dt</span>
+        
+    <span class="k">return</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">X</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span><span class="n">T_tab</span></div>
+
+<div class="viewcode-block" id="fx"><a class="viewcode-back" href="../../../lorenz.enkf.html#lorenz.enkf.enkf.fx">[docs]</a><span class="k">def</span> <span class="nf">fx</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">t</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span><span class="n">γ</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">t_n</span><span class="p">,</span><span class="n">X_n</span><span class="p">,</span><span class="n">γ</span><span class="p">):</span> 
+        <span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">)</span><span class="o">=</span><span class="n">X_n</span>
+        <span class="n">f_1</span> <span class="o">=</span> <span class="n">γ</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">f_2</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="p">(</span><span class="n">γ</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">z</span><span class="p">)</span><span class="o">-</span><span class="n">y</span>
+        <span class="n">f_3</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">-</span><span class="n">γ</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">z</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f_1</span><span class="p">,</span><span class="n">f_2</span><span class="p">,</span><span class="n">f_3</span><span class="p">])</span>
+    <span class="n">K1</span><span class="o">=</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span><span class="n">γ</span><span class="p">)</span>
+    <span class="n">K2</span><span class="o">=</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">1.</span><span class="o">/</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">K1</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span><span class="n">γ</span><span class="p">)</span>
+    <span class="n">K3</span><span class="o">=</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">1.</span><span class="o">/</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">K2</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span><span class="n">γ</span><span class="p">)</span>
+    <span class="n">K4</span><span class="o">=</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span><span class="p">,</span> <span class="n">x</span><span class="o">+</span> <span class="n">K3</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span><span class="n">γ</span><span class="p">)</span>
+    <span class="n">X_next</span><span class="o">=</span><span class="n">x</span><span class="o">+</span> <span class="n">dt</span><span class="o">/</span><span class="mf">6.</span><span class="o">*</span> <span class="p">(</span><span class="n">K1</span><span class="o">+</span><span class="mf">2.</span><span class="o">*</span><span class="n">K2</span><span class="o">+</span><span class="mf">2.</span><span class="o">*</span><span class="n">K3</span><span class="o">+</span><span class="n">K4</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">X_next</span></div>
+    
+    
+<div class="viewcode-block" id="test_enkf_harmonique"><a class="viewcode-back" href="../../../lorenz.enkf.html#lorenz.enkf.enkf.test_enkf_harmonique">[docs]</a><span class="k">def</span> <span class="nf">test_enkf_harmonique</span><span class="p">():</span>
+    <span class="n">w</span><span class="o">=</span><span class="mi">2</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">Pe</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">w</span>
+    <span class="n">dt</span><span class="o">=</span> <span class="n">Pe</span><span class="o">/</span><span class="mi">20</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">Pe</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">T</span><span class="o">/</span><span class="n">dt</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">fx_rk4</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">t</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span><span class="n">w</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">X_n</span><span class="p">,</span><span class="n">w</span><span class="p">):</span> <span class="c1">#X_n=(x_n,y_n,z_n)</span>
+            <span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span><span class="o">=</span><span class="n">X_n</span>
+            <span class="n">f_1</span> <span class="o">=</span> <span class="n">v</span>
+            <span class="n">f_2</span> <span class="o">=-</span><span class="n">w</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">u</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f_1</span><span class="p">,</span><span class="n">f_2</span><span class="p">])</span>
+        <span class="n">K1</span><span class="o">=</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">K2</span><span class="o">=</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">1.</span><span class="o">/</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">K1</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">K3</span><span class="o">=</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">1.</span><span class="o">/</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">K2</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">K4</span><span class="o">=</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="o">+</span> <span class="n">K3</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">X_next</span><span class="o">=</span><span class="n">x</span><span class="o">+</span> <span class="n">dt</span><span class="o">/</span><span class="mf">6.</span><span class="o">*</span> <span class="p">(</span><span class="n">K1</span><span class="o">+</span><span class="mf">2.</span><span class="o">*</span><span class="n">K2</span><span class="o">+</span><span class="mf">2.</span><span class="o">*</span><span class="n">K3</span><span class="o">+</span><span class="n">K4</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">X_next</span>
+
+    <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.0</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mf">0.001</span> <span class="c1"># matrice de cov associer a la mesure</span>
+    <span class="n">Q</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mf">0.0</span>
+    <span class="k">def</span> <span class="nf">hx</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span>  <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+
+
+    <span class="k">def</span> <span class="nf">read_sensor</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+            <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">oscillateur</span><span class="o">=</span><span class="n">RK4_harmonique</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">T</span><span class="p">)</span>
+
+    <span class="n">tab_etat_oscillateur</span><span class="p">,</span><span class="n">tab_temps_oscillateur</span><span class="p">,</span><span class="n">tab_cov</span><span class="o">=</span><span class="n">assimilation_donnée</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">read_sensor</span><span class="p">,</span><span class="n">P</span><span class="p">,</span><span class="n">Q</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">dt</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="n">hx</span><span class="p">,</span><span class="n">fx_rk4</span><span class="p">,</span><span class="n">w</span><span class="p">)</span>
+    <span class="n">taille_tab_etat</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">tab_etat_oscillateur</span><span class="p">)</span>
+    <span class="n">compteur</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="n">taille_tab_etat</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">tab_etat_oscillateur</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">oscillateur</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">])</span><span class="o">&lt;</span><span class="mf">1e-5</span><span class="p">):</span>
+            <span class="n">compteur</span><span class="o">+=</span><span class="mi">1</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">compteur</span><span class="o">==</span><span class="n">taille_tab_etat</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;test oke pour enkf&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;test ne passe pas pour enkf&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="assimilation_donnée"><a class="viewcode-back" href="../../../lorenz.enkf.html#lorenz.enkf.enkf.assimilation_donnée">[docs]</a><span class="k">def</span> <span class="nf">assimilation_donnée</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">read_sensor</span><span class="p">,</span><span class="n">P</span><span class="p">,</span><span class="n">Q</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">dimz</span><span class="p">,</span><span class="n">dt</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">nb_echantillon</span><span class="p">,</span><span class="n">hx</span><span class="p">,</span><span class="n">fx</span><span class="p">,</span><span class="n">γ</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters: </span>
+<span class="sd">        -x:a size 3 array with the initial constition, initial point (x,y,z)</span>
+<span class="sd">        -read_sensor: a function that will read the observation every time</span>
+<span class="sd">        -P:covariance matrix  associated with the forecast state error</span>
+<span class="sd">        -Q:covariance matrix associated with the model error</span>
+<span class="sd">        -R:covariance matrix associated with the observations error</span>
+<span class="sd">        -T:a real that represents the time interval</span>
+<span class="sd">        -dimz: a real that represent the dimention of the observations</span>
+<span class="sd">        -dt:a real that represent the time for each discretisation</span>
+<span class="sd">        -N: a real that represents the index difference between the observations and the model</span>
+<span class="sd">        -nb_echantillon: a real that represents the index difference between the observations and the model</span>
+<span class="sd">        -hx:Measurement function. Convert state x into a measurement</span>
+<span class="sd">        -fx:State transition function</span>
+<span class="sd">        -γ: an array of real that represente the three parameter of the lorenz system (σ, b, r)</span>
+<span class="sd">        -N: a real that represents the number of discritisation</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        this function do the data assimilation using the ensemble kalman filter</span>
+<span class="sd">        -tab_etat: an array with the state mean after data assimilation</span>
+<span class="sd">        -tab_temps: an array with the time</span>
+<span class="sd">        -tab_cov: an array with the diagonal of the state covarience matrix pour each time</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">EnsembleKalmanFilter</span> <span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">dim_z</span><span class="o">=</span><span class="n">dimz</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">nb_echantillon</span><span class="p">,</span><span class="n">hx</span><span class="o">=</span><span class="n">hx</span><span class="p">,</span> <span class="n">fx</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">dt</span><span class="p">:</span><span class="n">fx</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">dt</span><span class="p">,</span><span class="n">γ</span><span class="p">))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="n">R</span> <span class="c1"># matrice de cov associer a la mesure</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span><span class="n">Q</span>   <span class="c1">#bruit blanc  centree en 0</span>
+    <span class="n">t</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">index</span><span class="o">=</span><span class="n">N</span>
+    <span class="n">tab_etat</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">tab_temps</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">tab_cov</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">tab_etat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">tab_temps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">tab_cov</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">P_post</span><span class="o">.</span><span class="n">diagonal</span><span class="p">())</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">-</span><span class="n">dt</span><span class="p">):</span><span class="c1">#</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">read_sensor</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">predict</span><span class="p">()</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">diag_cov</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">P_post</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
+        <span class="n">tab_cov</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">diag_cov</span><span class="p">)</span>
+        <span class="n">index</span><span class="o">+=</span><span class="n">N</span>
+        <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span>
+        <span class="n">tab_etat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">tab_temps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tab_etat</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tab_temps</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tab_cov</span><span class="p">))</span></div>
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Melissa, Frederique.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

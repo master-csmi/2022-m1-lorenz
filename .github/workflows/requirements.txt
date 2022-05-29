@@ -1,10 +1,9 @@
 numpy
-filterpy
+filterpy=1.4.5
 matplotlib
 mpl_toolkits
 scipy
 time
-mpi4py
 csv
 math
 os

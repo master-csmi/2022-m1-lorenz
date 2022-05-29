@@ -145,19 +145,6 @@
 
 	\section{Numerical resolution (with differents method)}
 	
-	\begin{frame}{Methods used to solve Lorenz system}
-		
-		\begin{itemize}
-			\item Discretization : \\
-			\qquad \includegraphics[width=0.4\textwidth]{images/intro/discretization.jpg} \\
-			\item Explicit Euler
-			\item Implicit Euler			
-			\item Runge Kutta order 4th			
-			\item Scipy function : \qquad \textit{scipy.integrate.solve\_ivp}
-		\end{itemize}
-		
-	\end{frame}
-	
 	\begin{frame}{Some results (with Python)}
 		
 		\includegraphics[width=\textwidth]{images/intro/N100000.png} \\ 
@@ -178,6 +165,25 @@
 	\section{Data assimilation}
 	
 	\input{enkf.tex}
+	
+	\section{Conclusion}
+	
+	\begin{frame}{Conclusion and Perspectives}
+		Main goals achieved :
+		\begin{enumerate}[\textbullet]
+			\item to implement different numerical resolution methods
+			\item to implement the parareal method
+			\item to realise data assimilation
+		\end{enumerate} \; \\
+	
+		Some possibilities for the future :
+		\begin{enumerate}[\textbullet]
+			\item try to find a number of processes P which is optimal
+			\item What happens when we take more intervals that are spread over the different processes ?
+			\item understand strange phenomena
+			\item apply the data assimilation with real observation 
+		\end{enumerate}
+	\end{frame}
 	
 \end{document}
 

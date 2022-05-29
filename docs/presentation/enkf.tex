@@ -16,19 +16,26 @@
 \subsection{Theory}
 \begin{frame}[allowframebreaks]{Kalman filter}
     The Kalman filter method consists in looking for $x^a$ an analysis, this analysis will be a linear combination of what our model and our observations.
-    $$x^a=x^b+K(y-x^b)$$
+    \begin{equation}
+    	x^a=x^b+K(y-x^b)
+    	\label{eq1}
+    \end{equation}
     with K the gain matrix.
-    \newline Let’s consider that we are in 1D, and true state $x^t$ exists:
-    $$x^a-x^t=x^b-x^t+K(y-x^t-x^b+x^t)$$
-	Errors:
-    $$\begin{aligned}
-        &\epsilon^a=x^a-x^t, \\
-        &\epsilon^b=x^b-x^t, \\
-        &\epsilon^y=y-x^t, \\
-    \end{aligned}$$
+    \newline Let’s consider that true state $x^t$ exists:
+    \begin{equation}
+    	x^a-x^t=x^b-x^t+K(y-x^t-x^b+x^t)
+    \end{equation}
+	Errors: \qquad $\epsilon^a=x^a-x^t,\qquad \epsilon^b=x^b-x^t, \qquad \epsilon^y=y-x^t$ \\
+    One realisation of these errors :
+    \begin{equation}
+    	\epsilon^a=\epsilon^b+K(\epsilon^y-\epsilon^b)
+    \end{equation}
+    Many realisation of these errors :
+    \begin{equation}
+    	<\epsilon^a>=<\epsilon^b>+K(<\epsilon^y>-<\epsilon^b>)
+    \end{equation}
     \newpage
-    We can also write:
-    $$<\epsilon^a>=<\epsilon^b>+K(<\epsilon^y>-<\epsilon^b>)$$
+    \textbf{In one dimension.} \\
     Analysis error variance as low as possible.
     \newline Minimize $<(\epsilon^a)^2>$ with respect to $K$ :
     $$<(\epsilon^a)^2>=<(\epsilon^b)^2>+K^2<(\epsilon^y-\epsilon^b)^2>+2K<\epsilon^b(\epsilon^y-\epsilon^b)^2>$$
@@ -37,7 +44,7 @@
     $(\sigma^y)^2$ the observation error variance, \newline $(\sigma^b)^2$ the background or model error variance.
 
 	\newpage
-    Now that we have explained the method for finding $x^a$ let's try to generalize our formula in a multi-dimensional case.
+    Now that we have explained the method for finding $x^a$ let's try to generalize our formula in a \textbf{multi-dimensional case}.
 
     $$\left\{\begin{aligned}
   &x^a=(I-KH)x^b+Ky^0=x^b+K(y^0-H(x^b)) \\

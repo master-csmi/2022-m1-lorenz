@@ -3,8 +3,4 @@ filterpy==1.4.5
 matplotlib
 scipy
 mpi4py
-csv
-math
-os
 pandas
-sys

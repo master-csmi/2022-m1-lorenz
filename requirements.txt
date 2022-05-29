@@ -1,9 +1,7 @@
 numpy
 filterpy==1.4.5
 matplotlib
-mpl_toolkits
 scipy
-time
 mp4py
 csv
 math

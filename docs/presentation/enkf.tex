@@ -45,10 +45,9 @@
  \end{aligned}\right.$$
     With $K$ the gain or weight matrix.
     This formulation is called the Best Linear Unbiased Estimator (BLUE).
-
-	\newpage
-
-    \pgfimage[height=5.5cm,width=11cm]{images/schema_kalman_filter.png}
+    \begin{figure}
+    	\pgfimage[width=0.5\linewidth]{images/enkf/schema_kalman_filter.png}
+    \end{figure}
 \end{frame}
 \begin{frame}{Minimizing a cost function}
     Solves the analysis problem through an optimisation (minimisation of a cost-function)
@@ -59,7 +58,7 @@
     \end{aligned}$$
 	\begin{minipage}{\linewidth}
 		\centering
-		\pgfimage[width=0.6\linewidth]{images/schema_3D_Var.png}
+		\pgfimage[width=0.6\linewidth]{images/enkf/schema_3D_Var.png}
 	\end{minipage}
 \end{frame}
 \begin{frame}{Ensemble Filter Kalman}
@@ -74,25 +73,64 @@
     $$P^f=\frac{1}{m-1}\sum_{i=1}^{m}(x_i^f-\bar{x}^f)(x_i^f-\bar{x}^f)^T~~\text{with}~~\bar{x}^f=\frac{1}{m}\sum_{i=1}^{m}x_i^f $$ .
 \end{frame}
 \subsection{Results}
-\begin{frame}[allowframebreaks]{Harmonic oscillator}
-    $$\qquad \frac{\partial x}{\partial t}=v \quad \Rightarrow \quad \frac{\partial^2 x}{\partial t^2}=\frac{\partial v}{\partial t}$$
-    \begin{enumerate}[\textbullet]
-		\item We choose for the initial point $(2,0)$
-		\item For the period let's take Pe=$\frac{2\pi}{w}$ with $w$ the first components of our initial point
-		\item For the discretisation,  dt=$\frac{\text{Pe}}{20}$ 
-		\item We try to find the solution in the interval $[0,T]$ with T=$3\text{Pe}$
-   	\end{enumerate}
+%\begin{frame}[allowframebreaks]{Harmonic oscillator}
+    %$$\qquad \frac{\partial x}{\partial t}=v \quad \Rightarrow \quad \frac{\partial^2 x}{\partial t^2}=\frac{\partial v}{\partial t}$$
+    %\begin{enumerate}[\textbullet]
+		%\item We choose for the initial point $(2,0)$
+		%\item For the period let's take $Pe$=$\frac{2\pi}{w}$ with $w$ the first components of our initial point
+		%\item For the discretisation,  $dt$=$\frac{Pe}{20}$ 
+		%\item We try to find the solution in the interval $[0,T]$ with T=$3Pe$
+   	%\end{enumerate}
 
-	\newpage
+	%\newpage
+\begin{frame}{Harmonic oscillator}
+	\small
+	$(x(0),v(0))=(2,0)$, \quad Period : \; $Pe$=$\frac{2\pi}{x(0)}$, \quad $dt$=$\frac{Pe}{20}$, \quad $[t_0,T]=[0,3Pe]$
+	\begin{minipage}{.32\linewidth}
+		\centering
+		$$P=\begin{pmatrix}
+			0.01 & 0. \\ 
+			0. & 0.01 
+		\end{pmatrix} ,$$
+		$$Q=\begin{pmatrix}
+			0.01 & 0. \\
+			0. & 0.01 
+		\end{pmatrix} ,$$
+		$$R=0.001$$
+		\includegraphics[width=\linewidth]{"images/enkf/oscillator1_b.png"}
+	\end{minipage} \;
+	\begin{minipage}{.32\linewidth}
+		\centering
+		$$P=\begin{pmatrix}
+			1. & 0. \\
+			0. & 1. 
+		\end{pmatrix} ,$$
+		$$Q=\begin{pmatrix}
+			0.01 & 0. \\
+			0. & 0.01 
+		\end{pmatrix} ,$$
+		$$R=0.001$$
+		\includegraphics[width=\linewidth]{"images/enkf/oscillator2_b.png"}
+	\end{minipage} \;
+	\begin{minipage}{.32\linewidth}
+		\centering
+		$$P=\begin{pmatrix}
+			0. & 0. \\
+			0. & 0. 
+		\end{pmatrix} ,$$
+		$$Q=\begin{pmatrix}
+			0. & 0. \\
+			0. & 0. 
+		\end{pmatrix} ,$$
+		$$R=0.001$$
+		\includegraphics[width=\linewidth]{"images/enkf/oscillator3_b.png"}
+	\end{minipage}
 
-	\; \\
-
-	\begin{figure}[H]
-		\includegraphics[width=0.32\linewidth]{"images/oscillator1.png"}
-		\includegraphics[width=0.32\linewidth]{"images/oscillator2.png"}
-		\includegraphics[width=0.32\linewidth]{"images/oscillator3.png"}
-	\end{figure}
-    
+	%\begin{figure}[H]
+		%\includegraphics[width=0.32\linewidth]{"images/enkf/oscillator1.png"}
+		%\includegraphics[width=0.32\linewidth]{"images/enkf/oscillator2.png"}
+		%\includegraphics[width=0.32\linewidth]{"images/enkf/oscillator3.png"}
+	%\end{figure}
     
 \end{frame}
 \begin{frame}[allowframebreaks]{Lorenz System}
@@ -112,7 +150,7 @@
     0. & 0.01 & 0. \\
     0. & 0. & 0.01 \\
     \end{pmatrix}.$$ 
-	\pgfimage[width=1.002\linewidth]{images/lorenz_1.png} 
+	\pgfimage[width=1.002\linewidth]{images/enkf/lorenz_1.png} 
 	
 	\newpage
 	
@@ -138,7 +176,7 @@
 
 	\begin{figure}
 		\centering
-		\pgfimage[width=0.89\linewidth]{images/lorenz_2.png}
+		\pgfimage[width=0.89\linewidth]{images/enkf/lorenz_2.png}
 	\end{figure}
 
 	\newpage
@@ -165,7 +203,7 @@
 
 	\begin{figure}
 		\centering
-    	\pgfimage[width=0.89\linewidth]{images/lorenz3_b.png} 
+    	\pgfimage[width=0.89\linewidth]{images/enkf/lorenz3_b.png} 
     \end{figure}
 \end{frame}
 	

@@ -9,46 +9,34 @@
 		\item a model
 		\item some observations
  \end{enumerate}	 
- The best estimate is searched for as a linear combination of the background estimate and the observations:
+ The best estimation:
  $$x^a=Lx^b+Ky^0$$
  with $x^a$ the analyzed state, $x^b$ the state of the model and $y^0$ the observations.
- Data assimilation methods are often split into two families:
- \begin{enumerate}[\textbullet]
-		\item statistical method
-		\item variational method
-   	\end{enumerate}
 \end{frame}
 \subsection{Theory}
 \begin{frame}[allowframebreaks]{Kalman filter}
-    The Kalman filter method consists in looking for $x^a$ an analysis, this analysis will be a linear combination of what we already know, our model and our observations.
+    The Kalman filter method consists in looking for $x^a$ an analysis, this analysis will be a linear combination of what our model and our observations.
     $$x^a=x^b+K(y-x^b)$$
     with K the gain matrix.
-    To simplify let’s consider that we are in 1D, and we suppose that the true state $x^t$ exists:
+    \newline Let’s consider that we are in 1D, and true state $x^t$ exists:
     $$x^a-x^t=x^b-x^t+K(y-x^t-x^b+x^t)$$
-	
-	\newpage
-
-    We will therefore have errors such as:
+	Errors:
     $$\begin{aligned}
         &\epsilon^a=x^a-x^t, \\
         &\epsilon^b=x^b-x^t, \\
         &\epsilon^y=y-x^t, \\
     \end{aligned}$$
-    If we have many realisation of these error, then we can write:
-    $$<\epsilon^a>=<\epsilon^b>+K(<\epsilon^y>-<\epsilon^b>)$$
-    We want to have the analysis error variance as low as possible .So we want to minimize $<(\epsilon^a)^2>$ with respect to $K$ :
-    $$<(\epsilon^a)^2>=<(\epsilon^b)^2>+K^2<(\epsilon^y-\epsilon^b)^2>+2K<\epsilon^b(\epsilon^y-\epsilon^b)^2>$$
-    
     \newpage
-    
-    We assume that the errors in the background and observation are uncorrelated.
+    We can also write:
+    $$<\epsilon^a>=<\epsilon^b>+K(<\epsilon^y>-<\epsilon^b>)$$
+    Analysis error variance as low as possible.
+    \newline Minimize $<(\epsilon^a)^2>$ with respect to $K$ :
+    $$<(\epsilon^a)^2>=<(\epsilon^b)^2>+K^2<(\epsilon^y-\epsilon^b)^2>+2K<\epsilon^b(\epsilon^y-\epsilon^b)^2>$$
+    The errors in the background and observation are uncorrelated.
     $$K=\frac{<(\epsilon^b)^2>}{<(\epsilon^b)^2>+<(\epsilon^y)^2>} \Rightarrow K=\frac{(\sigma^b)^2}{(\sigma^b)^2+(\sigma^y)^2} $$
-    where $(\sigma^y)^2$ is the observation error variance and $(\sigma^b)^2$ is the background or model error variance.
-    \newline If  $(\sigma^y)^2=0$, $K=1$ and $x^a=y$ => observation are perfect.
-    \newline And if $(\sigma^b)^2=0$, $K=0$ and $x^a=x^b$ => we ignore the observations.
+    $(\sigma^y)^2$ the observation error variance, \newline $(\sigma^b)^2$ the background or model error variance.
 
 	\newpage
-
     Now that we have explained the method for finding $x^a$ let's try to generalize our formula in a multi-dimensional case.
 
     $$\left\{\begin{aligned}
@@ -75,13 +63,13 @@
 	\end{minipage}
 \end{frame}
 \begin{frame}{Ensemble Filter Kalman}
-    The ENKF method consists in using the Kalman filter method in high dimension and compare P by a set of states $x_1,x_2,..,x_{m}$. So we can approximate the moments of the error by the moments of the sample.
-    The we have:
+    The ENKF method consists in using the Kalman filter method in high dimension.
+    \newline We apply the Kalman filter on several state samples $x_1,x_2,..,x_{m}$.
     $$x_i^a=x_i^f+K[y-h(x_i^f)]$$
     with $h(x_i^f)$ the observation operator.
     We can also define the Kalman gains: 
     $$K=P^f H^T(HP^f H^T+R)^{-1}$$
-    To begin with we can estimate the
+    For exemple we can estimate the
     forecast error covariance matrix as:
     $$P^f=\frac{1}{m-1}\sum_{i=1}^{m}(x_i^f-\bar{x}^f)(x_i^f-\bar{x}^f)^T~~\text{with}~~\bar{x}^f=\frac{1}{m}\sum_{i=1}^{m}x_i^f $$ .
 \end{frame}
@@ -124,43 +112,41 @@
     0. & 0.01 & 0. \\
     0. & 0. & 0.01 \\
     \end{pmatrix}.$$ 
-	\pgfimage[width=\linewidth]{images/lorenz_1.png} 
+	\pgfimage[width=1.002\linewidth]{images/lorenz_1.png} 
 	
 	\newpage
 	
     \begin{enumerate}[\textbullet]
-		\item For the model $(\sigma, r, b)=(10.,6.,10.)$,
-		\item For the observation $(\sigma, r, b)=(12.,6.,12.)$,
-	\end{enumerate}
-	$\quad X_0=(-10.,-10.,25.)$, $\quad \Delta t=0.1s$ $\quad [t_0,T]=[0,4]$,
-	$$P=\begin{pmatrix}
-    0.1 & 0. & 0. \\
-    0. & 0.1 & 0. \\
-    0. & 0. & 0.1 \\
-    \end{pmatrix} ,
-    Q=\begin{pmatrix}
-    0.01 & 0. & 0. \\
-    0. & 0.01 & 0. \\
-    0. & 0. & 0.01 \\
-    \end{pmatrix},
-    R=\begin{pmatrix}
-    0.1 & 0. & 0. \\
-    0. & 0.1 & 0. \\
-    0. & 0. & 0.1 \\
-    \end{pmatrix}.$$
+		\item Model $(\sigma, r, b)=(10.,6.,10.)$, Observation $(\sigma, r, b)=(12.,6.,12.)$,
+	    \item $X_0=(-10.,-10.,25.)$, $\quad \Delta t=0.1s$ $\quad [t_0,T]=[0,4]$,
+	    \end{enumerate}
+    	$$P=\begin{pmatrix}
+        0.1 & 0. & 0. \\
+         0. & 0.1 & 0. \\
+        0. & 0. & 0.1 \\
+        \end{pmatrix} ,
+        Q=\begin{pmatrix}
+         0.01 & 0. & 0. \\
+        0. & 0.01 & 0. \\
+        0. & 0. & 0.01 \\
+        \end{pmatrix},
+        R=\begin{pmatrix}
+        0.1 & 0. & 0. \\
+        0. & 0.1 & 0. \\
+        0. & 0. & 0.1 \\
+        \end{pmatrix}.$$
 
 	\begin{figure}
 		\centering
-		\pgfimage[width=0.7\linewidth]{images/lorenz_2.png}
+		\pgfimage[width=0.89\linewidth]{images/lorenz_2.png}
 	\end{figure}
 
 	\newpage
  
 	\begin{enumerate}[\textbullet]
-	     	\item For the model $(\sigma, r, b)=(10.,6.,10.)$,
-	     	\item For the observation $(\sigma, r, b)=(12.,6.,12.)$,
+	     	\item Model $(\sigma, r, b)=(10.,6.,10.)$,Observation $(\sigma, r, b)=(12.,6.,12.)$,
+	        \item $X_0=(-10.,-10.,25.)$, $\quad \Delta t=0.1s$ $\quad [t_0,T]=[0,4]$,
 	\end{enumerate}
-	$\quad X_0=(-10.,-10.,25.)$, $\quad \Delta t=0.1s$ $\quad [t_0,T]=[0,4]$,
     $$P=\begin{pmatrix}
     0.1 & 0. & 0. \\
     0. & 0.1 & 0. \\
@@ -179,7 +165,7 @@
 
 	\begin{figure}
 		\centering
-    	\pgfimage[width=0.7\linewidth]{images/lorenz3_b.png} 
+    	\pgfimage[width=0.89\linewidth]{images/lorenz3_b.png} 
     \end{figure}
 \end{frame}
 	

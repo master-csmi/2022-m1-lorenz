@@ -30,8 +30,8 @@ with $x^a=\begin{pmatrix}
  y_p \\
  \end{pmatrix}$ the observation and $K$ the gain matrix of size $p \times p$. 
 
-To simplify the redaction let's consider that we are trying to find the true state of a single point(1D),we suppose that the true state $x^t$ exists so:
-$$x^a-x^t+K(y-x^t-x^b+x^t).$$
+\noindent To simplify the redaction let's consider that we are trying to find the true state of a single point(1D),we suppose that the true state $x^t$ exists so:
+$$x^a-x^t=x^b-x^t+K(y-x^t-x^b+x^t).$$
 Let's define the errors:
 $$\begin{aligned}
 &\epsilon^a=x^a-x^t, \\
@@ -61,9 +61,11 @@ With $K$ the gain or weight matrix, $(y^0-H(x^b))$ the innovation and $H$ the li
 This formulation is called the Best Linear Unbiased Estimator (BLUE) or least squares analysis.
 The principle of the Kalman filter is based on this formulation. Here is a small figure which illustrates the Kalman filter.
 \vspace*{5mm}
-\begin{center}
+\begin{figure}
+    \centering
 		\includegraphics[width=0.8\textwidth]{"images/schema_kalman_filter.png"}
-	\end{center}
+	\caption{Kalman filter}
+\end{figure}
 The general idea consists in estimating the state at time $k$ from an estimate at time $k-1$ and measurements at time $k$.
 We do the estimation in two steps:
 \begin{enumerate}[label=\textbullet]
@@ -158,9 +160,11 @@ J^o&=\frac{1}{2}\|H_k(M_{0 \rightarrow k}(x))-y_k^0\|_{R_{k}}^2
 \end{aligned}$$
 \vspace*{5mm}
 Here is a diagram that illustrates the 3D Var method 
-\begin{center}
+\begin{figure}
+    \centering
 		\includegraphics[width=0.8\textwidth]{"images/schema_3D_Var.png"}
-	\end{center}
+		\caption{3D-Var}
+\end{figure}
 \subsubsection{From 3DVar to BLUE}
 \noindent We have are 3D-Var cost function:
 $$J(x)=\frac{1}{2}\|x-x^b\|_B^2+\frac{1}{2}\|H(x)-y\|_{R}^2 $$
@@ -189,8 +193,8 @@ We can also define the Kalman gains:
 $$K=P^f H^T(HP^f H^T+R)^{-1}$$
 To begin with we can estimate the
 forecast error covariance matrix as:
-$$P^f=\frac{1}{m-1}\sum_{i=1}^{m}(x_i^f-\bar{x}^f)(x_i^f-\bar{x}^f)^T~~with~~\bar{x}^f=\frac{1}{m}\sum_{i=1}^{m}x_i^f $$ .
-We can factorized the forecast error covariance matrix by:
+$$P^f=\frac{1}{m-1}\sum_{i=1}^{m}(x_i^f-\bar{x}^f)(x_i^f-\bar{x}^f)^T~~with~~\bar{x}^f=\frac{1}{m}\sum_{i=1}^{m}x_i^f .$$ 
+\noindent We can factorized the forecast error covariance matrix by:
 $$P^f=X_f X_f^T$$
 where $X_f$ is an $n \times m$ matrix whose columns are the normalized anomalies or normalized perturbations,
 $$[X_f]_i=\frac{x_i^f-\bar{x}^f}{\sqrt{m-1}}$$
@@ -204,7 +208,7 @@ $$\qquad \frac{\partial x}{\partial t}=v \quad \Rightarrow \quad \frac{\partial^
 
 
 
-For the first case we chose to take a model that will be solved with RK4 and as observation we chose to take the exact solution. We must also choose $P$, $R$ and $Q$ with $Q$ covariance matrix associated with the models, $R$ covariance matrix associated with the observations and $P$ covariance matrix associated with the forecast state.
+\noindent For the first case we chose to take a model that will be solved with RK4 and as observation we chose to take the exact solution. We must also choose $P$, $R$ and $Q$ with $Q$ covariance matrix associated with the models, $R$ covariance matrix associated with the observations and $P$ covariance matrix associated with the forecast state.
 The observation operator will only take the first value which is $\frac{\partial x}{\partial t}=v$ because we only observe the exact value of $v$ .
 Let's take :
 
@@ -221,36 +225,131 @@ def read_sensor(t):
         2*np.cos(2*t)
 \end{lstlisting}
 With $Pe$ the period, $N$ the number of discretisation points, hx(x) the measurement function,it convert state x into a measurement and readsensor(t) a function that will read the observation every time.
-\begin{center}
-		\includegraphics[width=0.3\textwidth]{"images/oscillator1.png"}
-		\includegraphics[width=0.3\textwidth]{"images/oscillator2.png"}
-		\includegraphics[width=0.3\textwidth]{"images/oscillator3.png"}
-	\end{center}
-We have 3 different cases:
+\noindent\newline Let's take:
+\begin{enumerate}[label=\textbullet]
+	\item For the first case:
+	        $$P=\begin{pmatrix}
+            0.01 & 0. \\
+            0. & 0.01 \\
+            \end{pmatrix} ,
+            Q=\begin{pmatrix}
+            0.01 & 0.\\
+            0. & 0.01 \\
+            \end{pmatrix},
+            R=\begin{pmatrix}
+            0.001 \\
+            \end{pmatrix}.$$ 
+        \item For the second case:
+	        $$P=\begin{pmatrix}
+            1. & 0. \\
+            0. & 1.\\
+            \end{pmatrix} ,
+            Q=\begin{pmatrix}
+            0.01 & 0.\\
+            0. & 0.01 \\
+            \end{pmatrix},
+            R=\begin{pmatrix}
+            0.001 \\
+            \end{pmatrix}.$$ 
+        \item For the third case:
+	        $$P=\begin{pmatrix}
+            0. & 0. \\
+            0. & 0.\\
+            \end{pmatrix} ,
+            Q=\begin{pmatrix}
+            0. & 0.\\
+            0. & 0. \\
+            \end{pmatrix},
+            R=\begin{pmatrix}
+            0.001 \\
+            \end{pmatrix}.$$ 
+\end{enumerate}
+\begin{figure}[H]
+    \centering
+		\includegraphics[width=0.4\textwidth]{"images/oscillator1.png"}
+		\includegraphics[width=0.4\textwidth]{"images/oscillator2.png"}
+		\includegraphics[width=0.4\textwidth]{"images/oscillator3.png"}
+		\caption{Data assimilation with the harmonic oscillator}
+\end{figure}
+\noindent We have 3 different cases:
 We tried to vary the covariance matrices associated with the error in order to understand their impact in the algorithm. For the first case we took a covariance matrix associated to the observation R smaller than the other matrices. This refers to the fact that our observations are very precise, they correspond to the exact solution. For Q, the covariance matrix associated to the model, we have also chosen an identity matrix, with in the diagonal the 0.1, since we solve it with the method of RK4 this one remains nevertheless quite accurate. And for P, in this case is a scalar because we observe only one component, and is equal to 0.1.
 In the second case we have exactly the same value for R and Q, but we choose to take a  much bigger P than the one before to see if we have a difference. We can see that the green curve does not match exactly, it is much too far from our model and observation curve. This is because P represents the initial covariance matrix.
 In the last case we choose to set the P and Q matrix to zero, so in fact we want to use the information from our model only, ignoring the observations. In this case we expect the curve after assimilation to be superimposed on the model curve, which is indeed the case. We will have that our $K=P^fH^T(HP^fH^T+R)^{-1}$ will be equal to 0.
 \subsubsection{Lorenz system}
-Now that we have tried the harmonic oscillator case, we can now look at the Lorenz system. The model will be the Lorenz system solved with RK4, and we will obtain our observations by solving the Lorenz system with different parameter values or different precision.
+\noindent Now that we have tried the harmonic oscillator case, we can now look at the Lorenz system. The model will be the Lorenz system solved with RK4, and we will obtain our observations by solving the Lorenz system with different parameter values or different precision.
 For the first case we chose to take exactly the same initial point and the same parameters for the observations and the model.
 For $(\sigma, r, b)$ we have chosen to take (12.,6.,12.) and for the initial point we take (-10.,-10.,25.). But to differentiate the observations and the model we prefer to work with the time step. For the model we have chosen $dt=N/0.1$ and for the observations we have chosen $dt=N/0.01$ (with $N$ the number that represent the points of discretization). This means that, when we make the assimilation of the data  every 0.1 s., our observations will taken every 0.01 s.
-\begin{center}
+\begin{figure}[H]
+    \centering
 		\includegraphics[width=1\textwidth]{"images/dt.png"}
-\end{center}
+		\caption{discretisation}
+\end{figure}
 We also chose to take a fairly small R because our observations are very precise.
+\noindent\newline Let's take 
+			$$P=\begin{pmatrix}
+            0.1 & 0. & 0. \\
+            0. & 0.1 & 0. \\
+            0. & 0. & 0.1 \\
+            \end{pmatrix} ,
+            Q=\begin{pmatrix}
+            0.1 & 0. & 0. \\
+            0. & 0.1 & 0. \\
+            0. & 0. & 0.1 \\
+            \end{pmatrix},
+            R=\begin{pmatrix}
+            0.01 & 0. & 0. \\
+            0. & 0.01 & 0. \\
+            0. & 0. & 0.01 \\
+            \end{pmatrix}.$$ 
 
-\includegraphics[width=0.3\textwidth]{"images/lorenz1_a.png"}
-
-\begin{center}
+\begin{figure}[H]
+    \centering
 		\includegraphics[width=1\textwidth]{"images/lorenz1_b.png"}
-\end{center}
-We can notice that our curve after data assimilation is very close to our two other curves, we can see that our curve is very close to the model, which is totally normal, since we do the assimilation on each dt=N/0.1, it only takes the observations every 10 steps . But we can still see that the green curve is between the observations curve and the model curve.
-Let's try to change our parameters for the observations and the model. For $(\sigma, r, b)$ that we use in the observation we have chosen to take (12.,6.,12.), for the model $(\sigma, r, b)$=(10.,6.,10.) and for the initial point we take (-10.,-10.,25.) for both of them.
- \begin{center}
-		\includegraphics[width=1\textwidth]{"images/lorenz2.png"}
-\end{center}
-This time we take a small Q, which means that we trust the model much more than the observations. We notice that our data assimilation curve is quite close to the one of the model, which confirms the assumptions we made when we chose Q and R.
- \begin{center}
-		\includegraphics[width=1\textwidth]{"images/lorenz3.png"}
-\end{center}
-Now we have inverted the values of R and Q and we have not changed our P. We expect to see that our green curve is close to the blue curve which corresponds to the observations. On the other hand we notice that the values of the states after the data assimilation are very close almost similar to the observation ones.
+		\caption{First example for Lorenz with $(\sigma, r, b)=(12.,6.,12.)$, $X_0=(-10.,-10.,25.),\text{time step}=0.01s$ for observation and $0.1$s. for the model}
+\end{figure}
+\noindent We can notice that our curve after data assimilation is very close to our two other curves, we can see that our curve is very close to the model, which is totally normal, since we do the assimilation on each dt=N/0.1, it only takes the observations every 10 steps. But we can still see that the green curve is between the observations curve and the model curve.
+\noindent \newline Let's try to change our parameters for the observations and the model. For $(\sigma, r, b)$ that we use in the observation we have chosen to take (12.,6.,12.), for the model $(\sigma, r, b)$=(10.,6.,10.) and for the initial point we take (-10.,-10.,25.) for both of them.
+\noindent\newline Let's take 
+			$$P=\begin{pmatrix}
+            0.1 & 0. & 0. \\
+            0. & 0.1 & 0. \\
+            0. & 0. & 0.1 \\
+            \end{pmatrix} ,
+            Q=\begin{pmatrix}
+            0.01 & 0. & 0. \\
+            0. & 0.01 & 0. \\
+            0. & 0. & 0.01 \\
+            \end{pmatrix},
+            R=\begin{pmatrix}
+            0.1 & 0. & 0. \\
+            0. & 0.1 & 0. \\
+            0. & 0. & 0.1 \\
+            \end{pmatrix}.$$ 
+ \begin{figure}[H]
+    \centering
+		\includegraphics[width=1\textwidth]{"images/lorenz2_a.png"}
+		\caption{Second example for Lorenz with $(\sigma, r, b)=(12.,6.,12.)$ for the observation, $(\sigma, r, b)=(10.,6.,10.)$ for the model, $X_0=(-10.,-10.,25.),\text{time step}=0.1s$ }
+\end{figure}
+\noindent This time we take a small Q, which means that we trust the model much more than the observations. We notice that our data assimilation curve is quite close to the one of the model, which confirms the assumptions we made when we chose Q and R.
+\noindent\newline Let's take 
+			$$P=\begin{pmatrix}
+            0.1 & 0. & 0. \\
+            0. & 0.1 & 0. \\
+            0. & 0. & 0.1 \\
+            \end{pmatrix} ,
+            Q=\begin{pmatrix}
+            0.1 & 0. & 0. \\
+            0. & 0.1 & 0. \\
+            0. & 0. & 0.1 \\
+            \end{pmatrix},
+            R=\begin{pmatrix}
+            0.01 & 0. & 0. \\
+            0. & 0.01 & 0. \\
+            0. & 0. & 0.01 \\
+            \end{pmatrix}.$$ 
+ \begin{figure}[H]
+        \centering
+		\includegraphics[width=1\textwidth]{"images/lorenz3_b.png"}
+		\caption{Third example for Lorenz with $(\sigma, r, b)=(12.,6.,12.)$, $X_0=(-10.,-10.,25.),\text{time step}=0.01s$ for observation and $0.1$s. for the model}
+\end{figure}
+\noindent Now we have inverted the values of R and Q and we have not changed our P. We expect to see that our green curve is close to the blue curve which corresponds to the observations. On the other hand we notice that the values of the states after the data assimilation are very close almost similar to the observation ones.

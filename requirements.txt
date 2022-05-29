@@ -2,7 +2,7 @@ numpy
 filterpy==1.4.5
 matplotlib
 scipy
-mp4py
+mpi4py
 csv
 math
 os

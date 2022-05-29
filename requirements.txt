@@ -1,5 +1,5 @@
 numpy
-filterpy=1.4.5
+filterpy==1.4.5
 matplotlib
 mpl_toolkits
 scipy

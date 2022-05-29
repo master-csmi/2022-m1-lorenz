@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 
 # to delete old files
 def delete_old_files_lorenz():
+    """Delete old csv files created for the lorenz system.
+    """    
     if(os.path.isfile("data_parareal/solx.csv")):
         os.remove("data_parareal/solx.csv")
     if(os.path.isfile("data_parareal/soly.csv")):
@@ -25,6 +27,8 @@ def delete_old_files_lorenz():
     print("Old files deleted")
 
 def delete_olf_files_oscillator():
+    """Delete old csv files created for the oscillator.
+    """    
     if(os.path.isfile("data_parareal/solx_oscillateur.csv")):
         os.remove("data_parareal/solx_oscillateur.csv")
 
@@ -37,6 +41,17 @@ def delete_olf_files_oscillator():
     print("Old files deleted")
 
 def compute_time(t0,T,dt_G,P):
+    """Compute time used to the system resolution.
+
+    Args:
+        t0 (float): Starting time.
+        T (float): Finish time.
+        dt_G (float): Coarse time step.
+        P (int): Number of interval (= number of processes).
+
+    Returns:
+        list: Time used to the system resolution.
+    """    
     # time between t_j and t_{j+1}
     dt_P = (T-t0)/P 
     # nb points
@@ -60,6 +75,16 @@ def compute_time(t0,T,dt_G,P):
 
 # to check if initial points converge
 def sol_converge(x0_k,x0_knext,eps=1e-15):
+    """_summary_
+
+    Args:
+        x0_k (_type_): _description_
+        x0_knext (_type_): _description_
+        eps (_type_, optional): _description_. Defaults to 1e-15.
+
+    Returns:
+        _type_: _description_
+    """    
     return (np.max(np.abs(x0_knext-x0_k))/np.max(np.abs(x0_knext))) < eps
 
 #to create and write in the csv files

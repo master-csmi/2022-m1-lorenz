@@ -103,10 +103,6 @@ def parareal_method(X0_t0,t0,T,prob,fct_res,fct_write,dt_G,dt_F,gamma=None,
 
     if(write_csv):
         nb_tj,sol_k = compute_sol_k(fin,X0_k_j)
-        print(type(nb_tj))
-        print(nb_tj)
-        print(type(sol_k))
-        print(sol_k)
         if(rank==0):
             solution = [sol_k]
             init_pts = [X0_k]

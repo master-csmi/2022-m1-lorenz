@@ -3,9 +3,6 @@ from mpi4py import MPI
 from pyrsistent import v
 from lorenz.parareal import utils
 
-# python3 para-real.py | grep truc
-# mpiexec -n 3 python3 para-real_parallele.py
-
 comm = MPI.COMM_WORLD
 P = comm.Get_size()
 rank = comm.Get_rank()
@@ -38,7 +35,7 @@ def compute_sol_k(fin,X0_k_j):
     return nb_tj,sol_k
 
 
-# P = number of processing units ; j in {0,...,P} 
+# P = number of processing units
 def parareal_method(X0_t0,t0,T,prob,fct_res,fct_write,dt_G,dt_F,gamma=None,
         write_csv=True): 
     """Parareal method.
@@ -71,49 +68,47 @@ def parareal_method(X0_t0,t0,T,prob,fct_res,fct_write,dt_G,dt_F,gamma=None,
 
     times = []
     X0_k = np.empty((P,len(X0_t0))) 
-    
-    grossier_k = np.empty((P-1,len(X0_t0))) #pas de valeur pour j=0
+    coarse_k = np.empty((P-1,len(X0_t0))) #pas de valeur pour j=0
 
     if(rank == 0):   
         ## we initialize the time intervals for each processing units ##
         times=utils.compute_time(t0,T,dt_G,P)
 
-        #### Itération k=0 ####
+        #### Iteration k=0 ####
 
-        # 1ère étape : calculer les X0 pour chaque tj (en séquentiel)
-        # On utilise pour cela l'intégrateur grossier
+        # 1 st step : compute the X0s for each tj (in sequential)
+        # We use the coarse integrator
         X0_k[0] = X0_t0
         X0_k_j = X0_t0
         for j in range(1,P):
             X0_j = G(X0_k[j-1],times[j-1],times[j])[-1]
             X0_k[j] = X0_j
             comm.send(X0_k[j], dest=j, tag=j)   
-            grossier_k[j-1] = X0_j         
+            coarse_k[j-1] = X0_j         
 
     if(rank>0):
         X0_k_j = comm.recv(source=0, tag=rank)
     t_j = comm.scatter(times[:-1], root=0)
     t_jp = comm.scatter(times[1:], root=0)
 
-    # 2ème étape : calculer la solution sur chaque sous-intervalle
-    # On utilise l'intégrateur fin
+    # 2nd step : compute the solution on each interval
+    # We use the fine integrator
 
-    fin = F(X0_k_j,t_j,t_jp)
+    fine = F(X0_k_j,t_j,t_jp)
     
-    fin_k_j = fin[-1]
-    fin_k = np.array(comm.gather(fin_k_j, 0))
+    fine_k_j = fine[-1]
+    fine_k = np.array(comm.gather(fine_k_j, 0))
 
     if(write_csv):
-        nb_tj,sol_k = compute_sol_k(fin,X0_k_j)
+        nb_tj,sol_k = compute_sol_k(fine,X0_k_j)
         if(rank==0):
             solution = [sol_k]
             init_pts = [X0_k]
 
-    #### Itérations suivantes (jusqu'à ce que la solution converge) ####
+    #### Following iterations (until the solution converge) ####
     k=1
     converge=False
 
-    # pour rentrer dans la boucle
     X0_kp = np.copy(X0_k)+np.ones((len(X0_k),len(X0_t0))) 
     while(not converge):      
         X0_kp = np.zeros((P,len(X0_t0)))
@@ -122,21 +117,21 @@ def parareal_method(X0_t0,t0,T,prob,fct_res,fct_write,dt_G,dt_F,gamma=None,
             X0_kp[0] = X0_k[0]
             X0_k_j = X0_k[0]
             for j in range(1,P):
-                grossier_k_j = G(X0_kp[j-1],times[j-1],times[j])[-1]
-                X0_kp[j] = grossier_k_j + fin_k[j-1] - grossier_k[j-1]
+                coarse_k_j = G(X0_kp[j-1],times[j-1],times[j])[-1]
+                X0_kp[j] = coarse_k_j + fine_k[j-1] - coarse_k[j-1]
                 comm.send(X0_k[j], dest=j, tag=j)
-                grossier_k[j-1] = grossier_k_j
+                coarse_k[j-1] = coarse_k_j
 
         if(rank>0):
             X0_k_j = comm.recv(source=0, tag=rank)
 
-        fin = F(X0_k_j,t_j,t_jp)
+        fine = F(X0_k_j,t_j,t_jp)
     
-        fin_k_j = fin[-1]
-        fin_k = np.array(comm.gather(fin_k_j, 0))
+        fine_k_j = fine[-1]
+        fine_k = np.array(comm.gather(fine_k_j, 0))
 
         if(write_csv):
-            nb_tj,sol_k = compute_sol_k(fin,X0_k_j)
+            nb_tj,sol_k = compute_sol_k(fine,X0_k_j)
             if(rank==0):
                 solution = np.concatenate((solution,[sol_k]),axis=0)
                 init_pts = np.concatenate((init_pts,[X0_kp]),axis=0)

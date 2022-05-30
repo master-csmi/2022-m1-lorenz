@@ -19,20 +19,21 @@
 
 	\; \\
 
-	\begin{minipage}{.68\linewidth}
-		Notation :
+	\begin{minipage}{\linewidth}
+		Notations :
 		\begin{enumerate}[\textbullet]
 			\item $F$ : high accuracy integrator, \quad $\Delta t_F$ : time step \\
 			$G$ : low accuracy integrator, \quad $\Delta t_G$ : coarse time step
 			\item $U_j^k, j\in\{0,\dots,P\}$ : initial point at time $t_j$ and at iteration $k$.
 		\end{enumerate}
-	\end{minipage}
-	\begin{minipage}{.28\linewidth}
-		\qquad \includegraphics[width=0.7\linewidth]{images/parareal/explane_F.jpg}
-	\end{minipage}
+	\end{minipage} \\
 	\begin{enumerate}[\textbullet]
 		\item $F(U_{j-1}^k), j\in\{1,\dots,P\}$ : value of the fine integrator at $t_j$ starting by $U_{j-1}^k$ (resp. $G(U_{j-1}^k)$)
 	\end{enumerate}
+	\begin{minipage}{\linewidth}
+		\centering
+		\qquad \includegraphics[width=0.35\linewidth]{images/parareal/explane_F.jpg}
+	\end{minipage}
 	
 \end{frame}
 
@@ -141,7 +142,7 @@
 	\begin{minipage}{\linewidth}
 	\begin{figure}
 		\centering       
-		\includegraphics[width=0.9\linewidth]{"images/parareal/lorenz_1p.jpg"}
+		\includegraphics[width=0.95\linewidth]{"images/parareal/lorenz_1p.jpg"}
 		\caption{Parareal method on the Lorenz system with 1 process}
 	\end{figure}
 	\end{minipage}
@@ -152,7 +153,7 @@
 	\begin{minipage}{\linewidth}
 	\begin{figure}
 		\centering       
-		\includegraphics[width=0.7\linewidth]{"images/parareal/lorenz_3p.jpg"}
+		\includegraphics[width=0.85\linewidth]{"images/parareal/lorenz_3p.jpg"}
 		\caption{Parareal method on the Lorenz system with 3 processes}
 	\end{figure}
 	\end{minipage}

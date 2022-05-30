@@ -35,7 +35,7 @@
            x^a-x^t=x^b-x^t+K(y-x^t-x^b+x^t)
        \end{equation}
        Errors: \qquad $\epsilon^a=x^a-x^t,\qquad \epsilon^b=x^b-x^t, \qquad \epsilon^y=y-x^t$ \\
-       One realisation of these errors :$ \quad \epsilon^a=\epsilon^b+K(\epsilon^y-\epsilon^b)$
+       One realisation of these errors :$ \quad \epsilon^a=\epsilon^b+K(\epsilon^y-\epsilon^b)$ \\
        Many realisation of these errors + sample average :
        \begin{equation}
            <\epsilon^a>=<\epsilon^b>+K(<\epsilon^y>-<\epsilon^b>)
@@ -137,7 +137,7 @@
        \end{minipage}
        
    \end{frame}
-   \begin{frame}[allowframebreaks]{Lorenz System}
+   \begin{frame}{Lorenz System - Same parameters}
        $(\sigma, r, b)=(12.,6.,12.)$, $\quad X_0=(-10.,-10.,25.)$, $\quad [t_0,T]=[0,1]$,
        $$P=\begin{pmatrix}
        0.1 & 0. & 0. \\
@@ -154,9 +154,10 @@
        0. & 0.01 & 0. \\
        0. & 0. & 0.01 \\
        \end{pmatrix}.$$ 
-       \pgfimage[width=1.002\linewidth]{images/enkf/lorenz_1.png} 
+       \pgfimage[width=\linewidth]{images/enkf/lorenz_1.png} 
        
-       \newpage
+    \end{frame}
+	\begin{frame}[allowframebreaks]{Lorenz System - Differents parameters}
        
        \begin{enumerate}[\textbullet]
            \item Model $(\sigma, r, b)=(10.,6.,10.)$, Observation $(\sigma, r, b)=(12.,6.,12.)$,
@@ -180,7 +181,7 @@
    
        \begin{figure}
            \centering
-           \pgfimage[width=0.89\linewidth]{images/enkf/lorenz_2.png}
+           \pgfimage[width=0.87\linewidth]{images/enkf/lorenz_2.png}
        \end{figure}
    
        \newpage

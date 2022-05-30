@@ -104,8 +104,9 @@
 <span class="sd">        file_name (str): Name of the csv file where the calculated solution is.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        tuple: Discretisation time between t0 and T for the calculated solution</span>
-<span class="sd">                and calculated solution.</span>
+<span class="sd">        tuple: </span>
+<span class="sd">            Discretisation time between t0 and T for the calculated solution</span>
+<span class="sd">            and calculated solution.</span>
 <span class="sd">    &quot;&quot;&quot;</span> 
     <span class="n">t</span><span class="o">=</span><span class="p">[]</span>
     <span class="n">sol_k</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
@@ -129,7 +130,8 @@
 <span class="sd">        dim (int): System dimension.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        tuple: Times for the initial poins, number of value of the solution </span>
+<span class="sd">        tuple: </span>
+<span class="sd">            Times for the initial poins, number of value of the solution </span>
 <span class="sd">            for each process and initial points for each process and each iteration.</span>
 <span class="sd">    &quot;&quot;&quot;</span>    
     <span class="n">times</span><span class="o">=</span><span class="p">[]</span>
@@ -201,13 +203,14 @@
 <span class="sd">        nom_pts (str): Name of the csv file where the initial points are.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        tuple: Discretisation time between t0 and T for the exact solution, \</span>
-<span class="sd">                exact solution, discretisation time between t0 and T for \</span>
-<span class="sd">                the calculated solution, calculated solution (only the variable \</span>
-<span class="sd">                concerned), number of iteration (until the solution converge), \</span>
-<span class="sd">                times for the initial poins, number of value of the solution \</span>
-<span class="sd">                for each process and initial points for each process \</span>
-<span class="sd">                and each iteration.</span>
+<span class="sd">        tuple: </span>
+<span class="sd">            Discretisation time between t0 and T for the exact solution,</span>
+<span class="sd">            exact solution, discretisation time between t0 and T for</span>
+<span class="sd">            the calculated solution, calculated solution (only the variable</span>
+<span class="sd">            concerned), number of iteration (until the solution converge),</span>
+<span class="sd">            times for the initial poins, number of value of the solution</span>
+<span class="sd">            for each process and initial points for each process</span>
+<span class="sd">            and each iteration.</span>
 <span class="sd">    &quot;&quot;&quot;</span>    
     <span class="n">t_rk4</span><span class="p">,</span><span class="n">sol_rk4</span><span class="o">=</span><span class="n">read_sol_ex</span><span class="p">(</span><span class="s1">&#39;data_parareal/&#39;</span><span class="o">+</span><span class="n">nom_sol_ex</span><span class="p">)</span>
     <span class="n">t</span><span class="p">,</span><span class="n">sol</span><span class="p">,</span><span class="n">nb_iter</span><span class="o">=</span><span class="n">read_sol</span><span class="p">(</span><span class="s1">&#39;data_parareal/&#39;</span><span class="o">+</span><span class="n">nom_sol</span><span class="p">)</span>

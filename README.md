@@ -5,7 +5,7 @@
  The main goals of this project was to implement a parallel time resolution method for the Lorenz system, and to realize the data assimilation using the EnKF method. For this we also had to implement several methods to solve numerically the Lorenz system.
 
 ## Authors
-This project is realized during the master csmi by two Master 1 students, Lecourtier Frederique and AYDOGDU Melissa and it is managed by Cemosis which is the "Centre de Modélisation et de Simulation de Strasbourg" (Strasbourg Modeling and Simulation Center). Cemosis is hosted by the Institute of Advanced Mathematical Research (IRMA) and was created in January 2013. Cemosis relies currently on the team Modeling and Control of the IRMA. Their work is focused on the numarical simulation and mathematical modelling of different phenomena.
+This project is realized during the master csmi by two Master 1 students, LECOURTIER Frédérique and AYDOGDU Melissa and it is managed by Cemosis which is the "Centre de Modélisation et de Simulation de Strasbourg" (Strasbourg Modeling and Simulation Center). Cemosis is hosted by the Institute of Advanced Mathematical Research (IRMA) and was created in January 2013. Cemosis relies currently on the team Modeling and Control of the IRMA. Their work is focused on the numarical simulation and mathematical modelling of different phenomena.
 
 ## Requirements
 For the execution of the project it is necessary to install the following modules:
@@ -39,11 +39,8 @@ For the organization of our repository we have at first a docs directory in whic
 Our source code for the implementation is in the lorenz directory with two different parts, the implementation for the pararel part and the implementation for the data assimilation. 
 We also have an examples directory with the results we got by taking some parameters. To use our methods the lorenz module is required, so you have to add a path before running the examples. In the example directory you can do the command: 
 ```shell
-export PYTHONPATH= .
+export PYTHONPATH=.
 ```
-And finally we have a tests directory where we have our tests for our codes. These are checked at each push automatically using pytest.
-
-
-## Documentation
+And finally we have a tests directory where we have our tests for our codes. These are checked at each push automatically using pytest
 
 

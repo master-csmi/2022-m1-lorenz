@@ -119,8 +119,12 @@
 	\end{frame}
 	
 	\begin{frame}{Roadmap}
+	   	\begin{figure}
+	   	  \centering
+	   	    \pgfimage[height=5.5cm,width=11cm]{../gantt/gantt.pdf}
+        	\caption{Gantt Chart}
+		\end{figure}
 		
-		\pgfimage[height=5.5cm,width=11cm]{../gantt/gantt.pdf}
 	\end{frame}
 	
 	
@@ -146,10 +150,12 @@
 	\section{Numerical resolution (with differents method)}
 	
 	\begin{frame}{Some results (with Python)}
-		
-		\includegraphics[width=\textwidth]{images/intro/N100000.png} \\ 
+		 \begin{figure}
+		    \includegraphics[width=\textwidth]{images/intro/N100000.png} \\ 
+		    \caption{Resolution of the Lorenz System with different numerical methods}
+		\end{figure}
 		\begin{center}
-			\begin{minipage}[c]{0.5\linewidth}
+		   	\begin{minipage}[c]{0.5\linewidth}
 				$\sigma=10,\quad \beta=8/3, \quad r=28$ \\
 				$X_0=(-10,10,5)$ 
 			\end{minipage}
@@ -186,4 +192,3 @@
 	\end{frame}
 	
 \end{document}
-

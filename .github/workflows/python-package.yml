@@ -63,8 +63,8 @@ jobs:
           python -m pip install sphinx
           python -m pip install sphinx_rtd_theme
       - name: Run sphinx
-        run: make html 
         working-directory: docs/sphinx/
+        run: make html 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:

@@ -1,4 +1,5 @@
 # 2022-m1-lorenz
+[![Python package](https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/python-package.yml)
 ## Description of the projet: Data assimilation for the Lorenz system
 
  The main goals of this project was to implement a parallel time resolution method for the Lorenz system, and to realize the data assimilation using the EnKF method. For this we also had to implement several methods to solve numerically the Lorenz system
@@ -21,27 +22,29 @@ For the execution of the project it is necessary to install the following module
 ```shell
   pip install matplotlib
 ```
-* Scipy [MatPlotLib Documentation](https://docs.scipy.org/doc/scipy/ "Title")
+* Scipy [SciPy Documentation](https://docs.scipy.org/doc/scipy/ "Title")
 ```shell
-  pip install matplotlib
+  pip install scipy
+```
+* MPI4Py [MPI4Py Documentation](https://mpi4py.readthedocs.io/en/stable/ "Title")
+```shell
+  python -m pip install mpi4py
+```
+* Panda [Panda Documentation](https://pandas.pydata.org/docs/ "Title")
+```shell
+  pip install pandas
 ```
 
-$$
-\begin{aligned}
-x'(t) &= \sigma(y-x)\\
-y'(t) &= \\
-z'(t) &= \\
-\end{aligned}
-$$
-
-## Authors
-
-
 ## Organisation 
+For the organization of our repository we have at first a docs directory in which our latex source files are located. In this directory we have our project report, the presentation and a glove diagram. 
+Our source code for the implementation is in the lorenz directory with two different parts, the implementation for the pararel part and the implementation for the data assimilation. 
+We also have an examples directory with the results we got by taking some parameters. To use our methods the lorenz module is required, so you have to add a path before running the examples. In the example directory you can do the command: export PYTHONPATH= .
+And finally we have a tests directory where we have our tests for our codes. These are checked at each push automatically using pytest.
+
 
 ## Documentation
 
 ## Examples
 =======
-[![Python package](https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/python-package.yml)
+
 

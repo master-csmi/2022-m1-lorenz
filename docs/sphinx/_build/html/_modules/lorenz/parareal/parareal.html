@@ -88,8 +88,9 @@
 <span class="sd">            current iteration.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        tuple: Ndarray with the number of values of solution for each process</span>
-<span class="sd">                and the entire solution between t0 and T.</span>
+<span class="sd">        tuple: </span>
+<span class="sd">            Ndarray with the number of values of solution for each process</span>
+<span class="sd">            and the entire solution between t0 and T.</span>
 <span class="sd">    &quot;&quot;&quot;</span>    
     <span class="n">sol_k_j</span> <span class="o">=</span> <span class="n">fin</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
     <span class="k">if</span><span class="p">(</span><span class="n">rank</span><span class="o">==</span><span class="mi">0</span><span class="p">):</span>
@@ -124,7 +125,8 @@
 <span class="sd">            solutions in a csv file. Defaults to True.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        numpy.ndarray: Solution at the last iteration.</span>
+<span class="sd">        numpy.ndarray: </span>
+<span class="sd">            Solution at the last iteration.</span>
 <span class="sd">    &quot;&quot;&quot;</span>    
     <span class="c1"># fine integrator</span>
     <span class="k">def</span> <span class="nf">F</span><span class="p">(</span><span class="n">initial_point</span><span class="p">,</span><span class="n">t_j1</span><span class="p">,</span><span class="n">t_j2</span><span class="p">):</span>

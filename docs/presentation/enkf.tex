@@ -16,8 +16,15 @@
 
    \subsection{Theory}
    
-   \begin{frame}[allowframebreaks]{Statistical approach}
+   \begin{frame}[allowframebreaks]{Statistical approach:Derivation of the Kalman filter}
        The Kalman filter method consists in looking for $x^a$ as linear combination of our model and our observations.
+       \begin{equation}
+           x^a=x^b+K(y-x^b)
+           \label{eq1}
+       \end{equation}
+       with K the gain matrix.
+    \newpage
+        The Kalman filter method consists in looking for $x^a$ as linear combination of our model and our observations.
        \begin{equation}
            x^a=x^b+K(y-x^b)
            \label{eq1}
@@ -28,16 +35,14 @@
            x^a-x^t=x^b-x^t+K(y-x^t-x^b+x^t)
        \end{equation}
        Errors: \qquad $\epsilon^a=x^a-x^t,\qquad \epsilon^b=x^b-x^t, \qquad \epsilon^y=y-x^t$ \\
-       One realisation of these errors :
-       \begin{equation}
-           \epsilon^a=\epsilon^b+K(\epsilon^y-\epsilon^b)
-       \end{equation}
+       One realisation of these errors :$ \quad \epsilon^a=\epsilon^b+K(\epsilon^y-\epsilon^b)$
        Many realisation of these errors + sample average :
        \begin{equation}
            <\epsilon^a>=<\epsilon^b>+K(<\epsilon^y>-<\epsilon^b>)
        \end{equation}
+    \end{frame}
+    \begin{frame}{Kalman filter in one-dimension}
 
-       \textbf{In one dimension.} \\
        Analysis error variance as low as possible.
        \newline Minimize $<(\epsilon^a)^2>$ with respect to $K$ :
        $$<(\epsilon^a)^2>=<(\epsilon^b)^2>+K^2<(\epsilon^y-\epsilon^b)^2>+2K<\epsilon^b(\epsilon^y-\epsilon^b)^2>$$
@@ -47,7 +52,7 @@
    
 	\end{frame}
        
-	\begin{frame}{BLUE : Kalman filter}
+	\begin{frame}{Kalman filter in multi-dimensional case}
        Now that we have explained the method for finding $x^a$ let's try to generalize our formula in a \textbf{multi-dimensional case}.
    
        $$\left\{\begin{aligned}

@@ -58,14 +58,11 @@
 	\end{equation*}
 	with
 	$$\mathcal{E}(j,k)=|U_j^k-U_{ex}(t_j)|+\max_{t\in[t_j,t_{j+1}]}|U_k(t)-U_{ex}(t)|$$
-	where 
-	\begin{enumerate}[\textbullet]
-		\item $U_j^k$ : initial point at $t_j$ and iteration $k$
-		\item $U_{ex}(t_j)$ : exact solution at $t_j$
-		\item $U_k$ : solution between $t_0$ and $T$ at iteration k
-		\item $U_{ex}$ : exact solution between $t_0$ and $T$
-	\end{enumerate}
-	Note that we calculate the maximum just between $t_j$ and $t_{j+1}$.
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.62\linewidth]{images/parareal/explane_order.jpg}
+		\caption{Explanation of the order property}
+	\end{figure}
 \end{frame}
 
 \subsection{Results}

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lorenz.enkf package &mdash; Lorenz 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="lorenz.parareal package" href="lorenz.parareal.html" />
+    <link rel="prev" title="lorenz package" href="lorenz.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Lorenz
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">lorenz</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lorenz.html">lorenz package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="lorenz.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">lorenz.enkf package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lorenz.parareal.html">lorenz.parareal package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lorenz.html#module-lorenz">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Lorenz</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">lorenz</a> &raquo;</li>
+          <li><a href="lorenz.html">lorenz package</a> &raquo;</li>
+      <li>lorenz.enkf package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/lorenz.enkf.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="lorenz-enkf-package">
+<h1>lorenz.enkf package<a class="headerlink" href="#lorenz-enkf-package" title="Permalink to this heading"></a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="module-lorenz.enkf.enkf">
+<span id="lorenz-enkf-enkf-module"></span><h2>lorenz.enkf.enkf module<a class="headerlink" href="#module-lorenz.enkf.enkf" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="lorenz.enkf.enkf.RK4_Lorenz">
+<span class="sig-prename descclassname"><span class="pre">lorenz.enkf.enkf.</span></span><span class="sig-name descname"><span class="pre">RK4_Lorenz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">γ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lorenz/enkf/enkf.html#RK4_Lorenz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lorenz.enkf.enkf.RK4_Lorenz" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>-γ</strong> – an array of real that represente the three parameter of the lorenz system (σ, b, r)</p></li>
+<li><p><strong>-X0</strong> – a size 3 array with the initial constition, initial point (x,y,z)</p></li>
+<li><p><strong>-N</strong> – a real that represents the number of discritisation</p></li>
+<li><p><strong>-T</strong> – a real that represents the time interval</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>this fonction return resolution with RK4
+-X[:,0]: array of x
+-X[:,1]: array of y
+-X[:,2]: array of z
+-T_tab: array of the time</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lorenz.enkf.enkf.RK4_harmonique">
+<span class="sig-prename descclassname"><span class="pre">lorenz.enkf.enkf.</span></span><span class="sig-name descname"><span class="pre">RK4_harmonique</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lorenz/enkf/enkf.html#RK4_harmonique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lorenz.enkf.enkf.RK4_harmonique" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>-w</strong> – a real that represente the first parameter of the hamonic oscillator</p></li>
+<li><p><strong>-X0</strong> – a size 2 array with the initial constition, initial point.</p></li>
+<li><p><strong>-N</strong> – a real that represents the number of discritisation</p></li>
+<li><p><strong>-T</strong> – a real that represents the time interval</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>this fonction return resolution with RK4
+-X[:,0]: array of x
+-X[:,1]: array of y
+-T_tab: array of the time</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lorenz.enkf.enkf.assimilation_donnee">
+<span class="sig-prename descclassname"><span class="pre">lorenz.enkf.enkf.</span></span><span class="sig-name descname"><span class="pre">assimilation_donnée</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_sensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_echantillon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">γ</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lorenz/enkf/enkf.html#assimilation_donnée"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lorenz.enkf.enkf.assimilation_donnee" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>-x</strong> – a size 3 array with the initial constition, initial point (x,y,z)</p></li>
+<li><p><strong>-read_sensor</strong> – a function that will read the observation every time</p></li>
+<li><p><strong>-P</strong> – covariance matrix  associated with the forecast state error</p></li>
+<li><p><strong>-Q</strong> – covariance matrix associated with the model error</p></li>
+<li><p><strong>-R</strong> – covariance matrix associated with the observations error</p></li>
+<li><p><strong>-T</strong> – a real that represents the time interval</p></li>
+<li><p><strong>-dimz</strong> – a real that represent the dimention of the observations</p></li>
+<li><p><strong>-dt</strong> – a real that represent the time for each discretisation</p></li>
+<li><p><strong>-N</strong> – a real that represents the index difference between the observations and the model</p></li>
+<li><p><strong>-nb_echantillon</strong> – a real that represents the index difference between the observations and the model</p></li>
+<li><p><strong>-hx</strong> – Measurement function. Convert state x into a measurement</p></li>
+<li><p><strong>-fx</strong> – State transition function</p></li>
+<li><p><strong>-γ</strong> – an array of real that represente the three parameter of the lorenz system (σ, b, r)</p></li>
+<li><p><strong>-N</strong> – a real that represents the number of discritisation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>this function do the data assimilation using the ensemble kalman filter
+-tab_etat: an array with the state mean after data assimilation
+-tab_temps: an array with the time
+-tab_cov: an array with the diagonal of the state covarience matrix pour each time</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lorenz.enkf.enkf.euler_explicit_harmonique">
+<span class="sig-prename descclassname"><span class="pre">lorenz.enkf.enkf.</span></span><span class="sig-name descname"><span class="pre">euler_explicit_harmonique</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lorenz/enkf/enkf.html#euler_explicit_harmonique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lorenz.enkf.enkf.euler_explicit_harmonique" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>-w</strong> – a real that represente the first parameter of the hamonic oscillator</p></li>
+<li><p><strong>-X0</strong> – a size 2 array with the initial constition, initial point.</p></li>
+<li><p><strong>-N</strong> – a real that represents the number of discritisation</p></li>
+<li><p><strong>-T</strong> – a real that represents the time interval</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>this fonction return resolution with euler
+-X[:,0]: array of x
+-X[:,1]: array of y
+-T_tab: array of the time</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lorenz.enkf.enkf.f">
+<span class="sig-prename descclassname"><span class="pre">lorenz.enkf.enkf.</span></span><span class="sig-name descname"><span class="pre">f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">σ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lorenz/enkf/enkf.html#f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lorenz.enkf.enkf.f" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lorenz.enkf.enkf.f_orcillateur">
+<span class="sig-prename descclassname"><span class="pre">lorenz.enkf.enkf.</span></span><span class="sig-name descname"><span class="pre">f_orcillateur</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lorenz/enkf/enkf.html#f_orcillateur"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lorenz.enkf.enkf.f_orcillateur" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>-X_n</strong> – un tableau de reel de taille 2</p></li>
+<li><p><strong>-w</strong> – a real that represente the first parameter of the hamonic oscillator</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lorenz.enkf.enkf.fx">
+<span class="sig-prename descclassname"><span class="pre">lorenz.enkf.enkf.</span></span><span class="sig-name descname"><span class="pre">fx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">γ</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lorenz/enkf/enkf.html#fx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lorenz.enkf.enkf.fx" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lorenz.enkf.enkf.plot">
+<span class="sig-prename descclassname"><span class="pre">lorenz.enkf.enkf.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lorenz1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lorenz2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_temps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_x_y_z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lorenz/enkf/enkf.html#plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lorenz.enkf.enkf.plot" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>-lorenz1</strong> – observations,an array of vectors where each vector is of size 3, representing [x,y,z]</p></li>
+<li><p><strong>-lorenz2</strong> – model,an array of vectors where each vector is of size 3, representing [x,y,z]</p></li>
+<li><p><strong>-tab_temps</strong> – real type array representing time</p></li>
+<li><p><strong>-tab_x_y_z</strong> – represente an array of vectors where each vector is of size 3,array after data assimilation,
+representing [x,y,z]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>-return nothing but makes three different plot, in each one we will have</dt><dd><p>3 curves (observations,model and stade after data assimilation) as a function of time</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lorenz.enkf.enkf.plot_1_fig">
+<span class="sig-prename descclassname"><span class="pre">lorenz.enkf.enkf.</span></span><span class="sig-name descname"><span class="pre">plot_1_fig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lorenz1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lorenz2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_temps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_cov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_x_y_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labelx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labely</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lorenz/enkf/enkf.html#plot_1_fig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lorenz.enkf.enkf.plot_1_fig" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>-lorenz1</strong> – observations,an array of vectors where each vector is of size 3, representing [x,y,z]</p></li>
+<li><p><strong>-lorenz2</strong> – model,an array of vectors where each vector is of size 3, representing [x,y,z]</p></li>
+<li><p><strong>-ind</strong> – a real representing the index we want to plot (x, y or z)</p></li>
+<li><p><strong>-tab_temps</strong> – real type array representing time</p></li>
+<li><p><strong>-tab_cov</strong> – an array of vectors where each vector is of size 3, representing variances
+(diag of the cov matrix associated to the state obtained through data assimilation)</p></li>
+<li><p><strong>-diff</strong> – represent the distance to create our standart deviation variance</p></li>
+<li><p><strong>-tab_x_y_z</strong> – represente an array of vectors where each vector is of size 3,array after data assimilation,
+representing [x,y,z]</p></li>
+<li><p><strong>-labelx</strong> – legend of the x-curve</p></li>
+<li><p><strong>-labely</strong> – legend of the y-curve</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>-return nothing but plot 3 curves as a function of ind(either x,y or z) as a function of time</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lorenz.enkf.enkf.test_enkf_harmonique">
+<span class="sig-prename descclassname"><span class="pre">lorenz.enkf.enkf.</span></span><span class="sig-name descname"><span class="pre">test_enkf_harmonique</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/lorenz/enkf/enkf.html#test_enkf_harmonique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lorenz.enkf.enkf.test_enkf_harmonique" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-lorenz.enkf">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-lorenz.enkf" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="lorenz.enkf.toto">
+<span class="sig-prename descclassname"><span class="pre">lorenz.enkf.</span></span><span class="sig-name descname"><span class="pre">toto</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/lorenz/enkf.html#toto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lorenz.enkf.toto" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lorenz.html" class="btn btn-neutral float-left" title="lorenz package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lorenz.parareal.html" class="btn btn-neutral float-right" title="lorenz.parareal package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Melissa, Frederique.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

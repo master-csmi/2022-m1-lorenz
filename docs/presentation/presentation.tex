@@ -1,7 +1,10 @@
 %% Requires compilation with XeLaTeX or LuaLaTeX
 \documentclass[10pt,xcolor={table,dvipsnames},t]{beamer}
+%\documentclass[compress]{beamer}
 \usetheme{diapo}
 \usepackage{amsmath}
+\usepackage[bottom]{footmisc}
+\usepackage{multirow}
 
 \title[Lorenz]{Data assimilation for the Lorenz system}
 \subtitle{Presentation (version 0)}
@@ -9,7 +12,12 @@
 \institute{\large Strasbourg University}
 \date{\today}
 
-\useoutertheme{miniframes}
+%\useoutertheme[subsection=false]{miniframes}
+%\usepackage{etoolbox}
+%\makeatletter
+%\patchcmd{\slideentry}{\advance\beamer@xpos by1\relax}{}{}{}
+%\def\beamer@subsectionentry#1#2#3#4#5{\advance\beamer@xpos by1\relax}%
+%\makeatother
 
 \begin{document}
 	
@@ -28,7 +36,18 @@
 		\end{frame}
 	}
 
+	\AtBeginSubsection[]{
+		\begin{frame}
+			\vfill
+			\centering
+			\begin{beamercolorbox}[sep=5pt,shadow=true,rounded=true]{subtitle}
+				\usebeamerfont{title}\insertsubsectionhead\par%
+			\end{beamercolorbox}
+			\vfill
+		\end{frame}
+	}
 
+	\section{Introduction to the project}
 
 	\begin{frame}{Cemosis}
 		
@@ -123,23 +142,12 @@
 		\end{enumerate}
 		
 	\end{frame}
-	
-	\begin{frame}{Methods used to solve Lorenz system}
-		
-		\begin{itemize}
-			\item Discretization : \\
-			\qquad \includegraphics[width=0.4\textwidth]{images/discretization.jpg} \\
-			\item Explicit Euler
-			\item Implicit Euler			
-			\item Runge Kutta order 4th			
-			\item Scipy function : \qquad \textit{scipy.integrate.solve\_ivp}
-		\end{itemize}
-		
-	\end{frame}
+
+	\section{Numerical resolution (with differents method)}
 	
 	\begin{frame}{Some results (with Python)}
 		
-		\includegraphics[width=\textwidth]{images/N100000.png} \\ 
+		\includegraphics[width=\textwidth]{images/intro/N100000.png} \\ 
 		\begin{center}
 			\begin{minipage}[c]{0.5\linewidth}
 				$\sigma=10,\quad \beta=8/3, \quad r=28$ \\
@@ -148,6 +156,33 @@
 			$T=100, N = 100000 \Rightarrow \Delta t=0.001$
 		\end{center}
 		
+	\end{frame}
+
+	\section{Parareal method}
+
+	\input{parareal.tex}
+	
+	\section{Data assimilation}
+	
+	\input{enkf.tex}
+	
+	\section{Conclusion}
+	
+	\begin{frame}{Conclusion and Perspectives}
+		Main goals achieved :
+		\begin{enumerate}[\textbullet]
+			\item to implement different numerical resolution methods
+			\item to implement the parareal method
+			\item to realise data assimilation
+		\end{enumerate} \; \\
+	
+		Some possibilities for the future :
+		\begin{enumerate}[\textbullet]
+			\item try to find a number of processes P which is optimal
+			\item What happens when we take more intervals that are spread over the different processes ?
+			\item understand strange phenomena
+			\item apply the data assimilation with real observation 
+		\end{enumerate}
 	\end{frame}
 	
 \end{document}

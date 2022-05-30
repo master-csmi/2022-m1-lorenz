@@ -63,7 +63,7 @@ The principle of the Kalman filter is based on this formulation. Here is a small
 \vspace*{5mm}
 \begin{figure}
     \centering
-		\includegraphics[width=0.8\textwidth]{"images/schema_kalman_filter.png"}
+		\includegraphics[width=0.8\textwidth]{"images/enkf/schema_kalman_filter.png"}
 	\caption{Kalman filter}
 \end{figure}
 The general idea consists in estimating the state at time $k$ from an estimate at time $k-1$ and measurements at time $k$.
@@ -162,7 +162,7 @@ J^o&=\frac{1}{2}\|H_k(M_{0 \rightarrow k}(x))-y_k^0\|_{R_{k}}^2
 Here is a diagram that illustrates the 3D Var method 
 \begin{figure}
     \centering
-		\includegraphics[width=0.8\textwidth]{"images/schema_3D_Var.png"}
+		\includegraphics[width=0.8\textwidth]{"images/enkf/schema_3D_Var.png"}
 		\caption{3D-Var}
 \end{figure}
 \subsubsection{From 3DVar to BLUE}
@@ -210,22 +210,14 @@ $$\qquad \frac{\partial x}{\partial t}=v \quad \Rightarrow \quad \frac{\partial^
 
 \noindent For the first case we chose to take a model that will be solved with RK4 and as observation we chose to take the exact solution. We must also choose $P$, $R$ and $Q$ with $Q$ covariance matrix associated with the models, $R$ covariance matrix associated with the observations and $P$ covariance matrix associated with the forecast state.
 The observation operator will only take the first value which is $\frac{\partial x}{\partial t}=v$ because we only observe the exact value of $v$ .
-Let's take :
-
-\begin{lstlisting}
-w=2 
-x = np.array([2,0])
-Pe = 2*np.pi/w
-dt= Pe/20
-T = 3*Pe
-N = int(round(T/dt))
-def hx(x):
-       return  np.array([x[0]])
-def read_sensor(t):
-        2*np.cos(2*t)
-\end{lstlisting}
-With $Pe$ the period, $N$ the number of discretisation points, hx(x) the measurement function,it convert state x into a measurement and readsensor(t) a function that will read the observation every time.
-\noindent\newline Let's take:
+\newpage
+\noindent Let's take :
+\begin{enumerate}[label=\textbullet]
+  \item For the initial point: $(x(0),v(0))=(2,0)$ 
+  \item For the period : \; $Pe$=$\frac{2\pi}{\omega_0=2}$,\quad $x_0=2$ \quad, $\phi_0=0$ 
+  \item For the discretisation $dt$=$\frac{Pe}{20}$, and for the time range :\quad $[t_0,T]=[0,3Pe]$
+\end{enumerate}
+\noindent\newline Several cases are studied:
 \begin{enumerate}[label=\textbullet]
 	\item For the first case:
 	        $$P=\begin{pmatrix}
@@ -266,9 +258,9 @@ With $Pe$ the period, $N$ the number of discretisation points, hx(x) the measure
 \end{enumerate}
 \begin{figure}[H]
     \centering
-		\includegraphics[width=0.4\textwidth]{"images/oscillator1.png"}
-		\includegraphics[width=0.4\textwidth]{"images/oscillator2.png"}
-		\includegraphics[width=0.4\textwidth]{"images/oscillator3.png"}
+		\includegraphics[width=0.4\textwidth]{"images/enkf/oscillator1.png"}
+		\includegraphics[width=0.4\textwidth]{"images/enkf/oscillator2.png"}
+		\includegraphics[width=0.4\textwidth]{"images/enkf/oscillator3.png"}
 		\caption{Data assimilation with the harmonic oscillator}
 \end{figure}
 \noindent We have 3 different cases:
@@ -281,7 +273,7 @@ For the first case we chose to take exactly the same initial point and the same 
 For $(\sigma, r, b)$ we have chosen to take (12.,6.,12.) and for the initial point we take (-10.,-10.,25.). But to differentiate the observations and the model we prefer to work with the time step. For the model we have chosen $dt=N/0.1$ and for the observations we have chosen $dt=N/0.01$ (with $N$ the number that represent the points of discretization). This means that, when we make the assimilation of the data  every 0.1 s., our observations will taken every 0.01 s.
 \begin{figure}[H]
     \centering
-		\includegraphics[width=1\textwidth]{"images/dt.png"}
+		\includegraphics[width=1\textwidth]{"images/enkf/dt.png"}
 		\caption{discretisation}
 \end{figure}
 We also chose to take a fairly small R because our observations are very precise.
@@ -304,7 +296,7 @@ We also chose to take a fairly small R because our observations are very precise
 
 \begin{figure}[H]
     \centering
-		\includegraphics[width=1\textwidth]{"images/lorenz1_b.png"}
+		\includegraphics[width=1\textwidth]{"images/enkf/lorenz1_b.png"}
 		\caption{First example for Lorenz with $(\sigma, r, b)=(12.,6.,12.)$, $X_0=(-10.,-10.,25.),\text{time step}=0.01s$ for observation and $0.1$s. for the model}
 \end{figure}
 \noindent We can notice that our curve after data assimilation is very close to our two other curves, we can see that our curve is very close to the model, which is totally normal, since we do the assimilation on each dt=N/0.1, it only takes the observations every 10 steps. But we can still see that the green curve is between the observations curve and the model curve.
@@ -327,7 +319,7 @@ We also chose to take a fairly small R because our observations are very precise
             \end{pmatrix}.$$ 
  \begin{figure}[H]
     \centering
-		\includegraphics[width=1\textwidth]{"images/lorenz2_a.png"}
+		\includegraphics[width=1\textwidth]{"images/enkf/lorenz2_a.png"}
 		\caption{Second example for Lorenz with $(\sigma, r, b)=(12.,6.,12.)$ for the observation, $(\sigma, r, b)=(10.,6.,10.)$ for the model, $X_0=(-10.,-10.,25.),\text{time step}=0.1s$ }
 \end{figure}
 \noindent This time we take a small Q, which means that we trust the model much more than the observations. We notice that our data assimilation curve is quite close to the one of the model, which confirms the assumptions we made when we chose Q and R.
@@ -349,7 +341,7 @@ We also chose to take a fairly small R because our observations are very precise
             \end{pmatrix}.$$ 
  \begin{figure}[H]
         \centering
-		\includegraphics[width=1\textwidth]{"images/lorenz3_b.png"}
+		\includegraphics[width=1\textwidth]{"images/enkf/lorenz3_b.png"}
 		\caption{Third example for Lorenz with $(\sigma, r, b)=(12.,6.,12.)$, $X_0=(-10.,-10.,25.),\text{time step}=0.01s$ for observation and $0.1$s. for the model}
 \end{figure}
 \noindent Now we have inverted the values of R and Q and we have not changed our P. We expect to see that our green curve is close to the blue curve which corresponds to the observations. On the other hand we notice that the values of the states after the data assimilation are very close almost similar to the observation ones.

@@ -9,19 +9,19 @@ import time
 def plot_1_fig(lorenz1,lorenz2,ind,tab_temps,tab_cov,diff,tab_x_y_z,labelx,labely):
     """
     Parameters:
-        -lorenz1: observations,an array of vectors where each vector is of size 3, representing [x,y,z] 
-        -lorenz2: model,an array of vectors where each vector is of size 3, representing [x,y,z] 
-        -ind:a real representing the index we want to plot (x, y or z)
-        -tab_temps:real type array representing time
-        -tab_cov:an array of vectors where each vector is of size 3, representing variances 
+        lorenz1: observations,an array of vectors where each vector is of size 3, representing [x,y,z] 
+        lorenz2: model,an array of vectors where each vector is of size 3, representing [x,y,z] 
+        ind:a real representing the index we want to plot (x, y or z)
+        tab_temps:real type array representing time
+        tab_cov:an array of vectors where each vector is of size 3, representing variances 
          (diag of the cov matrix associated to the state obtained through data assimilation)
-        -diff:represent the distance to create our standart deviation variance
-        -tab_x_y_z:represente an array of vectors where each vector is of size 3,array after data assimilation,
+        diff:represent the distance to create our standart deviation variance
+        tab_x_y_z:represente an array of vectors where each vector is of size 3,array after data assimilation,
          representing [x,y,z] 
-        -labelx:legend of the x-curve
-        -labely:legend of the y-curve
+        labelx:legend of the x-curve
+        labely:legend of the y-curve
     Returns:
-        -return nothing but plot 3 curves as a function of ind(either x,y or z) as a function of time
+        return nothing but plot 3 curves as a function of ind(either x,y or z) as a function of time
 
     
     """
@@ -38,13 +38,13 @@ def plot_1_fig(lorenz1,lorenz2,ind,tab_temps,tab_cov,diff,tab_x_y_z,labelx,label
 def plot(lorenz1,lorenz2,tab_temps,tab_x_y_z):
     """
     Parameters:
-        -lorenz1: observations,an array of vectors where each vector is of size 3, representing [x,y,z] 
-        -lorenz2: model,an array of vectors where each vector is of size 3, representing [x,y,z] 
-        -tab_temps:real type array representing time
-        -tab_x_y_z:represente an array of vectors where each vector is of size 3,array after data assimilation,
+        lorenz1: observations,an array of vectors where each vector is of size 3, representing [x,y,z] 
+        lorenz2: model,an array of vectors where each vector is of size 3, representing [x,y,z] 
+        tab_temps:real type array representing time
+        tab_x_y_z:represente an array of vectors where each vector is of size 3,array after data assimilation,
          representing [x,y,z] 
     Returns:
-        -return nothing but makes three different plot, in each one we will have 
+        return nothing but makes three different plot, in each one we will have 
          3 curves (observations,model and stade after data assimilation) as a function of time
 
     
@@ -76,8 +76,8 @@ def plot(lorenz1,lorenz2,tab_temps,tab_x_y_z):
 def f_orcillateur(t,X_n,w):
     """
     Parameters:
-        -X_n:un tableau de reel de taille 2 
-        -w: a real that represente the first parameter of the hamonic oscillator
+        X_n:un tableau de reel de taille 2 
+        w: a real that represente the first parameter of the hamonic oscillator
     
     """
     (u,v)=X_n
@@ -88,15 +88,15 @@ def f_orcillateur(t,X_n,w):
 def RK4_harmonique(w,X0,N,T): 
     """
     Parameters: 
-        -w: a real that represente the first parameter of the hamonic oscillator
-        -X0:a size 2 array with the initial constition, initial point.
-        -N: a real that represents the number of discritisation
-        -T: a real that represents the time interval
+        w: a real that represente the first parameter of the hamonic oscillator
+        X0:a size 2 array with the initial constition, initial point.
+        N: a real that represents the number of discritisation
+        T: a real that represents the time interval
     Returns:
         this fonction return resolution with RK4 
-        -X[:,0]: array of x
-        -X[:,1]: array of y
-        -T_tab: array of the time
+        X[:,0]: array of x
+        X[:,1]: array of y
+        T_tab: array of the time
     
     """
     dt=T/N
@@ -118,15 +118,15 @@ def RK4_harmonique(w,X0,N,T):
 def euler_explicit_harmonique(w,X0,N,T):
     """
     Parameters: 
-        -w: a real that represente the first parameter of the hamonic oscillator
-        -X0:a size 2 array with the initial constition, initial point.
-        -N: a real that represents the number of discritisation
-        -T: a real that represents the time interval
+        w: a real that represente the first parameter of the hamonic oscillator
+        X0:a size 2 array with the initial constition, initial point.
+        N: a real that represents the number of discritisation
+        T: a real that represents the time interval
     Returns:
         this fonction return resolution with euler
-        -X[:,0]: array of x
-        -X[:,1]: array of y
-        -T_tab: array of the time
+        X[:,0]: array of x
+        X[:,1]: array of y
+        T_tab: array of the time
     
     
     """
@@ -154,16 +154,16 @@ def f(t_n,X_n,σ, b, r):
 def RK4_Lorenz(γ,X0,N,T): 
     """
     Parameters: 
-        -γ: an array of real that represente the three parameter of the lorenz system (σ, b, r)
-        -X0:a size 3 array with the initial constition, initial point (x,y,z)
-        -N: a real that represents the number of discritisation
-        -T: a real that represents the time interval
+        γ: an array of real that represente the three parameter of the lorenz system (σ, b, r)
+        X0:a size 3 array with the initial constition, initial point (x,y,z)
+        N: a real that represents the number of discritisation
+        T: a real that represents the time interval
     Returns:
         this fonction return resolution with RK4
-        -X[:,0]: array of x
-        -X[:,1]: array of y
-        -X[:,2]: array of z
-        -T_tab: array of the time
+        X[:,0]: array of x
+        X[:,1]: array of y
+        X[:,2]: array of z
+        T_tab: array of the time
     
     
     """
@@ -200,67 +200,24 @@ def fx(x,t, dt,γ):
     K4=f(t+dt, x+ K3 * dt,γ)
     X_next=x+ dt/6.* (K1+2.*K2+2.*K3+K4)
     return X_next
-    
-    
-def test_enkf_harmonique():
-    w=2
-    x = np.array([2,0])
-    Pe = 2*np.pi/w
-    dt= Pe/20
-    T = 3*Pe
-    N = int(round(T/dt))
-    def fx_rk4(x,t, dt,w):
-        def f(t,X_n,w): #X_n=(x_n,y_n,z_n)
-            (u,v)=X_n
-            f_1 = v
-            f_2 =-w**2*u
-            return np.array([f_1,f_2])
-        K1=f(t, x,w)
-        K2=f(t+dt/2., x + 1./2. * K1 * dt,w)
-        K3=f(t+dt/2., x + 1./2. * K2 * dt,w)
-        K4=f(t, x+ K3 * dt,w)
-        X_next=x+ dt/6.* (K1+2.*K2+2.*K3+K4)
-        return X_next
-
-    P = np.eye(2) * 0.0
-    R = np.eye(1)*0.001 # matrice de cov associer a la mesure
-    Q=np.eye(2)*0.0
-    def hx(x):
-        return  np.array([x[0]])
-
-
-    def read_sensor(t):
-            2*np.cos(2*t)
-    oscillateur=RK4_harmonique(w,x,N,T)
-
-    tab_etat_oscillateur,tab_temps_oscillateur,tab_cov=assimilation_donnée(x,read_sensor,P,Q,R,T,1,dt,1,40,hx,fx_rk4,w)
-    taille_tab_etat=len(tab_etat_oscillateur)
-    compteur=0
-    for i in range (taille_tab_etat):
-        if ((tab_etat_oscillateur[i][0]-oscillateur[0][i])<1e-5):
-            compteur+=1;
-    if(compteur==taille_tab_etat):
-        print("test oke pour enkf")
-    else:
-        print("test ne passe pas pour enkf")
 
 def assimilation_donnée(x,read_sensor,P,Q,R,T,dimz,dt,N,nb_echantillon,hx,fx,γ):
     """
     Parameters: 
-        -x:a size 3 array with the initial constition, initial point (x,y,z)
-        -read_sensor: a function that will read the observation every time
-        -P:covariance matrix  associated with the forecast state error
-        -Q:covariance matrix associated with the model error
-        -R:covariance matrix associated with the observations error
-        -T:a real that represents the time interval
-        -dimz: a real that represent the dimention of the observations
-        -dt:a real that represent the time for each discretisation
-        -N: a real that represents the index difference between the observations and the model
-        -nb_echantillon: a real that represents the index difference between the observations and the model
-        -hx:Measurement function. Convert state x into a measurement
-        -fx:State transition function
-        -γ: an array of real that represente the three parameter of the lorenz system (σ, b, r)
-        -N: a real that represents the number of discritisation
+        x:a size 3 array with the initial constition, initial point (x,y,z)
+        read_sensor: a function that will read the observation every time
+        P:covariance matrix  associated with the forecast state error
+        Q:covariance matrix associated with the model error
+        R:covariance matrix associated with the observations error
+        T:a real that represents the time interval
+        dimz: a real that represent the dimention of the observations
+        dt:a real that represent the time for each discretisation
+        N: a real that represents the index difference between the observations and the model
+        nb_echantillon: a real that represents the index difference between the observations and the model
+        hx:Measurement function. Convert state x into a measurement
+        fx:State transition function
+        γ: an array of real that represente the three parameter of the lorenz system (σ, b, r)
+        N: a real that represents the number of discritisation
     Returns:
         this function do the data assimilation using the ensemble kalman filter
         -tab_etat: an array with the state mean after data assimilation

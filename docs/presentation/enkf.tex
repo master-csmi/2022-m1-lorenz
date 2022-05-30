@@ -142,26 +142,22 @@
         \item $(\sigma, r, b)=(12.,6.,12.)$, $\quad X_0=(-10.,-10.,25.)$, $\quad [t_0,T]=[0,1]$,
         \item We trust much more the observation
         \end{enumerate}
-        \scalebox{0.7}{
         $$P=\begin{pmatrix}
         0.1 & 0. & 0. \\
         0. & 0.1 & 0. \\
         0. & 0. & 0.1 \\
-        \end{pmatrix},\qquad \qquad \qquad \qquad \qquad $$} 
-        \scalebox{0.7}{
-        $$Q=\begin{pmatrix}
+        \end{pmatrix}, \qquad
+        Q=\begin{pmatrix}
         0.1 & 0. & 0. \\
         0. & 0.1 & 0. \\
         0. & 0. & 0.1 \\
-        \end{pmatrix},\qquad \qquad \qquad \qquad \qquad $$}
-        \scalebox{0.7}{
-        $$R=\begin{pmatrix}
+        \end{pmatrix},\qquad
+       	R=\begin{pmatrix}
         0.01 & 0. & 0. \\
         0. & 0.01 & 0. \\
         0. & 0. & 0.01 \\
-        \end{pmatrix}. $$} 
+        \end{pmatrix}.$$
         \pgfimage[width=1.002\linewidth]{images/enkf/lorenz_1.png}
-       
     \end{frame}
 	\begin{frame}[allowframebreaks]{Lorenz System - Differents parameters}
        
@@ -170,25 +166,23 @@
            \item $X_0=(-10.,-10.,25.)$, $\quad \Delta t=0.1s$ $\quad [t_0,T]=[0,4]$,
            \item We trust much more the model .
            \end{enumerate}
-           \scalebox{0.7}{
-           $$\qquad \qquad P=\begin{pmatrix}
+       		\footnotesize
+           $$P=\begin{pmatrix}
            0.1 & 0. & 0. \\
             0. & 0.1 & 0. \\
            0. & 0. & 0.1 \\
-           \end{pmatrix},$$\qquad \qquad \qquad \qquad}
-           \scalebox{0.7}{
-           $$Q=\begin{pmatrix}
+           \end{pmatrix},\qquad
+           Q=\begin{pmatrix}
             0.01 & 0. & 0. \\
            0. & 0.01 & 0. \\
            0. & 0. & 0.01 \\
-           \end{pmatrix},$$\qquad \qquad \qquad }
-           \scalebox{0.7}{
-           $$R=\begin{pmatrix}
+           \end{pmatrix}, \qquad 
+           R=\begin{pmatrix}
            0.1 & 0. & 0. \\
            0. & 0.1 & 0. \\
            0. & 0. & 0.1 \\
-           \end{pmatrix}.$$}
-   
+           \end{pmatrix}.$$
+   			\normalsize
        \begin{figure}
            \centering
            \pgfimage[width=0.87\linewidth]{images/enkf/lorenz_2.png}
@@ -201,25 +195,23 @@
                \item $X_0=(-10.,-10.,25.)$, $\quad \Delta t=0.1s$ $\quad [t_0,T]=[0,4]$,
                \item We trust much more the observation .
             \end{enumerate}
-            \scalebox{0.7}{
-            $$\qquad \qquad P=\begin{pmatrix}
+        \footnotesize
+            $$P=\begin{pmatrix}
             0.1 & 0. & 0. \\
              0. & 0.1 & 0. \\
             0. & 0. & 0.1 \\
-            \end{pmatrix},$$\qquad \qquad \qquad \qquad}
-            \scalebox{0.7}{
-            $$Q=\begin{pmatrix}
+            \end{pmatrix},\qquad
+       		Q=\begin{pmatrix}
              0.1 & 0. & 0. \\
             0. & 0.1 & 0. \\
             0. & 0. & 0.1 \\
-            \end{pmatrix},$$\qquad \qquad \qquad }
-            \scalebox{0.7}{
-            $$R=\begin{pmatrix}
+            \end{pmatrix}, \qquad
+            R=\begin{pmatrix}
             0.01 & 0. & 0. \\
             0. & 0.01 & 0. \\
             0. & 0. & 0.01 \\
-            \end{pmatrix}.$$}
-   
+            \end{pmatrix}.$$
+   		\normalsize
        \begin{figure}
            \centering
            \pgfimage[width=0.89\linewidth]{images/enkf/lorenz3_b.png} 

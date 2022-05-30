@@ -1,10 +1,10 @@
-\begin{frame}{Introduction to the data assimilation}
+\begin{frame}{Introduction to data assimilation}
     Data assimilation is widely used in:
     \begin{enumerate}[\textbullet]
            \item weather forecasting
            \item ocean simulation
     \end{enumerate}	 
-          The main idea of the data assimilation is to combine:
+          The main idea of computational data assimilation is to combine:
     \begin{enumerate}[\textbullet]
            \item a model
            \item some observations
@@ -13,9 +13,11 @@
     $$x^a=Lx^b+Ky^0$$
     with $x^a$ the analyzed state, $x^b$ the state of the model and $y^0$ the observations.
    \end{frame}
+
    \subsection{Theory}
-   \begin{frame}[allowframebreaks]{Kalman filter}
-       The Kalman filter method consists in looking for $x^a$ an analysis, this analysis will be a linear combination of what our model and our observations.
+   
+   \begin{frame}[allowframebreaks]{Statistical approach}
+       The Kalman filter method consists in looking for $x^a$ as linear combination of our model and our observations.
        \begin{equation}
            x^a=x^b+K(y-x^b)
            \label{eq1}
@@ -30,11 +32,11 @@
        \begin{equation}
            \epsilon^a=\epsilon^b+K(\epsilon^y-\epsilon^b)
        \end{equation}
-       Many realisation of these errors :
+       Many realisation of these errors + sample average :
        \begin{equation}
            <\epsilon^a>=<\epsilon^b>+K(<\epsilon^y>-<\epsilon^b>)
        \end{equation}
-       \newpage
+
        \textbf{In one dimension.} \\
        Analysis error variance as low as possible.
        \newline Minimize $<(\epsilon^a)^2>$ with respect to $K$ :
@@ -43,13 +45,15 @@
        $$K=\frac{<(\epsilon^b)^2>}{<(\epsilon^b)^2>+<(\epsilon^y)^2>} \Rightarrow K=\frac{(\sigma^b)^2}{(\sigma^b)^2+(\sigma^y)^2} $$
        $(\sigma^y)^2$ the observation error variance, \newline $(\sigma^b)^2$ the background or model error variance.
    
-       \newpage
+	\end{frame}
+       
+	\begin{frame}{BLUE : Kalman filter}
        Now that we have explained the method for finding $x^a$ let's try to generalize our formula in a \textbf{multi-dimensional case}.
    
        $$\left\{\begin{aligned}
-     &x^a=(I-KH)x^b+Ky^0=x^b+K(y^0-H(x^b)) \\
-           &K=BH^T(HBH^T+R)^{-1} \\
-    \end{aligned}\right.$$
+	     &x^a=(I-KH)x^b+Ky^0=x^b+K(y^0-H(x^b)) \\
+	           &K=BH^T(HBH^T+R)^{-1} \\
+	    \end{aligned}\right.$$
        With $K$ the gain or weight matrix.
        The Best Linear Unbiased Estimator (BLUE).
        \begin{figure}[H]
@@ -57,9 +61,9 @@
            \caption{Kalman Filter}
        \end{figure}
    \end{frame}
-   \begin{frame}{Minimizing a cost function}
+   \begin{frame}{3D Var : Minimizing a cost function}
        Solves the analysis problem through an optimisation (minimisation of a cost-function)
-       Variational approach of BLUE consists in finding $x^a=\arg\max_{x}J$:
+       Variational approach of BLUE consists in finding $x^a=\arg\min_{x}J$:
        $$\begin{aligned}
            J(x)&=\frac{1}{2}(x^b-x)^TB^{-1}(x^b-x)+\frac{1}{2}(y-H(x))^TR^{-1}(y-H(x)) \\
            &=\frac{1}{2}\|x-x^b\|_B^2+\frac{1}{2}\|H(x)-y^0\|_R^2
@@ -70,8 +74,8 @@
            \caption{3D-Var}
        \end{figure}
    \end{frame}
-   \begin{frame}{Ensemble Filter Kalman}
-       The ENKF method consists in using the Kalman filter method in high dimension.
+   \begin{frame}{Ensemble Kalman Filter}
+       The ENKF method consists in using the Kalman filter in non-linear system.
        \newline We apply the Kalman filter on several state samples $x_1,x_2,..,x_{m}$.
        $$x_i^a=x_i^f+K[y-h(x_i^f)]$$
        with $h(x_i^f)$ the observation operator.
@@ -81,20 +85,12 @@
        forecast error covariance matrix as:
        $$P^f=\frac{1}{m-1}\sum_{i=1}^{m}(x_i^f-\bar{x}^f)(x_i^f-\bar{x}^f)^T~~\text{with}~~\bar{x}^f=\frac{1}{m}\sum_{i=1}^{m}x_i^f $$ .
    \end{frame}
+
    \subsection{Results}
-   %\begin{frame}[allowframebreaks]{Harmonic oscillator}
-       %$$\qquad \frac{\partial x}{\partial t}=v \quad \Rightarrow \quad \frac{\partial^2 x}{\partial t^2}=\frac{\partial v}{\partial t}$$
-       %\begin{enumerate}[\textbullet]
-           %\item We choose for the initial point $(2,0)$
-           %\item For the period let's take $Pe$=$\frac{2\pi}{w}$ with $w$ the first components of our initial point
-           %\item For the discretisation,  $dt$=$\frac{Pe}{20}$ 
-           %\item We try to find the solution in the interval $[0,T]$ with T=$3Pe$
-          %\end{enumerate}
-   
-       %\newpage
+
    \begin{frame}{Harmonic oscillator}
        \small
-       $(x(0),v(0))=(2,0)$, \quad Period : \; $Pe$=$\frac{2\pi}{\omega_0=2}$,\quad $x_0=2$ \quad, $\phi_0=0$ \quad $dt$=$\frac{Pe}{20}$, \quad $[t_0,T]=[0,3Pe]$
+       $(x(0),v(0))=(2,0)$, \quad $Pe$=$\frac{2\pi}{\omega_0}$, \quad $\omega_0=2$, \quad $x_0=2$ \quad, $\phi_0=0$ \quad $dt$=$\frac{Pe}{20}$, \quad $[t_0,T]=[0,3Pe]$
        \begin{minipage}{.32\linewidth}
            \centering
            $$P=\begin{pmatrix}
@@ -134,12 +130,6 @@
            $$R=0.001$$
            \includegraphics[width=\linewidth]{"images/enkf/oscillator3_b.png"}
        \end{minipage}
-   
-       %\begin{figure}[H]
-           %\includegraphics[width=0.32\linewidth]{"images/enkf/oscillator1.png"}
-           %\includegraphics[width=0.32\linewidth]{"images/enkf/oscillator2.png"}
-           %\includegraphics[width=0.32\linewidth]{"images/enkf/oscillator3.png"}
-       %\end{figure}
        
    \end{frame}
    \begin{frame}[allowframebreaks]{Lorenz System}

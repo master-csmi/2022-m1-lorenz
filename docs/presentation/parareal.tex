@@ -1,14 +1,16 @@
 \subsection{Theory}
 
-\begin{frame}{Utilities for the parareal method}
+\begin{frame}{Generalities of the parareal method}
 	
 	\small
 	What is the parareal method ?
 	\begin{enumerate}[\textbullet]
-		\item parallel-in-time integration method, introduced in 2001 by Lions, Maday and Turinici\footnote[frame]{\url{https://en.wikipedia.org/w/index.php?title=Parareal&oldid=1047894968}}
+		\item parallel-in-time integration method, introduced in 2001 by Lions, Maday and Turinici
 		\item computes the numerical solution for multiple time steps in parallel
 		\item categorized as a parallel-across-the-steps method 
 	\end{enumerate}
+
+	\; \\
 
 	Time decomposition :
 	\begin{enumerate}[\textbullet]
@@ -69,7 +71,7 @@
 \begin{frame}[allowframebreaks]{Harmonic oscillator}
 	\begin{minipage}{0.48\linewidth}
 		Equation :
-		$$\frac{\partial^2 x}{\partial t^2}+\omega_0^2 x = 0$$
+		$$\frac{d^2 x}{d t^2}+\omega_0^2 x = 0$$
 	\end{minipage}
 	\begin{minipage}{0.48\linewidth}
 		Exact solution :
@@ -87,9 +89,9 @@
 	
 	2nd order differential equation $\rightarrow$ system of two first order equations :
 		
-	$$\qquad \frac{\partial x}{\partial t}=v \quad \Rightarrow \quad \left\{\;\begin{aligned}
-		\frac{\partial x}{\partial t}&=v \\
-		\frac{\partial v}{\partial t}&=-\omega_0^2 x
+	$$\qquad \frac{d x}{d t}=v \quad \Rightarrow \quad \left\{\;\begin{aligned}
+		\frac{d x}{d t}&=v \\
+		\frac{d v}{d t}&=-\omega_0^2 x
 	\end{aligned}\right.
 	$$  
 	
@@ -101,7 +103,7 @@
 		\begin{figure}
 			\centering
 			\includegraphics[width=\linewidth]{"images/parareal/osci_1.jpg"}
-			\caption{Parareal method apply to the harmonic oscillator}
+			\caption{Parareal method applied to the harmonic oscillator}
 		\end{figure}
 	\end{minipage} \;
 	\begin{minipage}{0.38\linewidth}

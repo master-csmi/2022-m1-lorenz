@@ -7,10 +7,10 @@
 \usepackage{multirow}
 
 \title[Lorenz]{Data assimilation for the Lorenz system}
-\subtitle{Presentation (version 0)}
+\subtitle{Presentation (final version)}
 \author[name]{AYDOGDU Melissa, LECOURTIER Frédérique}
 \institute{\large Strasbourg University}
-\date{\today}
+\date{May 31,2022}
 
 %\useoutertheme[subsection=false]{miniframes}
 %\usepackage{etoolbox}
@@ -132,35 +132,18 @@
 		
 		The system :
 		$$\left\{\begin{aligned} 
-			\frac{\partial x(t)}{\partial t} &=\sigma(y(t)-x(t))\\
-			\frac{\partial y(t)}{\partial t}&=x(t)(r-z(t))-y(t) \\
-			\frac{\partial z(t)}{\partial t}&=x(t)y(t)-bz(t)
+			\frac{d x(t)}{d t} &=\sigma(y(t)-x(t))\\
+			\frac{d y(t)}{d t}&=x(t)(r-z(t))-y(t) \\
+			\frac{d z(t)}{d t}&=x(t)y(t)-bz(t)
 		\end{aligned}\right.$$
 	
 		where
 		
 		\begin{enumerate}[\textbullet]
 			\item $\sigma > 0$  relates to the Prandtl number
-			\item $r > 0$  relates to the Rayleigh
+			\item $r > 0$  relates to the Rayleigh number
 			\item $b > 0$ is a geometric factor
 		\end{enumerate}
-		
-	\end{frame}
-
-	\section{Numerical resolution (with differents method)}
-	
-	\begin{frame}{Some results (with Python)}
-		 \begin{figure}
-		    \includegraphics[width=\textwidth]{images/intro/N100000.png} \\ 
-		    \caption{Resolution of the Lorenz System with different numerical methods}
-		\end{figure}
-		\begin{center}
-		   	\begin{minipage}[c]{0.5\linewidth}
-				$\sigma=10,\quad \beta=8/3, \quad r=28$ \\
-				$X_0=(-10,10,5)$ 
-			\end{minipage}
-			$T=100, N = 100000 \Rightarrow \Delta t=0.001$
-		\end{center}
 		
 	\end{frame}
 
@@ -177,17 +160,16 @@
 	\begin{frame}{Conclusion and Perspectives}
 		Main goals achieved :
 		\begin{enumerate}[\textbullet]
-			\item to implement different numerical resolution methods
-			\item to implement the parareal method
-			\item to realise data assimilation
+			\item to implement different numerical resolution methods for ODEs
+			\item to implement the parareal method for ODEs models
+			\item to realise data assimilation of ODEs model
 		\end{enumerate} \; \\
 	
 		Some possibilities for the future :
 		\begin{enumerate}[\textbullet]
 			\item try to find a number of processes P which is optimal
 			\item What happens when we take more intervals that are spread over the different processes ?
-			\item understand strange phenomena
-			\item apply the data assimilation with real observation 
+			\item apply the data assimilation using real observation 
 		\end{enumerate}
 	\end{frame}
 	

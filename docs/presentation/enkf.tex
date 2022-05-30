@@ -138,23 +138,29 @@
        
    \end{frame}
    \begin{frame}{Lorenz System - Same parameters}
-       $(\sigma, r, b)=(12.,6.,12.)$, $\quad X_0=(-10.,-10.,25.)$, $\quad [t_0,T]=[0,1]$,
-       $$P=\begin{pmatrix}
-       0.1 & 0. & 0. \\
-       0. & 0.1 & 0. \\
-       0. & 0. & 0.1 \\
-       \end{pmatrix} ,
-       Q=\begin{pmatrix}
-       0.1 & 0. & 0. \\
-       0. & 0.1 & 0. \\
-       0. & 0. & 0.1 \\
-       \end{pmatrix},
-       R=\begin{pmatrix}
-       0.01 & 0. & 0. \\
-       0. & 0.01 & 0. \\
-       0. & 0. & 0.01 \\
-       \end{pmatrix}.$$ 
-       \pgfimage[width=\linewidth]{images/enkf/lorenz_1.png} 
+    \begin{enumerate}[\textbullet]
+        \item $(\sigma, r, b)=(12.,6.,12.)$, $\quad X_0=(-10.,-10.,25.)$, $\quad [t_0,T]=[0,1]$,
+        \item We trust much more the observation
+        \end{enumerate}
+        \scalebox{0.7}{
+        $$P=\begin{pmatrix}
+        0.1 & 0. & 0. \\
+        0. & 0.1 & 0. \\
+        0. & 0. & 0.1 \\
+        \end{pmatrix},\qquad \qquad \qquad \qquad \qquad $$} 
+        \scalebox{0.7}{
+        $$Q=\begin{pmatrix}
+        0.1 & 0. & 0. \\
+        0. & 0.1 & 0. \\
+        0. & 0. & 0.1 \\
+        \end{pmatrix},\qquad \qquad \qquad \qquad \qquad $$}
+        \scalebox{0.7}{
+        $$R=\begin{pmatrix}
+        0.01 & 0. & 0. \\
+        0. & 0.01 & 0. \\
+        0. & 0. & 0.01 \\
+        \end{pmatrix}. $$} 
+        \pgfimage[width=1.002\linewidth]{images/enkf/lorenz_1.png}
        
     \end{frame}
 	\begin{frame}[allowframebreaks]{Lorenz System - Differents parameters}
@@ -162,22 +168,26 @@
        \begin{enumerate}[\textbullet]
            \item Model $(\sigma, r, b)=(10.,6.,10.)$, Observation $(\sigma, r, b)=(12.,6.,12.)$,
            \item $X_0=(-10.,-10.,25.)$, $\quad \Delta t=0.1s$ $\quad [t_0,T]=[0,4]$,
+           \item We trust much more the model .
            \end{enumerate}
-           $$P=\begin{pmatrix}
+           \scalebox{0.7}{
+           $$\qquad \qquad P=\begin{pmatrix}
            0.1 & 0. & 0. \\
             0. & 0.1 & 0. \\
            0. & 0. & 0.1 \\
-           \end{pmatrix} ,
-           Q=\begin{pmatrix}
+           \end{pmatrix},$$\qquad \qquad \qquad \qquad}
+           \scalebox{0.7}{
+           $$Q=\begin{pmatrix}
             0.01 & 0. & 0. \\
            0. & 0.01 & 0. \\
            0. & 0. & 0.01 \\
-           \end{pmatrix},
-           R=\begin{pmatrix}
+           \end{pmatrix},$$\qquad \qquad \qquad }
+           \scalebox{0.7}{
+           $$R=\begin{pmatrix}
            0.1 & 0. & 0. \\
            0. & 0.1 & 0. \\
            0. & 0. & 0.1 \\
-           \end{pmatrix}.$$
+           \end{pmatrix}.$$}
    
        \begin{figure}
            \centering
@@ -189,22 +199,26 @@
        \begin{enumerate}[\textbullet]
                 \item Model $(\sigma, r, b)=(10.,6.,10.)$,Observation $(\sigma, r, b)=(12.,6.,12.)$,
                \item $X_0=(-10.,-10.,25.)$, $\quad \Delta t=0.1s$ $\quad [t_0,T]=[0,4]$,
-       \end{enumerate}
-       $$P=\begin{pmatrix}
-       0.1 & 0. & 0. \\
-       0. & 0.1 & 0. \\
-       0. & 0. & 0.1 \\
-       \end{pmatrix} ,
-       Q=\begin{pmatrix}
-       0.1 & 0. & 0. \\
-       0. & 0.1 & 0. \\
-       0. & 0. & 0.1 \\
-       \end{pmatrix},
-       R=\begin{pmatrix}
-       0.01 & 0. & 0. \\
-       0. & 0.01 & 0. \\
-       0. & 0. & 0.01 \\
-       \end{pmatrix}.$$ 
+               \item We trust much more the observation .
+            \end{enumerate}
+            \scalebox{0.7}{
+            $$\qquad \qquad P=\begin{pmatrix}
+            0.1 & 0. & 0. \\
+             0. & 0.1 & 0. \\
+            0. & 0. & 0.1 \\
+            \end{pmatrix},$$\qquad \qquad \qquad \qquad}
+            \scalebox{0.7}{
+            $$Q=\begin{pmatrix}
+             0.1 & 0. & 0. \\
+            0. & 0.1 & 0. \\
+            0. & 0. & 0.1 \\
+            \end{pmatrix},$$\qquad \qquad \qquad }
+            \scalebox{0.7}{
+            $$R=\begin{pmatrix}
+            0.01 & 0. & 0. \\
+            0. & 0.01 & 0. \\
+            0. & 0. & 0.01 \\
+            \end{pmatrix}.$$}
    
        \begin{figure}
            \centering

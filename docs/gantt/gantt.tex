@@ -51,7 +51,7 @@
 		\ganttbar[bar/.append style={fill=implementation}]{Resolution with OpenModelica}{2022-04-04}{2022-04-10}  \\
 		
 		%PART 2
-		\ganttgroup[progress=5]{Part 2 : Para-real method}{2022-04-04}{2022-05-15} \\
+		\ganttgroup[progress=100]{Part 2 : Para-real method}{2022-04-04}{2022-05-15} \\
 		
 		\ganttbar[bar/.append style={fill=lecture,dashed}]{Reading references (comprehension)}{2022-04-04}{2022-04-17}  \\
 		\ganttbar[bar/.append style={fill=lecture,dashed}]{Pseudo-code on paper}{2022-04-11}{2022-04-24}  \\
@@ -60,19 +60,19 @@
 		\ganttbar[bar/.append style={fill=implementation,dashed}]{Test scaling with difficult case}{2022-05-09}{2022-05-15}  \\
 		
 		%PART 3
-		\ganttgroup[progress=3]{Part 3 : Data assimilation}{2022-04-04}{2022-06-05} \\
+		\ganttgroup[progress=100]{Part 3 : Data assimilation}{2022-04-04}{2022-06-05} \\
 		
 		\ganttbar[bar/.append style={fill=lecture,dotted}]{Reading references on data assimilation}{2022-04-04}{2022-04-17}  \\
 		\ganttbar[bar/.append style={fill=lecture,dotted}]{Understanding Kalman Filter}{2022-04-18}{2022-04-24}  \\
 		\ganttbar[bar/.append style={fill=lecture,dotted}]{Understanding 3DVar}{2022-04-24}{2022-05-01}  \\
 		\ganttbar[bar/.append style={fill=lecture,dotted}]{Understanding link between Kalman filter and 3DVar}{2022-04-18}{2022-05-01}  \\
 		\ganttbar[bar/.append style={fill=lecture,dotted}]{Understanding EnKF (Ensemble Kalman Filter)}{2022-05-02}{2022-05-15}  \\
-		\ganttbar[bar/.append style={fill=lecture}]{Pseudo-code of EnKF on paper}{2022-05-16}{2022-05-29}  \\
-		\ganttbar[bar/.append style={fill=implementation}]{Algorithm with FilterPy}{2022-05-30}{2022-06-05}  \\
+		\ganttbar[bar/.append style={fill=lecture}]{Pseudo-code of EnKF on paper}{2022-05-16}{2022-05-22}  \\
+		\ganttbar[bar/.append style={fill=implementation}]{Algorithm with FilterPy}{2022-05-23}{2022-05-31}  \\
 		
-		%Version 0
 		\ganttvrule{v0}{2022-04-05}
 		\ganttvrule{v0-$\beta$}{2022-04-19}
+		\ganttvrule{vfinal}{2022-05-31}
 		
 		%LEGEND
 		\node (a) [fill=lecture,line width=1pt,anchor=west] at ([xshift=-40pt,yshift=-20pt]current bounding box.north east){Read/Understand};

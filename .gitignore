@@ -7,7 +7,10 @@ docs/gantt/gantt*
 docs/report/report*
 !docs/report/report.tex
 
+lorenz/enkf/enkf.o
+
 .ipynb_checkpoints/
+.vscode/
 
 .DS_Store
 __pycache__/

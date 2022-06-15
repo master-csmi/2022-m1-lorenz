@@ -8,6 +8,7 @@ docs/report/report*
 !docs/report/report.tex
 
 lorenz/enkf/enkf.o
+lorenz/enkf/run
 
 .ipynb_checkpoints/
 .vscode/

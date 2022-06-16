@@ -5,6 +5,7 @@
 #include <math.h>
 #include <iomanip>
 #include <sstream>
+#include<time.h>
 #include <Eigen/Dense>
 #include <Eigen/Eigenvalues>
 #include <Eigen/Cholesky>

@@ -19,10 +19,10 @@ MyMatrix read_sensor_model(int index,MyMatrix lorenz_1)
 {
     MyMatrix z;
     int dim_z=lorenz_1.cols();
-    z=MyMatrix(dim_z,1);
+    z=MyMatrix::Zero(dim_z,1);
     for(int i=0;i<dim_z;i++)
     {
-        std::cout << lorenz_1(index,i)<< std::endl;
+        
         z(i,0)=lorenz_1(index,i);
     }
     return z;
@@ -50,7 +50,7 @@ MyMatrix fx_2(double dt,MyMatrix X)
     MyMatrix p{{12.},{6.},{12.}};
     int dim_x=X.cols();
     MyMatrix X_p;
-    X_p=MyMatrix(dim_x,1);
+    X_p=MyMatrix::Zero(dim_x,1);
     MyMatrix K1=f_lorenz(t,X,p);
     MyMatrix K2=f_lorenz(t+dt/2, X + 1./2. * K1 * dt,p);
     MyMatrix K3=f_lorenz(t+dt/2,X + 1./2. * K2 * dt,p);
@@ -118,15 +118,20 @@ int main()
     dt=0.1;
     lorenz_2=RK4(3,p,X_0,N2,T);
     std::cout << "lorenz2 \n  "<<lorenz_2<<std::endl;
-    EnsembleKalmanFilter E1(3,3,X_0,P,dt, 4, &hx_model,&fx_2);
+    EnsembleKalmanFilter E1(3,3,X_0,P,dt, 20, &hx_model,&fx_2);
     E1.set_Q(Q);
     E1.set_R(R);
     int M=10;
     int index=M;
     double time=0;
-    MyMatrix z=read_sensor_model(M,lorenz_1);
-    E1.predict();
-    E1.update(z);
+    while(time<1-dt)
+    {
+        MyMatrix z=read_sensor_model(index,lorenz_1);
+        E1.predict();
+        E1.update(z);
+        index+=10;
+        time+=dt;
+    }
 
     
 

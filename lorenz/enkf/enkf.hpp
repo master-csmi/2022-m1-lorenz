@@ -48,7 +48,7 @@ class EnsembleKalmanFilter
             M_fx=fx;
             
             //Initialise
-            std::mt19937_64 urng(1);
+            std::mt19937_64 urng( time(NULL) );
             auto gen1 = Rand::makeMvNormalGen(x, P);
             M_sigmas = (gen1.generate(urng, N)).transpose();
             
@@ -141,10 +141,10 @@ class EnsembleKalmanFilter
     {
         MyMatrix sigmas_h,sigmas_x,sigmas_z,z_mean,P_zz,P_xz,sigma,sigma_2;
         MyMatrix K;
-        sigmas_h=MyMatrix(M_N,M_dim_z);
+        sigmas_h=MyMatrix::Zero(M_N,M_dim_z);
         for(int i=0;i<M_N;i++)
         {
-            sigmas_x=MyMatrix(M_dim_x,1);
+            sigmas_x=MyMatrix::Zero(M_dim_x,1);
             for(int j=0;j<M_dim_x;j++)
             {
                 sigmas_x(j,0)=M_sigmas(i,j);
@@ -156,9 +156,9 @@ class EnsembleKalmanFilter
             }
         }
         z_mean=MyMatrix::Zero(M_dim_z,1);
-        std::cout << "sigmas_h\n "<<sigmas_h<<std::endl;
+        //std::cout << "sigmas_h\n "<<sigmas_h<<std::endl;
         z_mean=mean(sigmas_h,0);
-        std::cout << "z_meam\n "<<z_mean<<std::endl;
+        //std::cout << "z_meam\n "<<z_mean<<std::endl;
         P_zz=MyMatrix::Zero(M_dim_z,M_dim_z);
         sigma=MyMatrix::Zero(M_dim_z,1);
         for(int i=0;i<M_N;i++)
@@ -171,9 +171,10 @@ class EnsembleKalmanFilter
             P_zz+=sigma*sigma.transpose();
         }
         P_zz=(P_zz/(M_N-1))+M_R;
-        std::cout << "P_zz\n "<<P_zz<<std::endl;
-        P_xz=MyMatrix(M_dim_x,M_dim_z);
-        sigma_2=MyMatrix(M_dim_x,1);
+        //std::cout << "P_zz\n "<<P_zz<<std::endl;
+        P_xz=MyMatrix::Zero(M_dim_x,M_dim_z);
+        sigma=MyMatrix::Zero(M_dim_z,1);
+        sigma_2=MyMatrix::Zero(M_dim_x,1);
         for(int i=0;i<M_N;i++)
         {
             for(int j=0;j<M_dim_z;j++)
@@ -187,19 +188,40 @@ class EnsembleKalmanFilter
             P_xz+=(sigma_2-M_x)*((sigma-z_mean).transpose());
         }
         P_xz=(P_xz/(M_N-1));
-        std::cout << "P_xz\n "<<P_xz<<std::endl;
-        //P_zz.inverse();
+        //std::cout << "P_xz\n "<<P_xz<<std::endl;
+        P_zz.inverse();
         M_K=P_xz*(P_zz.inverse());
-        std::cout << "K\n "<<M_K<<std::endl;
-
-
-
-        
-       
-
-
-
-
+        //std::cout << "K\n "<<M_K<<std::endl;
+        std::mt19937_64 urng3( time(NULL) );
+        auto gen3 = Rand::makeMvNormalGen(M_mean_z, M_R);
+        MyMatrix e_r = (gen3.generate(urng3, M_N)).transpose();
+        //std::cout << "e_r\n "<<e_r<<std::endl;
+        MyMatrix e_r_i=MyMatrix::Zero(M_dim_z,1);
+        MyMatrix sigma_h_i=MyMatrix::Zero(M_dim_z,1);
+        for(int i=0;i<M_N;i++)
+        {
+            for(int j=0;j<M_dim_z;j++)
+            {
+                sigma_h_i(j,0)=sigmas_h(i,j);
+                e_r_i(j,0)=e_r(i,j);
+            }
+            MyMatrix sigma_i=M_K*(z+e_r_i-sigma_h_i);
+            for(int j=0;j<M_dim_x;j++)
+            {
+                M_sigmas(i,j)+=sigma_i(j,0);
+                
+            }
+        }
+        //std::cout << "M_sigmas\n "<<M_sigmas<<std::endl;
+        M_x=mean(M_sigmas,0);
+        //std::cout << "M_x\n "<<M_x<<std::endl;
+        M_P=M_P-((M_K*P_zz)*M_K.transpose());
+        //std::cout << "M_P\n "<<M_P<<std::endl;
+        M_z=z;
+        M_x_post=M_x;
+        M_P_post=M_P;
+        std::cout << "M_x_post\n "<<M_x_post<<std::endl;
+        //std::cout << "M_P_post\n "<<M_P_post<<std::endl;
     }
     void predict()
     {
@@ -207,7 +229,7 @@ class EnsembleKalmanFilter
         MyMatrix sigmas_x;
         for (int i=0;i<M_N;i++)
         {
-            sigmas_x=MyMatrix(M_dim_x,1);
+            sigmas_x=MyMatrix::Zero(M_dim_x,1);
             for(int j=0;j<M_dim_x;j++)
             {
                 sigmas_x(j,0)=M_sigmas(i,j);
@@ -221,7 +243,7 @@ class EnsembleKalmanFilter
             }
         }
         
-        std::mt19937_64 urng2(2);
+        std::mt19937_64 urng2( time(NULL) );
         auto gen2 = Rand::makeMvNormalGen(M_mean, M_Q);
         MyMatrix e = (gen2.generate(urng2, M_N)).transpose();
         M_sigmas+=e;

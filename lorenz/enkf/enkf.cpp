@@ -18,15 +18,18 @@ MyMatrix hx_model(MyMatrix x)
 MyMatrix read_sensor_model(int index,MyMatrix lorenz_1)
 {
     MyMatrix z;
-    int dim_z=lorenz_1.rows();
+    int dim_z=lorenz_1.cols();
     z=MyMatrix(dim_z,1);
-    z(0,0)=lorenz_1(index,0);
-    z(0,1)=lorenz_1(index,1);
-    z(0,2)=lorenz_1(index,2);
+    for(int i=0;i<dim_z;i++)
+    {
+        std::cout << lorenz_1(index,i)<< std::endl;
+        z(i,0)=lorenz_1(index,i);
+    }
     return z;
 } 
 MyMatrix fx(MyMatrix X,double t,double dt,MyMatrix p)
 {
+    
     int dim_x=X.cols();
     MyMatrix X_p,K1,K2,K3,K4;
     X_p=MyMatrix(dim_x,1);
@@ -43,19 +46,15 @@ MyMatrix fx(MyMatrix X,double t,double dt,MyMatrix p)
 }
 MyMatrix fx_2(double dt,MyMatrix X)
 {
-    double t=0;
-    MyMatrix p{{2,0,0},{0,2,0},{0,0,2}};
+    double t=dt;
+    MyMatrix p{{12.},{6.},{12.}};
     int dim_x=X.cols();
-    MyMatrix X_p,K1,K2,K3,K4;
+    MyMatrix X_p;
     X_p=MyMatrix(dim_x,1);
-    K1=MyMatrix(dim_x,1);
-    K2=MyMatrix(dim_x,1);
-    K3=MyMatrix(dim_x,1);
-    K4=MyMatrix(dim_x,1);
-    K1=f_lorenz(t,X,p);
-    K2=f_lorenz(t+dt/2, X + 1./2. * K1 * dt,p);
-    K3=f_lorenz(t+dt/2,X + 1./2. * K2 * dt,p);
-    K4=f_lorenz(t+dt, X+ K3 * dt,p);
+    MyMatrix K1=f_lorenz(t,X,p);
+    MyMatrix K2=f_lorenz(t+dt/2, X + 1./2. * K1 * dt,p);
+    MyMatrix K3=f_lorenz(t+dt/2,X + 1./2. * K2 * dt,p);
+    MyMatrix K4=f_lorenz(t+dt, X+ K3 * dt,p);
     X_p=X+(dt/6.* (K1+(2.*K2)+(2.*K3)+K4));
     return X_p;
 }
@@ -104,25 +103,39 @@ int main()
     int N,N2;
     MyMatrix p{{12.},{6.},{12.}};
     MyMatrix X_0{{-10.},{-10.},{25.}}; 
-    MyMatrix P{{2,0,0},{0,2,0},{0,0,2}};
+    MyMatrix P{{0.1,0,0},{0,0.1,0},{0,0,0.1}};
+    MyMatrix Q{{0.1,0,0},{0,0.1,0},{0,0,0.1}};
+    MyMatrix R{{0.001,0,0},{0,0.001,0},{0,0,0.001}};
     T=1;
     double t=0;
     N=int(T/0.01);
-    dt=N*0.01;
+    
     std::cout << "p:  "<<p<<std::endl;
     std::cout << "X_0:  "<<X_0<<std::endl;
     lorenz_1=RK4(3,p,X_0,N,T);
-    std::cout << "Lorenz 1"<<lorenz_1<< std::endl;
-    std::cout << "Lorenz 1"<<lorenz_1(0,1)<< std::endl;
+    std::cout << "lorenz1 \n  "<<lorenz_1<<std::endl;
     N2=int(T/0.1);
+    dt=0.1;
     lorenz_2=RK4(3,p,X_0,N2,T);
-    auto l = [dt](int value) {std::cout << "exemple"<<dt<<"exemple 2"<<value<< std::endl;};
-    l(1);
-    l(3);
-    auto l2=[t,P](double dt,MyMatrix  x){return fx(x,t,dt,P);};
-    EnsembleKalmanFilter E1(3,3,X_0,P,dt, 10, &hx_model,&fx_2);
+    std::cout << "lorenz2 \n  "<<lorenz_2<<std::endl;
+    EnsembleKalmanFilter E1(3,3,X_0,P,dt, 4, &hx_model,&fx_2);
+    E1.set_Q(Q);
+    E1.set_R(R);
+    int M=10;
+    int index=M;
+    double time=0;
+    MyMatrix z=read_sensor_model(M,lorenz_1);
+    E1.predict();
+    E1.update(z);
+
     
-    std::cout << "Lorenz 2"<<E1.get_P()<< std::endl;
+
+    
+
+    
+
+
+
    /*
    //Rand::P8_mt19937_64 urng{ 1 };
    //Rand::P8_mt19937_64_32  urng{ 1 };

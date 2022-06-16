@@ -1,18 +1,4 @@
-
-#include <stdio.h>
-#include <iostream>
-#include <fstream>
-#include <cmath>
-#include <math.h>
-#include <iomanip>
-#include <sstream>
-#include <Eigen/Dense>
-#include <Eigen/Eigenvalues>
-#include <Eigen/Cholesky>
-#include <EigenRand/EigenRand>
-using namespace Eigen;
-typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> MyMatrix;
-
+#include "enkf_fct.cpp"
 class EnsembleKalmanFilter
 {
     private:
@@ -32,26 +18,25 @@ class EnsembleKalmanFilter
             M_dt=dt;
             M_N=N;
 
-            M_x=MyMatrix(M_dim_x,1);
-            M_z=MyMatrix(M_dim_z,1);
+            M_x=MyMatrix::Zero(M_dim_x,1);
+            M_z=MyMatrix::Zero(M_dim_z,1);
 
-            M_x_prior=MyMatrix(M_dim_x,1);
-            M_x_post=MyMatrix(M_dim_x,1);
+            M_x_prior=MyMatrix::Zero(M_dim_x,1);
+            M_x_post=MyMatrix::Zero(M_dim_x,1);
 
-            M_P=MyMatrix(M_dim_x,M_dim_x);
-            M_P_prior=MyMatrix(M_dim_x,M_dim_x);
-            M_P_post=MyMatrix(M_dim_x,M_dim_x);
+            M_P=MyMatrix::Zero(M_dim_x,M_dim_x);
+            M_P_prior=MyMatrix::Zero(M_dim_x,M_dim_x);
+            M_P_post=MyMatrix::Zero(M_dim_x,M_dim_x);
 
 
-            M_Q=MyMatrix(M_dim_x,M_dim_x);
-            M_R=MyMatrix(M_dim_z,M_dim_z);
-            M_K=MyMatrix(M_dim_x,M_dim_z);
+            M_Q=MyMatrix::Zero(M_dim_x,M_dim_x);
+            M_R=MyMatrix::Zero(M_dim_z,M_dim_z);
+            M_K=MyMatrix::Zero(M_dim_x,M_dim_z);
             
-            M_mean=MyMatrix(M_dim_x,1);
-            M_mean_z=MyMatrix(M_dim_z,1);
+            M_mean=MyMatrix::Zero(M_dim_x,1);
+            M_mean_z=MyMatrix::Zero(M_dim_z,1);
 
-            //M_sigmas=MyMatrix(N,M_dim_x);
-
+            M_sigmas=MyMatrix::Zero(N,M_dim_x);
 
             M_x=x;
             M_x_post=x;
@@ -61,11 +46,13 @@ class EnsembleKalmanFilter
             M_P_post=P;
             M_hx=hx;
             M_fx=fx;
-
+            
             //Initialise
             std::mt19937_64 urng(1);
             auto gen1 = Rand::makeMvNormalGen(x, P);
-            M_sigmas = gen1.generate(urng, N);
+            M_sigmas = (gen1.generate(urng, N)).transpose();
+            
+            
 
         }
     // accesseurs
@@ -105,6 +92,10 @@ class EnsembleKalmanFilter
     {
         return M_R;
     }
+    MyMatrix get_sigmas()const
+    {
+        return M_sigmas;
+    }
     // mutateur
     void set_dim_x(int dim_x) 
     {
@@ -142,14 +133,69 @@ class EnsembleKalmanFilter
     {
         M_R=R;
     }
+    void set_sigmas(MyMatrix sigmas)
+    {
+        M_sigmas=sigmas;
+    }
     void update(MyMatrix z)
     {
-        /*sigmas_h=MyMatrix(M_N,M_dim_z);
-        for(int i=0;i<M_n;i++)
+        MyMatrix sigmas_h,sigmas_x,sigmas_z,z_mean,P_zz,P_xz,sigma,sigma_2;
+        MyMatrix K;
+        sigmas_h=MyMatrix(M_N,M_dim_z);
+        for(int i=0;i<M_N;i++)
         {
-            sigmas_h[i]=M_hx()
+            sigmas_x=MyMatrix(M_dim_x,1);
+            for(int j=0;j<M_dim_x;j++)
+            {
+                sigmas_x(j,0)=M_sigmas(i,j);
+            }
+            sigmas_z=M_hx(sigmas_x);
+            for(int j=0;j<M_dim_z;j++)
+            {
+                sigmas_h(i,j)=sigmas_z(j,0);
+            }
         }
-        */
+        z_mean=MyMatrix::Zero(M_dim_z,1);
+        std::cout << "sigmas_h\n "<<sigmas_h<<std::endl;
+        z_mean=mean(sigmas_h,0);
+        std::cout << "z_meam\n "<<z_mean<<std::endl;
+        P_zz=MyMatrix::Zero(M_dim_z,M_dim_z);
+        sigma=MyMatrix::Zero(M_dim_z,1);
+        for(int i=0;i<M_N;i++)
+        {
+            for(int j=0;j<M_dim_z;j++)
+            {
+                sigma(j,0)=sigmas_h(i,j);
+            }
+            sigma=sigma-z_mean;
+            P_zz+=sigma*sigma.transpose();
+        }
+        P_zz=(P_zz/(M_N-1))+M_R;
+        std::cout << "P_zz\n "<<P_zz<<std::endl;
+        P_xz=MyMatrix(M_dim_x,M_dim_z);
+        sigma_2=MyMatrix(M_dim_x,1);
+        for(int i=0;i<M_N;i++)
+        {
+            for(int j=0;j<M_dim_z;j++)
+            {
+                sigma(j,0)=sigmas_h(i,j);
+            }
+            for(int j=0;j<M_dim_x;j++)
+            {
+                sigma_2(j,0)=M_sigmas(i,j);
+            }
+            P_xz+=(sigma_2-M_x)*((sigma-z_mean).transpose());
+        }
+        P_xz=(P_xz/(M_N-1));
+        std::cout << "P_xz\n "<<P_xz<<std::endl;
+        //P_zz.inverse();
+        M_K=P_xz*(P_zz.inverse());
+        std::cout << "K\n "<<M_K<<std::endl;
+
+
+
+        
+       
 
 
 
@@ -157,11 +203,43 @@ class EnsembleKalmanFilter
     }
     void predict()
     {
-
-
-
-
-
+       
+        MyMatrix sigmas_x;
+        for (int i=0;i<M_N;i++)
+        {
+            sigmas_x=MyMatrix(M_dim_x,1);
+            for(int j=0;j<M_dim_x;j++)
+            {
+                sigmas_x(j,0)=M_sigmas(i,j);
+            }
+            
+            sigmas_x=M_fx(M_dt,sigmas_x);
+            
+            for(int j=0;j<M_dim_x;j++)
+            {
+                M_sigmas(i,j)=sigmas_x(j,0);
+            }
+        }
+        
+        std::mt19937_64 urng2(2);
+        auto gen2 = Rand::makeMvNormalGen(M_mean, M_Q);
+        MyMatrix e = (gen2.generate(urng2, M_N)).transpose();
+        M_sigmas+=e;
+        MyMatrix P_=MyMatrix::Zero(M_dim_x,M_dim_x);
+        MyMatrix sigma=MyMatrix::Zero(M_dim_x,1);
+        for(int i=0;i<M_N;i++)
+        {
+            for(int j=0;j<M_dim_x;j++)
+            {
+               
+                sigma(j,0)=M_sigmas(i,j);
+            }
+            sigma=sigma-M_x;
+            P_+=sigma*sigma.transpose();
+        }
+        M_P=(P_/(M_N-1));
+        M_x_prior=M_x;
+        M_P_prior=M_P;
     }
 };
 

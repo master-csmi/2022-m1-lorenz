@@ -3,6 +3,10 @@
 #include <Eigen/Dense>
 #include <mpi.h>
 
+#include <fstream>
+#include <iomanip>
+#include <sstream>
+
 typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic,Eigen::RowMajor> Matrix;
 typedef Eigen::Matrix<double,1,Eigen::Dynamic> Vector;
 
@@ -77,29 +81,26 @@ Vector* compute_times(double t0, double T, double dt_G, int P){
 
 bool sol_converge(Matrix* X0_k, Matrix* X0_knext, double eps=1e-9){
     Matrix diff = *X0_knext-*X0_k;
+    std::cout << diff.cwiseAbs().maxCoeff() << std::endl;
     return diff.cwiseAbs().maxCoeff() < eps;
 }
 
-// void compute_sol_k(Matrix* fine, Vector* X0_k_j, int world_rank, int n_proc){   
-//     int dim = X0_k_j.cols();
-//     sol_k_j = fin[1:].flatten()
-//     if(world_rank==0){
-//     //     temp = np.array([X0_k_j])
-//     //     temp = np.append(temp,sol_k_j)
-//     //     sol_k_j=temp
-//     }
-//     // nb_tj = np.array(comm.gather(len(sol_k_j), 0))
-//     // sol_k=None
-//     // if(rank==0):
-//     //     sol_k = np.empty(sum(nb_tj))
-//     // comm.Gatherv(sendbuf=sol_k_j, recvbuf=(sol_k, nb_tj), root=0)
-//     // return nb_tj,sol_k
-// }
+// void csv_files_lorenz(double t0, double T, double dt_F, Vector times,
+//         int nb_tj, int nb_iter, Matrix* solution, Matrix* init_pts){
 
-void csv_files_lorenz(double t0, double T, double dt_F, Vector times,
-        int nb_tj, int nb_iter, Matrix* solution, Matrix* init_pts){
-//     # time between t0 and T for the fine integrator
-//     t = np.arange(t0,T+1e-6,dt_F)
+//     // time between t0 and T for the fine integrator
+//     // t = np.arange(t0,T+1e-6,dt_F);
+//     Vector* t = new Vector(1); *t << t0;
+//     while ( (*t)(t->rows()-1)<=T or std::abs((*t)(t->rows()-1)-T)<1e-6){
+//         t->conservativeResize(t->cols()+1);
+//         (*t)(t->rows()-1) = (*t)(t->rows()-2)+dt_F;
+//     }
+
+//     std::cout << t << std::endl;
+
+    // std::ostringstream filename; 
+    // filename << "../resultats/fichiers_resultats/solution1D_instat_activ_desactiv.csv";
+    // std::ofstream ofile(filename.str());
 
 //     # init
 //     init_pts_x = panda.DataFrame(times[:-1],columns=['t'],dtype=np.float64)
@@ -109,9 +110,9 @@ void csv_files_lorenz(double t0, double T, double dt_F, Vector times,
 //     init_pts_z = panda.DataFrame(times[:-1],columns=['t'],dtype=np.float64)
 //     init_pts_z.insert(len(init_pts_z.columns),'nb_pts',nb_tj)
 
-//     solutions_x = panda.DataFrame(t,columns=['t'],dtype=np.float64)
-//     solutions_y = panda.DataFrame(t,columns=['t'],dtype=np.float64)
-//     solutions_z = panda.DataFrame(t,columns=['t'],dtype=np.float64)
+    // solutions_x = panda.DataFrame(t,columns=['t'],dtype=np.float64)
+    // solutions_y = panda.DataFrame(t,columns=['t'],dtype=np.float64)
+    // solutions_z = panda.DataFrame(t,columns=['t'],dtype=np.float64)
 
 //     # write
 //     for k in range(nb_iter):
@@ -144,14 +145,13 @@ void csv_files_lorenz(double t0, double T, double dt_F, Vector times,
 //     sol_rk4.to_csv('data_parareal/sol_rk4.csv')
 
 //     print("Fichiers csv créés")
-}
+// }
 
 Matrix* parareal(Vector X0_t0, double t0, double T, Vector prob(double, 
         Vector, int, double*), double dt_G, double dt_F, double* gamma, 
         int world_rank, int n_proc, bool write_csv = true){
 
     int dim = X0_t0.cols();
-    Matrix* sol_final=new Matrix(1,dim);
 
     Vector* times;
     Matrix* X0_k = new Matrix(n_proc,dim); 
@@ -160,11 +160,11 @@ Matrix* parareal(Vector X0_t0, double t0, double T, Vector prob(double,
     Vector* X0_k_j = new Vector(dim);
     double t_j, t_jp;
 
+    // Iteration k = 0
+
     if(world_rank==0){
         // we initialize the time intervals for each processing units
         times = compute_times(t0,T,dt_G,n_proc);
-
-        // Iteration k = 0
 
         // 1st step : compute the X0s for each tj (in sequential)
         // We use the coarse integrator
@@ -214,24 +214,39 @@ Matrix* parareal(Vector X0_t0, double t0, double T, Vector prob(double,
     Matrix* fine_k = new Matrix(n_proc, dim);
     MPI_Gather(fine_k_j.data(), dim, MPI_DOUBLE, fine_k->data(), dim, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-    if(write_csv){
-        Matrix* sol_k;
+    // to save the solution
 
-        int* tab_nb_t_p = new int[dim];
-        int nb_t_p = fine->rows();
-        MPI_Gather(&nb_t_p, 1, MPI_INTEGER, tab_nb_t_p, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
-        if(world_rank==0){
-            int nb_t = 0;
-            for(int i=0; i<dim; i++)
-                nb_t+=tab_nb_t_p[i];
-            sol_k = new Matrix(nb_t,dim);
+    Matrix* sol_k;
+    int* nEltByProc = new int[n_proc];
+    int displacement[n_proc];
+    int nb_t_p = fine->rows();
+    int nb_t = 0;
+    MPI_Gather(&nb_t_p, 1, MPI_INTEGER, nEltByProc, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
+    if(world_rank==0){
+        for(int i=0; i<n_proc; i++){
+            nb_t+=nEltByProc[i];
+            nEltByProc[i] = nEltByProc[i] * dim;
         }
+        displacement[0] = 0;
+        for(int i=1; i<n_proc; i++){
+            displacement[i] = displacement[i-1]+nEltByProc[i-1];
+        }
+        sol_k = new Matrix(nb_t,dim);
+    }
+    
+    MPI_Gatherv(fine->data(), fine->size(), MPI_DOUBLE, sol_k->data(), nEltByProc, displacement, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-        MPI_Gather(fine->data(), fine->size(), MPI_DOUBLE, sol_k->data(), fine->size(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    Matrix* solution;
+    Matrix* init_pts;
+    if(write_csv){
         if(world_rank==0){
-            std::cout << "sol : " <<  *sol_k << std::endl;
-            // solution = [sol_k]
-            // init_pts = [X0_k]
+            solution = new Matrix(nb_t,dim);
+            *solution = *sol_k;
+            solution->resize(1,solution->cols()*solution->rows());
+
+            init_pts = new Matrix(n_proc,dim);
+            *init_pts = *X0_k;
+            init_pts->resize(1,init_pts->cols()*init_pts->rows());
         }
     }
 
@@ -245,6 +260,9 @@ Matrix* parareal(Vector X0_t0, double t0, double T, Vector prob(double,
 
     Vector* coarse_k_j = new Vector(dim);
     Vector* to_send = new Vector(dim);
+
+    Matrix* sol_k_resize;
+    Matrix* X0_k_resize;
 
     while(not converge){             
         if(world_rank==0){
@@ -266,7 +284,6 @@ Matrix* parareal(Vector X0_t0, double t0, double T, Vector prob(double,
     
         fine_k_j = fine->bottomRows<1>();
 
-        Matrix* fine_k = new Matrix(n_proc, dim);
         MPI_Gather(fine_k_j.data(), dim, MPI_DOUBLE, fine_k->data(), dim, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
         if(world_rank==0)
@@ -279,11 +296,47 @@ Matrix* parareal(Vector X0_t0, double t0, double T, Vector prob(double,
         if(world_rank==0)
             *X0_k = *X0_kp; 
 
+        // to save the solution
+
+        MPI_Gatherv(fine->data(), fine->size(), MPI_DOUBLE, sol_k->data(), nEltByProc, displacement, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+        if(write_csv){
+            if(world_rank==0){
+                #if 1
+                solution->conservativeResize(solution->rows()+1,solution->cols());
+                sol_k_resize = new Matrix(sol_k->rows(),sol_k->cols());
+                *sol_k_resize = *sol_k;
+                sol_k_resize->resize(1,sol_k_resize->rows()*sol_k_resize->cols());
+                solution->row(k) = *sol_k_resize;
+                delete sol_k_resize;
+                #endif
+
+                #if 0
+                init_pts->conservativeResize(init_pts->rows()+1,init_pts->cols());
+                std::cout << X0_k->rows() << std::endl;
+                std::cout << X0_k->cols() << std::endl;
+                X0_k_resize = new Matrix(X0_k->rows(),X0_k->cols());
+                *X0_k_resize = *X0_k;
+                X0_k_resize->resize(1,X0_k_resize->rows()*X0_k_resize->cols());
+                init_pts->row(k) = *X0_k_resize;
+                delete X0_k_resize;
+                #endif
+            }
+        }
+
         k++;
     }
 
-    if(world_rank==0)
+    if(world_rank==0){
+        // std::cout << "sol : " <<  *solution << std::endl << std::endl;
+        // std::cout << "init_pts : " <<  *init_pts << std::endl << std::endl;
         std::cout << k << " itérations" << std::endl;
+    }
+
+    // if(write_csv){
+    //     if(world_rank==0)
+    //         csv_files_lorenz(t0, T, dt_F, times, nEltByProc, k, solution, init_pts);
+    // }
 
     delete X0_k;
     delete coarse_k;
@@ -291,7 +344,7 @@ Matrix* parareal(Vector X0_t0, double t0, double T, Vector prob(double,
     if(world_rank==0)
         delete times;
     
-    return sol_final;
+    return sol_k;
 }
 
 

@@ -156,9 +156,7 @@ class EnsembleKalmanFilter
             }
         }
         z_mean=MyMatrix::Zero(M_dim_z,1);
-        //std::cout << "sigmas_h\n "<<sigmas_h<<std::endl;
         z_mean=mean(sigmas_h,0);
-        //std::cout << "z_meam\n "<<z_mean<<std::endl;
         P_zz=MyMatrix::Zero(M_dim_z,M_dim_z);
         sigma=MyMatrix::Zero(M_dim_z,1);
         for(int i=0;i<M_N;i++)
@@ -171,7 +169,6 @@ class EnsembleKalmanFilter
             P_zz+=sigma*sigma.transpose();
         }
         P_zz=(P_zz/(M_N-1))+M_R;
-        //std::cout << "P_zz\n "<<P_zz<<std::endl;
         P_xz=MyMatrix::Zero(M_dim_x,M_dim_z);
         sigma=MyMatrix::Zero(M_dim_z,1);
         sigma_2=MyMatrix::Zero(M_dim_x,1);
@@ -188,14 +185,11 @@ class EnsembleKalmanFilter
             P_xz+=(sigma_2-M_x)*((sigma-z_mean).transpose());
         }
         P_xz=(P_xz/(M_N-1));
-        //std::cout << "P_xz\n "<<P_xz<<std::endl;
         P_zz.inverse();
         M_K=P_xz*(P_zz.inverse());
-        //std::cout << "K\n "<<M_K<<std::endl;
         std::mt19937_64 urng3( time(NULL) );
         auto gen3 = Rand::makeMvNormalGen(M_mean_z, M_R);
         MyMatrix e_r = (gen3.generate(urng3, M_N)).transpose();
-        //std::cout << "e_r\n "<<e_r<<std::endl;
         MyMatrix e_r_i=MyMatrix::Zero(M_dim_z,1);
         MyMatrix sigma_h_i=MyMatrix::Zero(M_dim_z,1);
         for(int i=0;i<M_N;i++)
@@ -212,16 +206,11 @@ class EnsembleKalmanFilter
                 
             }
         }
-        //std::cout << "M_sigmas\n "<<M_sigmas<<std::endl;
         M_x=mean(M_sigmas,0);
-        //std::cout << "M_x\n "<<M_x<<std::endl;
         M_P=M_P-((M_K*P_zz)*M_K.transpose());
-        //std::cout << "M_P\n "<<M_P<<std::endl;
         M_z=z;
         M_x_post=M_x;
         M_P_post=M_P;
-        std::cout << "M_x_post\n "<<M_x_post<<std::endl;
-        //std::cout << "M_P_post\n "<<M_P_post<<std::endl;
     }
     void predict()
     {
@@ -262,6 +251,69 @@ class EnsembleKalmanFilter
         M_P=(P_/(M_N-1));
         M_x_prior=M_x;
         M_P_prior=M_P;
+    }
+    void creation_csv(MyMatrix lorenz1,double dt_1,MyMatrix lorenz2,double dt_2,MyMatrix etat,double dt_3)
+    {
+        int dim_col=lorenz1.cols();
+        int dim_row=lorenz1.rows();
+        std :: ofstream ofile("plotlorenz1.csv",std :: ios :: out|std :: ios :: app );
+       if ( ofile ) 
+       {
+            double time=0 ;
+            for (int i=0;i<dim_row;i++)
+            {
+                ofile << time <<" ";
+                    
+                for (int j=0;j<dim_col-1;j++)
+                {
+                    ofile <<lorenz1(i,j)<<" ";
+                }
+                ofile <<lorenz1(i,dim_col-1)<<std :: endl;
+           
+                time=time+dt_1;   
+           }
+       }
+       ofile.close ();
+       int dim_col2=lorenz2.cols();
+        int dim_row2=lorenz2.rows();
+        std :: ofstream oofile("plotlorenz2.csv",std :: ios :: out|std :: ios :: app );
+       if ( oofile )
+       {
+            double time2=0 ;
+            for (int i=0;i<dim_row2;i++)
+            {
+                oofile << time2 <<" ";
+                    
+                for (int j=0;j<dim_col2-1;j++)
+                {
+                    oofile <<lorenz2(i,j)<<" ";
+                }
+                oofile <<lorenz2(i,dim_col2-1)<<std :: endl;
+           
+                time2=time2+dt_2;   
+           }
+       }
+       oofile.close ();
+       int dim_col3=etat.cols();
+        int dim_row3=etat.rows();
+        std :: ofstream ooofile("plotetat.csv",std :: ios :: out|std :: ios :: app );
+       if ( ooofile ) 
+       {
+            double time3=0 ;
+            for (int i=0;i<dim_row3;i++)
+            {
+                ooofile << time3 <<" ";
+                    
+                for (int j=0;j<dim_col3-1;j++)
+                {
+                    ooofile <<etat(i,j)<<" ";
+                }
+                ooofile <<etat(i,dim_col3-1)<<std :: endl;
+           
+                time3=time3+dt_3;   
+           }
+       }
+       ooofile.close ();
     }
 };
 

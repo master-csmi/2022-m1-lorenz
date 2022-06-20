@@ -9,9 +9,11 @@ docs/report/report*
 
 lorenz/enkf/enkf.o
 lorenz/enkf/run
+lorenz/enkf/plotlorenz1.csv
+lorenz/enkf/plotlorenz2.csv
+lorenz/enkf/plotetat.csv
 
 .ipynb_checkpoints/
-.vscode/
 
 .DS_Store
 __pycache__/

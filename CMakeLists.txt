@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-find_package(MPI REQUIRED)
+
 
 # Set the project name to your project name, my project isn't very descriptive
 project(myproject CXX)
@@ -54,12 +54,20 @@ set(CONAN_EXTRA_REQUIRES ${CONAN_EXTRA_REQUIRES} eigen/3.3.9)
 include(cmake/Conan.cmake)
 run_conan()
 
+find_package(MPI REQUIRED)
+
+if(NOT Boost_ARCHITECTURE)
+    set(Boost_ARCHITECTURE "-x64")
+endif()
+
+set(Boost_ADDITIONAL_VERSIONS "1.61" "1.62" "1.63" "1.64" "1.65" "1.66" "1.67" "1.68" "1.69" "1.70" "1.71")
+set(BOOST_COMPONENTS_REQUIRED date_time filesystem system program_options unit_test_framework ${FEELPP_BOOST_MPI} regex serialization iostreams)
+FIND_PACKAGE(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS ${BOOST_COMPONENTS_REQUIRED})
+
 # if(ENABLE_TESTING)
-#   enable_testing()
-#   message("Building Tests. Be sure to check out test/constexpr_tests for constexpr testing")
-#   add_subdirectory(test)
+# enable_testing()
+# message("Building Tests. Be sure to check out test/constexpr_tests for constexpr testing")
+# add_subdirectory(test)
 # endif()
-
-include_directories(include/parareal)
-
+target_include_directories(project_options  INTERFACE ${MPI_CXX_HEADER_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp)
 add_subdirectory(src/cpp/parareal)

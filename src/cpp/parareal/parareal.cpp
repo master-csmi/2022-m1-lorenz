@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-#include "parareal.hpp"
+#include <parareal/parareal.hpp>
 #include "utils.hpp"
 
 // void csv_files_lorenz(double t0, double T, double dt_F, Vector times,

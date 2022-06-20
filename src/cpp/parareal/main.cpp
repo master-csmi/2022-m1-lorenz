@@ -1,5 +1,4 @@
-#include "parareal.hpp"
-#include <mpi.h>
+#include <parareal/parareal.hpp>
 
 int main (){
     MPI_Init ( nullptr , nullptr );

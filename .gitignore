@@ -18,3 +18,4 @@ lorenz/enkf/plotetat.csv
 .DS_Store
 __pycache__/
 .pytest_cache/
+build/

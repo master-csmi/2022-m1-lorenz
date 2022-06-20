@@ -1,4 +1,4 @@
-#include "utils.hpp"
+#include <parareal/utils.hpp>
 
 Vector lorenz(double t, Vector X, int dim, double* gamma){
     Vector sol(X.cols());

@@ -70,4 +70,5 @@ FIND_PACKAGE(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS ${BOOST_COMPONENTS_R
 # add_subdirectory(test)
 # endif()
 target_include_directories(project_options  INTERFACE ${MPI_CXX_HEADER_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp)
-add_subdirectory(src/cpp/parareal)
+
+add_subdirectory(src/cpp)

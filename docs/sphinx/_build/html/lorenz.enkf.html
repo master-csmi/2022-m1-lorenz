@@ -92,18 +92,18 @@
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>-γ</strong> – an array of real that represente the three parameter of the lorenz system (σ, b, r)</p></li>
-<li><p><strong>-X0</strong> – a size 3 array with the initial constition, initial point (x,y,z)</p></li>
-<li><p><strong>-N</strong> – a real that represents the number of discritisation</p></li>
-<li><p><strong>-T</strong> – a real that represents the time interval</p></li>
+<li><p><strong>γ</strong> – an array of real that represente the three parameter of the lorenz system (σ, b, r)</p></li>
+<li><p><strong>X0</strong> – a size 3 array with the initial constition, initial point (x,y,z)</p></li>
+<li><p><strong>N</strong> – a real that represents the number of discritisation</p></li>
+<li><p><strong>T</strong> – a real that represents the time interval</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>this fonction return resolution with RK4
--X[:,0]: array of x
--X[:,1]: array of y
--X[:,2]: array of z
--T_tab: array of the time</p>
+X[:,0]: array of x
+X[:,1]: array of y
+X[:,2]: array of z
+T_tab: array of the time</p>
 </dd>
 </dl>
 </dd></dl>
@@ -114,17 +114,17 @@
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>-w</strong> – a real that represente the first parameter of the hamonic oscillator</p></li>
-<li><p><strong>-X0</strong> – a size 2 array with the initial constition, initial point.</p></li>
-<li><p><strong>-N</strong> – a real that represents the number of discritisation</p></li>
-<li><p><strong>-T</strong> – a real that represents the time interval</p></li>
+<li><p><strong>w</strong> – a real that represente the first parameter of the hamonic oscillator</p></li>
+<li><p><strong>X0</strong> – a size 2 array with the initial constition, initial point.</p></li>
+<li><p><strong>N</strong> – a real that represents the number of discritisation</p></li>
+<li><p><strong>T</strong> – a real that represents the time interval</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>this fonction return resolution with RK4
--X[:,0]: array of x
--X[:,1]: array of y
--T_tab: array of the time</p>
+X[:,0]: array of x
+X[:,1]: array of y
+T_tab: array of the time</p>
 </dd>
 </dl>
 </dd></dl>
@@ -135,20 +135,20 @@
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>-x</strong> – a size 3 array with the initial constition, initial point (x,y,z)</p></li>
-<li><p><strong>-read_sensor</strong> – a function that will read the observation every time</p></li>
-<li><p><strong>-P</strong> – covariance matrix  associated with the forecast state error</p></li>
-<li><p><strong>-Q</strong> – covariance matrix associated with the model error</p></li>
-<li><p><strong>-R</strong> – covariance matrix associated with the observations error</p></li>
-<li><p><strong>-T</strong> – a real that represents the time interval</p></li>
-<li><p><strong>-dimz</strong> – a real that represent the dimention of the observations</p></li>
-<li><p><strong>-dt</strong> – a real that represent the time for each discretisation</p></li>
-<li><p><strong>-N</strong> – a real that represents the index difference between the observations and the model</p></li>
-<li><p><strong>-nb_echantillon</strong> – a real that represents the index difference between the observations and the model</p></li>
-<li><p><strong>-hx</strong> – Measurement function. Convert state x into a measurement</p></li>
-<li><p><strong>-fx</strong> – State transition function</p></li>
-<li><p><strong>-γ</strong> – an array of real that represente the three parameter of the lorenz system (σ, b, r)</p></li>
-<li><p><strong>-N</strong> – a real that represents the number of discritisation</p></li>
+<li><p><strong>x</strong> – a size 3 array with the initial constition, initial point (x,y,z)</p></li>
+<li><p><strong>read_sensor</strong> – a function that will read the observation every time</p></li>
+<li><p><strong>P</strong> – covariance matrix  associated with the forecast state error</p></li>
+<li><p><strong>Q</strong> – covariance matrix associated with the model error</p></li>
+<li><p><strong>R</strong> – covariance matrix associated with the observations error</p></li>
+<li><p><strong>T</strong> – a real that represents the time interval</p></li>
+<li><p><strong>dimz</strong> – a real that represent the dimention of the observations</p></li>
+<li><p><strong>dt</strong> – a real that represent the time for each discretisation</p></li>
+<li><p><strong>N</strong> – a real that represents the index difference between the observations and the model</p></li>
+<li><p><strong>nb_echantillon</strong> – a real that represents the index difference between the observations and the model</p></li>
+<li><p><strong>hx</strong> – Measurement function. Convert state x into a measurement</p></li>
+<li><p><strong>fx</strong> – State transition function</p></li>
+<li><p><strong>γ</strong> – an array of real that represente the three parameter of the lorenz system (σ, b, r)</p></li>
+<li><p><strong>N</strong> – a real that represents the number of discritisation</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -166,17 +166,17 @@
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>-w</strong> – a real that represente the first parameter of the hamonic oscillator</p></li>
-<li><p><strong>-X0</strong> – a size 2 array with the initial constition, initial point.</p></li>
-<li><p><strong>-N</strong> – a real that represents the number of discritisation</p></li>
-<li><p><strong>-T</strong> – a real that represents the time interval</p></li>
+<li><p><strong>w</strong> – a real that represente the first parameter of the hamonic oscillator</p></li>
+<li><p><strong>X0</strong> – a size 2 array with the initial constition, initial point.</p></li>
+<li><p><strong>N</strong> – a real that represents the number of discritisation</p></li>
+<li><p><strong>T</strong> – a real that represents the time interval</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>this fonction return resolution with euler
--X[:,0]: array of x
--X[:,1]: array of y
--T_tab: array of the time</p>
+X[:,0]: array of x
+X[:,1]: array of y
+T_tab: array of the time</p>
 </dd>
 </dl>
 </dd></dl>
@@ -192,8 +192,8 @@
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>-X_n</strong> – un tableau de reel de taille 2</p></li>
-<li><p><strong>-w</strong> – a real that represente the first parameter of the hamonic oscillator</p></li>
+<li><p><strong>X_n</strong> – un tableau de reel de taille 2</p></li>
+<li><p><strong>w</strong> – a real that represente the first parameter of the hamonic oscillator</p></li>
 </ul>
 </dd>
 </dl>
@@ -210,16 +210,16 @@
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>-lorenz1</strong> – observations,an array of vectors where each vector is of size 3, representing [x,y,z]</p></li>
-<li><p><strong>-lorenz2</strong> – model,an array of vectors where each vector is of size 3, representing [x,y,z]</p></li>
-<li><p><strong>-tab_temps</strong> – real type array representing time</p></li>
-<li><p><strong>-tab_x_y_z</strong> – represente an array of vectors where each vector is of size 3,array after data assimilation,
+<li><p><strong>lorenz1</strong> – observations,an array of vectors where each vector is of size 3, representing [x,y,z]</p></li>
+<li><p><strong>lorenz2</strong> – model,an array of vectors where each vector is of size 3, representing [x,y,z]</p></li>
+<li><p><strong>tab_temps</strong> – real type array representing time</p></li>
+<li><p><strong>tab_x_y_z</strong> – represente an array of vectors where each vector is of size 3,array after data assimilation,
 representing [x,y,z]</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
-<dt>-return nothing but makes three different plot, in each one we will have</dt><dd><p>3 curves (observations,model and stade after data assimilation) as a function of time</p>
+<dt>return nothing but makes three different plot, in each one we will have</dt><dd><p>3 curves (observations,model and stade after data assimilation) as a function of time</p>
 </dd>
 </dl>
 </p>
@@ -233,29 +233,24 @@ representing [x,y,z]</p></li>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>-lorenz1</strong> – observations,an array of vectors where each vector is of size 3, representing [x,y,z]</p></li>
-<li><p><strong>-lorenz2</strong> – model,an array of vectors where each vector is of size 3, representing [x,y,z]</p></li>
-<li><p><strong>-ind</strong> – a real representing the index we want to plot (x, y or z)</p></li>
-<li><p><strong>-tab_temps</strong> – real type array representing time</p></li>
-<li><p><strong>-tab_cov</strong> – an array of vectors where each vector is of size 3, representing variances
+<li><p><strong>lorenz1</strong> – observations,an array of vectors where each vector is of size 3, representing [x,y,z]</p></li>
+<li><p><strong>lorenz2</strong> – model,an array of vectors where each vector is of size 3, representing [x,y,z]</p></li>
+<li><p><strong>ind</strong> – a real representing the index we want to plot (x, y or z)</p></li>
+<li><p><strong>tab_temps</strong> – real type array representing time</p></li>
+<li><p><strong>tab_cov</strong> – an array of vectors where each vector is of size 3, representing variances
 (diag of the cov matrix associated to the state obtained through data assimilation)</p></li>
-<li><p><strong>-diff</strong> – represent the distance to create our standart deviation variance</p></li>
-<li><p><strong>-tab_x_y_z</strong> – represente an array of vectors where each vector is of size 3,array after data assimilation,
+<li><p><strong>diff</strong> – represent the distance to create our standart deviation variance</p></li>
+<li><p><strong>tab_x_y_z</strong> – represente an array of vectors where each vector is of size 3,array after data assimilation,
 representing [x,y,z]</p></li>
-<li><p><strong>-labelx</strong> – legend of the x-curve</p></li>
-<li><p><strong>-labely</strong> – legend of the y-curve</p></li>
+<li><p><strong>labelx</strong> – legend of the x-curve</p></li>
+<li><p><strong>labely</strong> – legend of the y-curve</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>-return nothing but plot 3 curves as a function of ind(either x,y or z) as a function of time</p>
+<dd class="field-even"><p>return nothing but plot 3 curves as a function of ind(either x,y or z) as a function of time</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="lorenz.enkf.enkf.test_enkf_harmonique">
-<span class="sig-prename descclassname"><span class="pre">lorenz.enkf.enkf.</span></span><span class="sig-name descname"><span class="pre">test_enkf_harmonique</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/lorenz/enkf/enkf.html#test_enkf_harmonique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lorenz.enkf.enkf.test_enkf_harmonique" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
 
 </div>
 <div class="section" id="module-lorenz.enkf">

@@ -1,6 +1,6 @@
 \subsection{Theory}
 
-\begin{frame}{Generalities of the parareal method}
+\begin{frame}[allowframebreaks]{Generalities of the parareal method}
 	
 	\small
 	What is the parareal method ?
@@ -10,27 +10,30 @@
 		\item categorized as a parallel-across-the-steps method 
 	\end{enumerate}
 
-	\; \\
+	\newpage
 
 	Time decomposition :
 	\begin{enumerate}[\textbullet]
 		\item $[t_0,T]=[t_0,t_1]\cup\dots\cup[t_{P-1},t_P]$ with $t_P=T$ and $P=$number of processes
 	\end{enumerate}
 
-	\begin{minipage}{.68\linewidth}
-		Notation :
+	\; \\
+
+	\begin{minipage}{\linewidth}
+		Notations :
 		\begin{enumerate}[\textbullet]
 			\item $F$ : high accuracy integrator, \quad $\Delta t_F$ : time step \\
 			$G$ : low accuracy integrator, \quad $\Delta t_G$ : coarse time step
 			\item $U_j^k, j\in\{0,\dots,P\}$ : initial point at time $t_j$ and at iteration $k$.
 		\end{enumerate}
-	\end{minipage}
-	\begin{minipage}{.28\linewidth}
-		\qquad \includegraphics[width=0.7\linewidth]{images/parareal/explane_F.jpg}
-	\end{minipage}
+	\end{minipage} \\
 	\begin{enumerate}[\textbullet]
 		\item $F(U_{j-1}^k), j\in\{1,\dots,P\}$ : value of the fine integrator at $t_j$ starting by $U_{j-1}^k$ (resp. $G(U_{j-1}^k)$)
 	\end{enumerate}
+	\begin{minipage}{\linewidth}
+		\centering
+		\qquad \includegraphics[width=0.35\linewidth]{images/parareal/explane_F.jpg}
+	\end{minipage}
 	
 \end{frame}
 
@@ -56,19 +59,16 @@
 	\end{equation*}
 	with
 	$$\mathcal{E}(j,k)=|U_j^k-U_{ex}(t_j)|+\max_{t\in[t_j,t_{j+1}]}|U_k(t)-U_{ex}(t)|$$
-	where 
-	\begin{enumerate}[\textbullet]
-		\item $U_j^k$ : initial point at $t_j$ and iteration $k$
-		\item $U_{ex}(t_j)$ : exact solution at $t_j$
-		\item $U_k$ : solution between $t_0$ and $T$ at iteration k
-		\item $U_{ex}$ : exact solution between $t_0$ and $T$
-	\end{enumerate}
-	Note that we calculate the maximum just between $t_j$ and $t_{j+1}$.
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.62\linewidth]{images/parareal/explane_order.jpg}
+		\caption{Explanation of the order property}
+	\end{figure}
 \end{frame}
 
 \subsection{Results}
 
-\begin{frame}[allowframebreaks]{Harmonic oscillator}
+\begin{frame}{Harmonic oscillator - Presentation}
 	\begin{minipage}{0.48\linewidth}
 		Equation :
 		$$\frac{d^2 x}{d t^2}+\omega_0^2 x = 0$$
@@ -95,7 +95,8 @@
 	\end{aligned}\right.
 	$$  
 	
-	\newpage
+	\end{frame}
+	\begin{frame}{Harmonic oscillator - Parareal method}
 	
 	$$P=3, \quad x(0)=0,\quad v(0)=1, \quad\omega_0=5, \quad x_0=\frac{-1}{5}, \quad \phi_0=\frac{\pi}{2}$$
 	
@@ -116,7 +117,7 @@
 	
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Lorenz system}
+\begin{frame}{Lorenz - 3D solution}
 	$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5), \quad t_0=0, \quad \Delta t_G=0.1, \quad \Delta t_F=0.01$
 	\begin{figure}
 		\centering
@@ -124,7 +125,8 @@
 		\caption{Solution 3D of the Lorenz system with given parameters ($T=20$ and $T=200$)}
 	\end{figure}
 
-	\newpage
+	\end{frame}
+	\begin{frame}{Lorenz - 2D solution}
 
 	\begin{minipage}{\linewidth}
 	\begin{figure} 
@@ -134,27 +136,32 @@
 	\end{figure}
 	\end{minipage}
 
-	\newpage
+	\end{frame}
+	\begin{frame}{Lorenz - Parareal method (1 process)}
 	
 	\begin{minipage}{\linewidth}
 	\begin{figure}
 		\centering       
-		\includegraphics[width=0.9\linewidth]{"images/parareal/lorenz_1p.jpg"}
+		\includegraphics[width=0.95\linewidth]{"images/parareal/lorenz_1p.jpg"}
 		\caption{Parareal method on the Lorenz system with 1 process}
 	\end{figure}
 	\end{minipage}
 
-	\newpage
+	\end{frame}
+	\begin{frame}{Lorenz - Parareal method (3 processes)}
 
 	\begin{minipage}{\linewidth}
 	\begin{figure}
 		\centering       
-		\includegraphics[width=0.7\linewidth]{"images/parareal/lorenz_3p.jpg"}
+		\includegraphics[width=0.85\linewidth]{"images/parareal/lorenz_3p.jpg"}
 		\caption{Parareal method on the Lorenz system with 3 processes}
 	\end{figure}
 	\end{minipage}
-
 	
+	\end{frame}
+	\begin{frame}{Lorenz - Execution time}
+
+	$$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5), \quad t_0=0.$$
 	\begin{table}[H]
 		\centering
 		\begin{tabular}{| c || c | c | c | c | c |}

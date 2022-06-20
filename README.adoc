@@ -1,6 +1,8 @@
 = 2022-m1-lorenz
 
 image::https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/python-package.yml/badge.svg?branch=main[Build,link=https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/python-package.yml]
+image::https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/python-package.yml/badge.svg?branch=parareal[Build,link=https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/python-package.yml]
+image::https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/python-package.yml/badge.svg?branch=enkf[Build,link=https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/python-package.yml]
 
 
 

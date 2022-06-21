@@ -1,6 +1,6 @@
 #include <parareal/utils.hpp>
 
-Vector lorenz(double t, Vector X, int dim, double* gamma){
+Vector lorenz(double /*t*/, Vector X, int /*dim*/, double* gamma){
     Vector sol(X.cols());
     sol << gamma[0] * (X[1]-X[0]), X[0] * (gamma[2]-X[2])-X[1],
          X[0]*X[1]-gamma[1]*X[2];
@@ -20,10 +20,10 @@ Matrix RK4(Vector X0, double dt, double t0, double T, Vector prob(double, Vector
     
     while ( (t+dt)<=T or std::abs(t+dt-T)<1e-6){ 
         X_prec = X.bottomRows<1>();
-        K1=lorenz(t, X_prec, dim, gamma);
-        K2=lorenz(t+dt/2., X_prec + 1./2. * K1 * dt, dim, gamma);
-        K3=lorenz(t+dt/2., X_prec + 1./2. * K2 * dt, dim, gamma);
-        K4=lorenz(t+dt, X_prec+ K3 * dt, dim, gamma);
+        K1=prob(t, X_prec, dim, gamma);
+        K2=prob(t+dt/2., X_prec + 1./2. * K1 * dt, dim, gamma);
+        K3=prob(t+dt/2., X_prec + 1./2. * K2 * dt, dim, gamma);
+        K4=prob(t+dt, X_prec+ K3 * dt, dim, gamma);
 
         X.conservativeResize(X.rows()+1, X.cols());
         X.row(X.rows()-1) = X_prec + dt/6.* (K1+2.*K2+2.*K3+K4);

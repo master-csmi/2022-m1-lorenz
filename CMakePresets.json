@@ -16,7 +16,8 @@
                 "CMAKE_C_COMPILER": "clang",
                 "CMAKE_CXX_COMPILER": "clang++",
                 "CMAKE_BUILD_TYPE": "Release",
-                "CONAN_CMD":"$env{HOME}/.local/bin/conan"
+                "CONAN_CMD":"$env{HOME}/.local/bin/conan",
+                "WARNINGS_AS_ERRORS":false
             },
             "vendor": {
                 "example.com/ExampleIDE/1.0": {

@@ -117,7 +117,7 @@ Matrix parareal(Vector X0_t0, double t0, double T, Vector prob(double,
     Vector coarse_k_j(dim);
     Vector to_send(dim);
 
-    Matrix* sol_k_resize;
+    // Matrix* sol_k_resize;
 
     while(not converge){             
         if(world_rank==0){
@@ -157,15 +157,15 @@ Matrix parareal(Vector X0_t0, double t0, double T, Vector prob(double,
 
         if(write_csv){
             if(world_rank==0){
-                #if 1
                 solution.conservativeResize(solution.rows()+1,solution.cols());
+                #if 0
                 sol_k_resize = new Matrix(sol_k.rows(),sol_k.cols());
                 *sol_k_resize = sol_k;
                 sol_k_resize->resize(1,sol_k_resize->rows()*sol_k_resize->cols());
                 solution.row(k) = *sol_k_resize;
                 delete sol_k_resize;
                 #endif
-                // solution.row(k) = sol_k.reshaped<Eigen::RowMajor>(1,sol_k.rows()*sol_k.cols());
+                solution.row(k) = sol_k.reshaped<Eigen::RowMajor>(1,sol_k.rows()*sol_k.cols());
 
                 #if 1
                 init_pts.conservativeResize(init_pts.rows()+1,init_pts.cols());

@@ -18,3 +18,5 @@ lorenz/enkf/plotetat.csv
 .DS_Store
 __pycache__/
 .pytest_cache/
+
+docs/sphinx/_build

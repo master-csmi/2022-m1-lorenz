@@ -55,35 +55,51 @@ For the execution of the project it is necessary to install the following module
 
 === Cmake
 
-Install cmake >= 3.21 using e.g. snap on ubunty 20.04 or homebrew
+Install cmake >= 3.21 using e.g. apt from kitware, snap on ubunty 20.04 or homebrew
+
+.Install from link:https://apt.kitware.com[Kitware APT]
+[source,bash]
+----
+> sudo apt-get update
+> sudo apt-get install gpg wget
+> echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ focal main' | sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null
+> sudo apt-get update
+> sudo apt install cmake
+----
 
 .Install cmake on Ubuntu using snap
-```shell
+[source,bash]
+----
 > snap install cmake
-```
+----
 
 .Install cmake on homebrew
-```shell
+[source,bash]
+----
 > brew install cmake
-```
+----
 
 === Compile
 
 VScode provides an interface for CMake Presets (see `CMakePresets.json`)
 
 .Configure and build the `default` preset
-```shell
+[source,bash]
+----
 > cmake --preset default
 > cmake --build --preset default
-```
+----
 
 == Organisation 
 For the organization of our repository we have at first a docs directory in which our latex source files are located. In this directory we have our project report, the presentation and a glove diagram. 
 Our source code for the implementation is in the lorenz directory with two different parts, the implementation for the pararel part and the implementation for the data assimilation. 
 We also have an examples directory with the results we got by taking some parameters. To use our methods the lorenz module is required, so you have to add a path before running the examples. In the example directory you can do the command: 
-```shell
+
+[source,bash]
+----
 export PYTHONPATH=src/python
-```
+----
+
 And finally we have a tests directory where we have our tests for our codes. These are checked at each push automatically using pytest
 
 

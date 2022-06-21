@@ -67,7 +67,7 @@ jobs:
           pip install -r requirements.txt
       - name: Setup PYTHONPATH
         run: |
-          echo "PYTHONPATH=src/python" >> $GITHUB_ENV 
+          echo "PYTHONPATH=../../src/python" >> $GITHUB_ENV 
       - name: Run sphinx
         working-directory: docs/sphinx/
         run: make html 

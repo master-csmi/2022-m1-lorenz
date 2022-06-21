@@ -1,4 +1,6 @@
 #include <parareal/parareal.hpp>
+#include <parareal/utils.hpp>
+#include <mpi.h>
 
 int main (){
     MPI_Init ( nullptr , nullptr );
@@ -16,6 +18,7 @@ int main (){
     parareal(X0, t0, T, lorenz, dt_G, dt_F, gamma, world_rank, n_proc);
 
     MPI_Finalize ();
+
 
     return 0;
 }

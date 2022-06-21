@@ -1,15 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
 
-
-
-# Set the project name to your project name, my project isn't very descriptive
-project(myproject CXX)
+project(parareal CXX)
 include(cmake/StandardProjectSettings.cmake)
 include(cmake/PreventInSourceBuilds.cmake)
 
 # Link this 'library' to set the c++ standard / compile-time options requested
 add_library(project_options INTERFACE)
-target_compile_features(project_options INTERFACE cxx_std_17)
+# target_compile_features(project_options INTERFACE cxx_std_17)
+target_compile_features(project_options INTERFACE cxx_std_20)
 
 # if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
 #   option(ENABLE_BUILD_WITH_TIME_TRACE "Enable -ftime-trace to generate time tracing .json files on clang" OFF)
@@ -25,8 +23,8 @@ add_library(project_warnings INTERFACE)
 # include(cmake/Cache.cmake)
 
 # standard compiler warnings
-include(cmake/CompilerWarnings.cmake)
-set_project_warnings(project_warnings)
+# include(cmake/CompilerWarnings.cmake)
+# set_project_warnings(project_warnings)
 
 # sanitizer options if supported by compiler
 # include(cmake/Sanitizers.cmake)
@@ -48,8 +46,8 @@ option(ENABLE_TESTING "Enable Test Builds" ON)
 set(CONAN_EXTRA_REQUIRES "")
 set(CONAN_EXTRA_OPTIONS "")
 
-set(CONAN_EXTRA_REQUIRES ${CONAN_EXTRA_REQUIRES} eigen/3.3.9)
-
+# set(CONAN_EXTRA_REQUIRES ${CONAN_EXTRA_REQUIRES} eigen/3.3.9)
+set(CONAN_EXTRA_REQUIRES ${CONAN_EXTRA_REQUIRES} eigen/3.4.0)
 
 include(cmake/Conan.cmake)
 run_conan()

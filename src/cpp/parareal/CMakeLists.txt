@@ -1,6 +1,6 @@
-add_executable(myproject main.cpp parareal.cpp utils.cpp)
+add_executable(parareal main.cpp parareal.cpp utils.cpp)
 target_link_libraries(
-  myproject
+  parareal
   PRIVATE project_options
           project_warnings
           CONAN_PKG::docopt.cpp

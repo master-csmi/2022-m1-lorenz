@@ -6,9 +6,15 @@
  * @version 1.0
  * @date 2022-06-22
  */
+
+/**
+ * @brief An enkf class to implement the ensemble kalman filter method.
+ *
+ */
 class EnsembleKalmanFilter
 {
     private:
+    
         int M_dim_x,M_dim_z,M_N;
         double M_dt;
         MyMatrix (* M_hx)(MyMatrix  x);
@@ -22,15 +28,74 @@ class EnsembleKalmanFilter
     
     
         // accesseurs
+        /**
+         * @brief Get the M_dim_x attibute.
+         * 
+         * @return type:int The dimensions of the state matrix.
+         */
         int get_dim_x()const;
+
+        /**
+         * @brief Get the M_dim_z attibute.
+         * 
+         * @return type:int The dimensions of the observations matrix.
+         */
         int get_dim_z()const;
+
+        /**
+         * @brief Get the M_N attibute.
+         * 
+         * @return type:int Number of sigma points (ensembles).
+         */
         int get_N()const;
+
+        /**
+         * @brief Get the M_dt attibute.
+         * 
+         * @return type:double Time step in seconds.
+         */
         double get_dt()const;
+
+        /**
+         * @brief Get the M_x attibute.
+         * 
+         * @return type:MyMatrix State mean matrix.
+         */
         MyMatrix get_x()const;
+
+        /**
+         * @brief Get the M_z attibutes.
+         * 
+         * @return type:MyMatrix Last measurement used in update().
+         */
         MyMatrix get_z()const;
+
+        /**
+         * @brief Get the M_P attibutes.
+         * 
+         * @return type:MyMatrix State covariance matrix.
+         */
         MyMatrix get_P()const;
+
+        /**
+         * @brief Get the M_Q attibutes.
+         * 
+         * @return type:MyMatrix Process noise matrix.
+         */
         MyMatrix get_Q()const;
+
+        /**
+         * @brief Get the M_R attibutes.
+         * 
+         * @return type:MyMatrix  Measurement noise matrix
+         */
         MyMatrix get_R()const;
+
+        /**
+         * @brief Get the M_sigmas attibutes.
+         * 
+         * @return MyMatrix 
+         */
         MyMatrix get_sigmas()const;
         
         // mutateur
@@ -46,9 +111,29 @@ class EnsembleKalmanFilter
         void set_sigmas(MyMatrix sigmas);
 
 
-
+        /**
+         * @brief Add a new measurement (z) to the kalman filter
+         * 
+         * @param z An eigen matrix with the new observations.
+         */
         void update(MyMatrix z);
+
+        /**
+         * @brief Predict next position.
+         * 
+         */
         void predict();
+
+        /**
+         * @brief Create 3 csv files.
+         * 
+         * @param lorenz1 An eigen matrix with the model.
+         * @param dt_1 An eigen matrix with the discretisation for the model.
+         * @param lorenz2 An eigen matrix with the observations.
+         * @param dt_2 An eigen matrix with the discretisation for the observations.
+         * @param etat An eigen matrix with the analyse state.
+         * @param dt_3 An eigen matrix with the discretisation for analyse state.
+         */
         void creation_csv(MyMatrix lorenz1,double dt_1,MyMatrix lorenz2,double dt_2,MyMatrix etat,double dt_3);
  };
 

@@ -1,7 +1,15 @@
 #include <Eigen/Dense>
 
-typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic,Eigen::RowMajor> Matrix;
-typedef Eigen::Matrix<double,1,Eigen::Dynamic> Vector;
+/**
+ * @file utils.hpp
+ * @author Frédérique Lecourtier
+ * @brief Utilities for the parareal algorithm.
+ * @version 1.0
+ * @date 2022-06-22
+ */
+
+using Matrix = Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic,Eigen::RowMajor>;
+using Vector = Eigen::Matrix<double,1,Eigen::Dynamic>;
 
 Vector lorenz(double t, Vector X, int dim, double* gamma);
 

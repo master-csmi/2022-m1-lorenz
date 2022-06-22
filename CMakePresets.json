@@ -33,7 +33,8 @@
             "binaryDir": "${sourceDir}/build/dbg",
             "cacheVariables": {
                 "CMAKE_CXX_COMPILER": "clang++",
-                "CMAKE_BUILD_TYPE": "Debug"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "WARNINGS_AS_ERRORS":false
             },
             "vendor": {
                 "example.com/ExampleIDE/1.0": {

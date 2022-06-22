@@ -7,9 +7,9 @@
 
 Matrix parareal(Vector X0_t0, double t0, double T, Vector prob(double, 
         Vector, int, double*), double dt_G, double dt_F, double* gamma, 
-        int world_rank, int n_proc, bool write_csv){
+        int world_rank, const int n_proc, bool write_csv){
 
-    int dim = X0_t0.cols();
+    int dim = static_cast<int>(X0_t0.cols());
 
     Vector times;
     Matrix X0_k(n_proc,dim); 
@@ -71,38 +71,38 @@ Matrix parareal(Vector X0_t0, double t0, double T, Vector prob(double,
 
     // to save the solution
 
+    int nb_t_p = static_cast<int>(fine.rows());
     int nEltByProc[n_proc];
-    int displacement[n_proc];
-    int nb_t_p = fine.rows();
-    int nb_t = 0;
     MPI_Gather(&nb_t_p, 1, MPI_INTEGER, nEltByProc, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
+    int displacement[n_proc];
     if(world_rank==0){
         for(int i=0; i<n_proc; i++){
-            nb_t+=nEltByProc[i];
             nEltByProc[i] = nEltByProc[i] * dim;
         }
+
         displacement[0] = 0;
         for(int i=1; i<n_proc; i++){
             displacement[i] = displacement[i-1]+nEltByProc[i-1];
         }
     }
-    
+
+    int nb_t = 0;
+    MPI_Reduce(&nb_t_p,&nb_t,1,MPI_INT,MPI_SUM,0,MPI_COMM_WORLD);
+
     Matrix sol_k(nb_t,dim);
-    MPI_Gatherv(fine.data(), fine.size(), MPI_DOUBLE, sol_k.data(), nEltByProc, displacement, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(fine.data(), static_cast<int>(fine.size()), MPI_DOUBLE, sol_k.data(), nEltByProc, displacement, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     Matrix solution(nb_t,dim);
     Matrix init_pts(n_proc,dim);
     if(write_csv){
         if(world_rank==0){
-            // solution = new Matrix(nb_t,dim);
             solution = sol_k;
-            // solution.reshaped<Eigen::RowMajor>(1,solution.cols()*solution.rows());
-            solution.resize(1,solution.cols()*solution.rows());
+            solution = solution.reshaped<Eigen::RowMajor>(1,solution.cols()*solution.rows());
+            // solution.resize(1,solution.cols()*solution.rows());
 
-            // init_pts = new Matrix(n_proc,dim);
             init_pts = X0_k;
-            // init_pts.reshaped<Eigen::RowMajor>(1,init_pts.cols()*init_pts.rows());
-            init_pts.resize(1,init_pts.cols()*init_pts.rows());
+            init_pts = init_pts.reshaped<Eigen::RowMajor>(1,init_pts.cols()*init_pts.rows());
+            // init_pts.resize(1,init_pts.cols()*init_pts.rows());
         }
     }
 
@@ -116,8 +116,6 @@ Matrix parareal(Vector X0_t0, double t0, double T, Vector prob(double,
 
     Vector coarse_k_j(dim);
     Vector to_send(dim);
-
-    // Matrix* sol_k_resize;
 
     while(not converge){             
         if(world_rank==0){
@@ -153,24 +151,15 @@ Matrix parareal(Vector X0_t0, double t0, double T, Vector prob(double,
 
         // to save the solution
 
-        MPI_Gatherv(fine.data(), fine.size(), MPI_DOUBLE, sol_k.data(), nEltByProc, displacement, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        MPI_Gatherv(fine.data(), static_cast<int>(fine.size()), MPI_DOUBLE, sol_k.data(), nEltByProc, displacement, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
         if(write_csv){
             if(world_rank==0){
                 solution.conservativeResize(solution.rows()+1,solution.cols());
-                #if 0
-                sol_k_resize = new Matrix(sol_k.rows(),sol_k.cols());
-                *sol_k_resize = sol_k;
-                sol_k_resize->resize(1,sol_k_resize->rows()*sol_k_resize->cols());
-                solution.row(k) = *sol_k_resize;
-                delete sol_k_resize;
-                #endif
-                solution.row(k) = sol_k.reshaped<Eigen::RowMajor>(1,sol_k.rows()*sol_k.cols());
-
-                #if 1
                 init_pts.conservativeResize(init_pts.rows()+1,init_pts.cols());
+
+                solution.row(k) = sol_k.reshaped<Eigen::RowMajor>(1,sol_k.rows()*sol_k.cols());
                 init_pts.row(k) = X0_k.reshaped<Eigen::RowMajor>(1,X0_k.rows()*X0_k.cols());
-                #endif
             }
         }
 

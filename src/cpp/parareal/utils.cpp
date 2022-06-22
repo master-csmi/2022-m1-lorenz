@@ -11,14 +11,15 @@ Vector lorenz(double /*t*/, Vector X, int /*dim*/, double* gamma){
 Matrix RK4(Vector X0, double dt, double t0, double T, Vector prob(double, Vector, 
         int, double*), double* gamma){
 
-    int dim = X0.cols();
+    int dim = static_cast<int>(X0.cols());
     Matrix X(1,dim); X << X0;
 
     double t = t0;
     Vector K1(dim), K2(dim), K3(dim), K4(dim);
     Vector X_prec(dim);
     
-    while ( (t+dt)<=T or std::abs(t+dt-T)<1e-6){ 
+    while ( (t+dt)<=T or std::abs(t+dt-T)<1e-6){
+    // while ( (t+dt)<=T ){ 
         X_prec = X.bottomRows<1>();
         K1=prob(t, X_prec, dim, gamma);
         K2=prob(t+dt/2., X_prec + 1./2. * K1 * dt, dim, gamma);
@@ -38,7 +39,7 @@ Vector compute_times(double t0, double T, double dt_G, int P){
     // time between t_j and t_{j+1}
     double dt_P = (T-t0)/P;
     // nb points
-    int nb_pts = dt_P/dt_G;
+    int nb_pts = static_cast<int>(dt_P/dt_G);
 
     // t_j exact
     Vector times_exact(P+1);

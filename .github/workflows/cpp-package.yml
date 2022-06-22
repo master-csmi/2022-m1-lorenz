@@ -1,0 +1,38 @@
+name: Cpp package
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  docs:
+
+    runs-on: ubuntu-latest
+    if: |
+      !contains(github.event.head_commit.message, 'skip docs')
+    steps:
+      - uses: actions/checkout@v3
+      # - name: Doxygen Action
+      #   uses: actions/setup-python@v3
+      #   with:   
+      #     python-version: 3.8
+      # - name: Install dependencies
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     python -m pip install sphinx
+      #     python -m pip install sphinx_rtd_theme
+      #     pip install -r requirements.txt
+      - name: Configure Doxygen Preset
+        run: cmake --preset doxygen -DDOXYGEN_EXECUTABLE=.
+      - name: Build Doxygen
+        run: cmake --build --preset doxygen
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          target_folder: cpp
+          folder: build/doxygen/doc/api/html # The folder the action should deploy.

@@ -75,4 +75,5 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
           branch: gh-pages # The branch the action should deploy to.
+          target_folder: python
           folder: docs/sphinx/_build/html # The folder the action should deploy.

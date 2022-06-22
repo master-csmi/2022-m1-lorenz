@@ -8,7 +8,7 @@ Vector lorenz(double /*t*/, Vector X, int /*dim*/, double* gamma){
     return sol;
 }
 
-Matrix RK4(Vector X0, double dt, double t0, double T, Vector prob(double, Vector, 
+Matrix RK4(Vector X0, double dt, double t0, int nb_t, Vector prob(double, Vector, 
         int, double*), double* gamma){
 
     int dim = static_cast<int>(X0.cols());
@@ -18,8 +18,9 @@ Matrix RK4(Vector X0, double dt, double t0, double T, Vector prob(double, Vector
     Vector K1(dim), K2(dim), K3(dim), K4(dim);
     Vector X_prec(dim);
     
-    while ( (t+dt)<=T or std::abs(t+dt-T)<1e-6){
+    // while ( (t+dt)<=T or std::abs(t+dt-T)<1e-6){
     // while ( (t+dt)<=T ){ 
+    for(int i=1; i<nb_t; i++){
         X_prec = X.bottomRows<1>();
         K1=prob(t, X_prec, dim, gamma);
         K2=prob(t+dt/2., X_prec + 1./2. * K1 * dt, dim, gamma);

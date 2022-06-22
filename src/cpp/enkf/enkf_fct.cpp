@@ -1,18 +1,4 @@
-#include <stdio.h>
-#include <iostream>
-#include <fstream>
-#include <cmath>
-#include <math.h>
-#include <iomanip>
-#include <sstream>
-#include<time.h>
-#include <Eigen/Dense>
-#include <Eigen/Eigenvalues>
-#include <Eigen/Cholesky>
-#include <EigenRand/EigenRand>
-
-using namespace Eigen;
-typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> MyMatrix;
+#include"enkf_fct.hpp"
 
 MyMatrix mean(MyMatrix M,int a)
 {

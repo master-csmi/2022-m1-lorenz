@@ -139,72 +139,46 @@ class EnsembleKalmanFilter
     }
     void update(MyMatrix z)
     {
-        MyMatrix sigmas_h,sigmas_x,sigmas_z,z_mean,P_zz,P_xz,sigma,sigma_2;
-        MyMatrix K;
-        sigmas_h=MyMatrix::Zero(M_N,M_dim_z);
+        
+        MyMatrix sigmas_h=MyMatrix::Zero(M_N,M_dim_z);
         for(int i=0;i<M_N;i++)
         {
-            sigmas_x=MyMatrix::Zero(M_dim_x,1);
-            for(int j=0;j<M_dim_x;j++)
-            {
-                sigmas_x(j,0)=M_sigmas(i,j);
-            }
-            sigmas_z=M_hx(sigmas_x);
-            for(int j=0;j<M_dim_z;j++)
-            {
-                sigmas_h(i,j)=sigmas_z(j,0);
-            }
+            sigmas_h.row(i)=M_hx(M_sigmas.row(i).transpose()).transpose();
+
         }
-        z_mean=MyMatrix::Zero(M_dim_z,1);
+        MyMatrix z_mean=MyMatrix::Zero(M_dim_z,1);
         z_mean=mean(sigmas_h,0);
-        P_zz=MyMatrix::Zero(M_dim_z,M_dim_z);
-        sigma=MyMatrix::Zero(M_dim_z,1);
+
+
+
+        MyMatrix P_zz=MyMatrix::Zero(M_dim_z,M_dim_z);
         for(int i=0;i<M_N;i++)
         {
-            for(int j=0;j<M_dim_z;j++)
-            {
-                sigma(j,0)=sigmas_h(i,j);
-            }
-            sigma=sigma-z_mean;
-            P_zz+=sigma*sigma.transpose();
+            P_zz+=(sigmas_h.row(i).transpose()-z_mean)*(sigmas_h.row(i).transpose()-z_mean).transpose();
         }
         P_zz=(P_zz/(M_N-1))+M_R;
-        P_xz=MyMatrix::Zero(M_dim_x,M_dim_z);
-        sigma=MyMatrix::Zero(M_dim_z,1);
-        sigma_2=MyMatrix::Zero(M_dim_x,1);
+
+
+
+
+        MyMatrix P_xz=MyMatrix::Zero(M_dim_x,M_dim_z);
         for(int i=0;i<M_N;i++)
         {
-            for(int j=0;j<M_dim_z;j++)
-            {
-                sigma(j,0)=sigmas_h(i,j);
-            }
-            for(int j=0;j<M_dim_x;j++)
-            {
-                sigma_2(j,0)=M_sigmas(i,j);
-            }
-            P_xz+=(sigma_2-M_x)*((sigma-z_mean).transpose());
+            P_xz+=(M_sigmas.row(i).transpose()-M_x)*((sigmas_h.row(i).transpose()-z_mean).transpose());
         }
         P_xz=(P_xz/(M_N-1));
         P_zz.inverse();
-        M_K=P_xz*(P_zz.inverse());
+        MyMatrix M_K=P_xz*(P_zz.inverse());
+
+
+
         std::mt19937_64 urng3( time(NULL) );
         auto gen3 = Rand::makeMvNormalGen(M_mean_z, M_R);
         MyMatrix e_r = (gen3.generate(urng3, M_N)).transpose();
-        MyMatrix e_r_i=MyMatrix::Zero(M_dim_z,1);
-        MyMatrix sigma_h_i=MyMatrix::Zero(M_dim_z,1);
         for(int i=0;i<M_N;i++)
         {
-            for(int j=0;j<M_dim_z;j++)
-            {
-                sigma_h_i(j,0)=sigmas_h(i,j);
-                e_r_i(j,0)=e_r(i,j);
-            }
-            MyMatrix sigma_i=M_K*(z+e_r_i-sigma_h_i);
-            for(int j=0;j<M_dim_x;j++)
-            {
-                M_sigmas(i,j)+=sigma_i(j,0);
-                
-            }
+            
+            M_sigmas.row(i)+=(M_K*(z+e_r.row(i).transpose()-sigmas_h.row(i).transpose())).transpose();
         }
         M_x=mean(M_sigmas,0);
         M_P=M_P-((M_K*P_zz)*M_K.transpose());
@@ -214,39 +188,21 @@ class EnsembleKalmanFilter
     }
     void predict()
     {
-       
-        MyMatrix sigmas_x;
         for (int i=0;i<M_N;i++)
         {
-            sigmas_x=MyMatrix::Zero(M_dim_x,1);
-            for(int j=0;j<M_dim_x;j++)
-            {
-                sigmas_x(j,0)=M_sigmas(i,j);
-            }
-            
-            sigmas_x=M_fx(M_dt,sigmas_x);
-            
-            for(int j=0;j<M_dim_x;j++)
-            {
-                M_sigmas(i,j)=sigmas_x(j,0);
-            }
+            M_sigmas.row(i)=M_fx(M_dt,M_sigmas.row(i).transpose()).transpose();
         }
+        
+
         
         std::mt19937_64 urng2( time(NULL) );
         auto gen2 = Rand::makeMvNormalGen(M_mean, M_Q);
         MyMatrix e = (gen2.generate(urng2, M_N)).transpose();
         M_sigmas+=e;
         MyMatrix P_=MyMatrix::Zero(M_dim_x,M_dim_x);
-        MyMatrix sigma=MyMatrix::Zero(M_dim_x,1);
         for(int i=0;i<M_N;i++)
         {
-            for(int j=0;j<M_dim_x;j++)
-            {
-               
-                sigma(j,0)=M_sigmas(i,j);
-            }
-            sigma=sigma-M_x;
-            P_+=sigma*sigma.transpose();
+            P_+=(M_sigmas.row(i).transpose()-M_x)*(M_sigmas.row(i).transpose()-M_x).transpose();
         }
         M_P=(P_/(M_N-1));
         M_x_prior=M_x;
@@ -256,7 +212,7 @@ class EnsembleKalmanFilter
     {
         int dim_col=lorenz1.cols();
         int dim_row=lorenz1.rows();
-        std :: ofstream ofile("plotlorenz1.csv",std :: ios :: out|std :: ios :: app );
+        std :: ofstream ofile("../../../examples/cpp/enkf/plotlorenz1.csv",std :: ios :: out|std :: ios :: app );
        if ( ofile ) 
        {
             double time=0 ;
@@ -276,7 +232,7 @@ class EnsembleKalmanFilter
        ofile.close ();
        int dim_col2=lorenz2.cols();
         int dim_row2=lorenz2.rows();
-        std :: ofstream oofile("plotlorenz2.csv",std :: ios :: out|std :: ios :: app );
+        std :: ofstream oofile("../../../examples/cpp/enkf/plotlorenz2.csv",std :: ios :: out|std :: ios :: app );
        if ( oofile )
        {
             double time2=0 ;
@@ -296,7 +252,7 @@ class EnsembleKalmanFilter
        oofile.close ();
        int dim_col3=etat.cols();
         int dim_row3=etat.rows();
-        std :: ofstream ooofile("plotetat.csv",std :: ios :: out|std :: ios :: app );
+        std :: ofstream ooofile("../../../examples/cpp/enkf/plotetat.csv",std :: ios :: out|std :: ios :: app );
        if ( ooofile ) 
        {
             double time3=0 ;

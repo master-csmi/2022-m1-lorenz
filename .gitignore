@@ -8,10 +8,11 @@ docs/report/report*
 !docs/report/report.tex
 
 lorenz/enkf/enkf.o
-lorenz/enkf/run
-lorenz/enkf/plotlorenz1.csv
-lorenz/enkf/plotlorenz2.csv
-lorenz/enkf/plotetat.csv
+src/cpp/enkf/build/
+
+examples/cpp/enkf/plotlorenz1.csv
+examples/cpp/enkf/plotlorenz2.csv
+examples/cpp/enkf/plotetat.csv
 
 .ipynb_checkpoints/
 

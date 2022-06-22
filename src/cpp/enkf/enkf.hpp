@@ -1,4 +1,11 @@
 #include "enkf_fct.hpp"
+/**
+ * @file enkf.hpp
+ * @author Melissa AYDOGDU
+ * @brief The enkf class.
+ * @version 1.0
+ * @date 2022-06-22
+ */
 class EnsembleKalmanFilter
 {
     private:

@@ -11,6 +11,14 @@
 #include <Eigen/Cholesky>
 #include <EigenRand/EigenRand>
 
+/**
+ * @file enkf_fct.hpp
+ * @author Melissa AYDOGDU
+ * @brief Some fonction to apply the enkf method .
+ * @version 1.0
+ * @date 2022-06-22
+ */
+
 using namespace Eigen;
 typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> MyMatrix;
 

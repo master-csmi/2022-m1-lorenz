@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(parareal CXX)
+project(lorenz CXX)
 include(cmake/StandardProjectSettings.cmake)
 include(cmake/PreventInSourceBuilds.cmake)
 

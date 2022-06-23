@@ -1,6 +1,6 @@
 #include <parareal/utils.hpp>
 
-Vector<double> lorenz(double /*t*/, Vector<double> X, int /*dim*/, double* gamma){
+Vector<double> lorenz(double /*t*/, Vector<double> X, double* gamma){
     Vector<double> sol(X.cols());
     sol << gamma[0] * (X[1]-X[0]), X[0] * (gamma[2]-X[2])-X[1],
          X[0]*X[1]-gamma[1]*X[2];
@@ -8,8 +8,8 @@ Vector<double> lorenz(double /*t*/, Vector<double> X, int /*dim*/, double* gamma
     return sol;
 }
 
-Matrix RK4(Vector<double> X0, double dt, double t0, int nb_t, Vector<double> prob(double, Vector<double>, 
-        int, double*), double* gamma){
+Matrix RK4(Vector<double> X0, double dt, double t0, int nb_t, 
+        Vector<double> prob(double, Vector<double>, double*), double* gamma){
 
     int dim = static_cast<int>(X0.cols());
     Matrix X(1,dim); X << X0;
@@ -22,10 +22,10 @@ Matrix RK4(Vector<double> X0, double dt, double t0, int nb_t, Vector<double> pro
     // while ( (t+dt)<=T ){ 
     for(int i=1; i<nb_t; i++){
         X_prec = X.bottomRows<1>();
-        K1=prob(t, X_prec, dim, gamma);
-        K2=prob(t+dt/2., X_prec + 1./2. * K1 * dt, dim, gamma);
-        K3=prob(t+dt/2., X_prec + 1./2. * K2 * dt, dim, gamma);
-        K4=prob(t+dt, X_prec+ K3 * dt, dim, gamma);
+        K1=prob(t, X_prec, gamma);
+        K2=prob(t+dt/2., X_prec + 1./2. * K1 * dt, gamma);
+        K3=prob(t+dt/2., X_prec + 1./2. * K2 * dt, gamma);
+        K4=prob(t+dt, X_prec+ K3 * dt, gamma);
 
         X.conservativeResize(X.rows()+1, X.cols());
         X.row(X.rows()-1) = X_prec + dt/6.* (K1+2.*K2+2.*K3+K4);

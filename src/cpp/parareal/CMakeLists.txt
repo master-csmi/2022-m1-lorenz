@@ -1,4 +1,4 @@
-add_executable(parareal.e main.cpp parareal.cpp utils.cpp)
+add_executable(parareal.e main.cpp parareal.cpp utils.cpp write_csv.cpp)
 target_link_libraries(
   parareal.e
   PRIVATE project_options

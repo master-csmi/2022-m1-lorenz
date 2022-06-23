@@ -2,11 +2,13 @@
 #include <cmath>
 #include <Eigen/Dense>
 #include <mpi.h>
+
 #include <parareal/parareal.hpp>
 #include <parareal/utils.hpp>
+#include <parareal/write_csv.hpp>
 
 Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(double, 
-        Vector<double>, int, double*), double dt_G, double dt_F, double* gamma, 
+        Vector<double>, double*), double dt_G, double dt_F, double* gamma, 
         int world_rank, const int n_proc, bool write_csv){
 
     /*
@@ -15,6 +17,9 @@ Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(d
 
     // number of variables (dimension of X0_t0)
     int dim = static_cast<int>(X0_t0.cols());
+
+    // iteration
+    int k = 0;
 
     // number of coarse time step for each process
     Vector<int> tab_nb_t_G_p(n_proc);
@@ -35,8 +40,15 @@ Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(d
     int nb_t_F_p;
     MPI_Scatter(tab_nb_t_F_p.data(), 1, MPI_INT, &nb_t_F_p, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
+    /*
+        Utilities for communication
+    */
+
+    // tab_nb_t_F_p*dim
     Vector<int> nEltByProc(n_proc);
+    // starting index for each process
     Vector<int> displacement(n_proc);
+
     if(world_rank==0){
         for(int i=0; i<n_proc; i++){
             nEltByProc(i) = tab_nb_t_F_p(i) * dim;
@@ -51,9 +63,10 @@ Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(d
 
     MPI_Barrier(MPI_COMM_WORLD);
 
-    /*
+
+    /* ============================================
         ITERATION : k = 0
-    */
+    ============================================ */
 
     // initial point of the process j
     Vector<double> X0_k_j(dim);
@@ -111,33 +124,42 @@ Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(d
         to save the solution
     */
 
+    // total number of fine time step (between t0 and T)
     int nb_t_F;
     MPI_Reduce(&nb_t_F_p,&nb_t_F,1,MPI_INT,MPI_SUM,0,MPI_COMM_WORLD);
     if(world_rank==0)
         nb_t_F = tab_nb_t_F_p.sum();
+    
+    // each fine time step between t0 and T
+    Vector<double> t(nb_t_F);
+    if(world_rank==0){
+        t(0) = t0;
+        for(int i=1; i<nb_t_F; i++){
+            t(i) = t(i-1) + dt_F;
+        }
+        // std::cout << t << std::endl;
+    }
 
     // fine solution between t0 and T ( only proc 0 )
     Matrix sol_k(nb_t_F,dim);
     MPI_Gatherv(fine.data(), static_cast<int>(fine.size()), MPI_DOUBLE, sol_k.data(), 
         nEltByProc.data(), displacement.data(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-    Matrix solution(nb_t_F,dim);
-    Matrix init_pts(n_proc,dim);
     if(write_csv){
         if(world_rank==0){
-            solution = sol_k;
-            solution = solution.reshaped<Eigen::RowMajor>(1,solution.cols()*solution.rows());
-
-            init_pts = X0_k;
-            init_pts = init_pts.reshaped<Eigen::RowMajor>(1,init_pts.cols()*init_pts.rows());
+            write_sol_k(k,t,sol_k);
+            write_X0_k(k,times,X0_k);
         }
     }
 
-    /*
-        FOLLOWING ITERATIONS (until the solution converge)
-    */
+    MPI_Barrier(MPI_COMM_WORLD);
 
-    int k = 1;
+    /* ============================================
+        FOLLOWING ITERATIONS (until the solution converge)
+    ============================================ */
+
+    k++;
+
     bool converge = false;
 
     Matrix X0_kp(n_proc,dim);
@@ -186,11 +208,8 @@ Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(d
 
         if(write_csv){
             if(world_rank==0){
-                solution.conservativeResize(solution.rows()+1,solution.cols());
-                init_pts.conservativeResize(init_pts.rows()+1,init_pts.cols());
-
-                solution.row(k) = sol_k.reshaped<Eigen::RowMajor>(1,sol_k.rows()*sol_k.cols());
-                init_pts.row(k) = X0_k.reshaped<Eigen::RowMajor>(1,X0_k.rows()*X0_k.cols());
+                write_sol_k(k,t,sol_k);
+                write_X0_k(k,times,X0_k);
             }
         }
 
@@ -198,9 +217,9 @@ Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(d
     }
 
     if(world_rank==0){
-        std::cout << "sol : " <<  solution << std::endl << std::endl;
-        std::cout << "init_pts : " <<  init_pts << std::endl << std::endl;
-        std::cout << k << " itérations" << std::endl;
+        // std::cout << "sol : " <<  solution << std::endl << std::endl;
+        // std::cout << "init_pts : " <<  init_pts << std::endl << std::endl;
+        std::cout << k << " iterations" << std::endl;
     }
 
     #if 0

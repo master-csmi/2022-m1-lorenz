@@ -9,18 +9,20 @@ Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(d
         Vector<double>, int, double*), double dt_G, double dt_F, double* gamma, 
         int world_rank, const int n_proc, bool write_csv){
 
-    int dim = static_cast<int>(X0_t0.cols());
-
     /*
-        Usefull :
-        - number of coarse time step for each process
-        - number of fine time step for each process
-        - times [t_0,...,t_P]
+        Utilities
     */
 
+    // number of variables (dimension of X0_t0)
+    int dim = static_cast<int>(X0_t0.cols());
+
+    // number of coarse time step for each process
     Vector<int> tab_nb_t_G_p(n_proc);
+    // number of fine time step for each process
     Vector<int> tab_nb_t_F_p(n_proc);
+    // times : [t_0,...,t_P]
     Vector<double> times;
+
     if(world_rank==0){
         times = compute_times(t0,T,dt_G,dt_F,n_proc,&tab_nb_t_G_p,&tab_nb_t_F_p);
     }
@@ -33,22 +35,21 @@ Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(d
     int nb_t_F_p;
     MPI_Scatter(tab_nb_t_F_p.data(), 1, MPI_INT, &nb_t_F_p, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-    /*
-        Usefull for communication
-    */
-
     Vector<int> nEltByProc(n_proc);
     Vector<int> displacement(n_proc);
     if(world_rank==0){
         for(int i=0; i<n_proc; i++){
             nEltByProc(i) = tab_nb_t_F_p(i) * dim;
         }
-
+    }
+    if(world_rank==0){
         displacement(0) = 0;
         for(int i=1; i<n_proc; i++){
-            displacement(i) = displacement(i-1)+nEltByProc(i-1);
+            displacement(i) = displacement(i-1) + nEltByProc(i-1);
         }
     }
+
+    MPI_Barrier(MPI_COMM_WORLD);
 
     /*
         ITERATION : k = 0
@@ -58,6 +59,7 @@ Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(d
     Vector<double> X0_k_j(dim);
     // initial points for each process ( tab of X0_k_j )
     Matrix X0_k(n_proc,dim); 
+
     // final point of the coarse integrator on each interval
     // starting with the initial point X0_k_j
     Vector<double> coarse_k_j(dim);
@@ -83,9 +85,12 @@ Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(d
             coarse_k.row(j-1) = coarse_k_j;
         }
     }
-    // final coarse point of proc j is the initial point of proc j+1
-    if(world_rank > 0)
-        MPI_Recv(X0_k_j.data(), dim, MPI_DOUBLE, 0, world_rank, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+    // final coarse point of proc j = initial point of proc j+1
+    if(world_rank > 0){
+        MPI_Recv(X0_k_j.data(), dim, MPI_DOUBLE, 0, world_rank, MPI_COMM_WORLD, 
+                MPI_STATUS_IGNORE);
+    }
 
     /*
         2nd step : compute the solution on each interval
@@ -94,7 +99,6 @@ Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(d
 
     // fine solution on each interval
     Matrix fine = RK4(X0_k_j,dt_F,t_j,nb_t_F_p,prob,gamma);
-    // std::cout << "fine : " << fine.size()/dim << std::endl;
     
     // final point of the fine integrator on each interval
     Vector<double> fine_k_j = fine.bottomRows<1>();
@@ -103,7 +107,9 @@ Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(d
     Matrix fine_k(n_proc, dim);
     MPI_Gather(fine_k_j.data(), dim, MPI_DOUBLE, fine_k.data(), dim, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-    // to save the solution
+    /*
+        to save the solution
+    */
 
     int nb_t_F;
     MPI_Reduce(&nb_t_F_p,&nb_t_F,1,MPI_INT,MPI_SUM,0,MPI_COMM_WORLD);
@@ -127,7 +133,9 @@ Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(d
         }
     }
 
-    // Following iterations (until the solution converge)
+    /*
+        FOLLOWING ITERATIONS (until the solution converge)
+    */
 
     int k = 1;
     bool converge = false;
@@ -170,7 +178,10 @@ Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(d
         if(world_rank==0)
             X0_k = X0_kp; 
 
-        // to save the solution
+        /*
+            to save the solution
+        */
+       
         MPI_Gatherv(fine.data(), static_cast<int>(fine.size()), MPI_DOUBLE, sol_k.data(), nEltByProc.data(), displacement.data(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
         if(write_csv){

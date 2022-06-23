@@ -9,7 +9,7 @@ int main (){
     MPI_Comm_size ( MPI_COMM_WORLD , & n_proc );
 
     double gamma[3] = {10.,8./3,28.};
-    Vector X0(3); X0 << 5., 5., 5.;
+    Vector<double> X0(3); X0 << 5., 5., 5.;
     double t0 = 0.;
     double T = 2.;
     double dt_G = 0.1;

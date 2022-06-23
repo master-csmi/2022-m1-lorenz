@@ -9,13 +9,14 @@
  */
 
 using Matrix = Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic,Eigen::RowMajor>;
-using Vector = Eigen::Matrix<double,1,Eigen::Dynamic>;
+template<class T> using Vector = Eigen::Matrix<T,1,Eigen::Dynamic>;
 
-Vector lorenz(double t, Vector X, int dim, double* gamma);
+Vector<double> lorenz(double t, Vector<double> X, int dim, double* gamma);
 
-Matrix RK4(Vector X0, double dt, double t0, int nb_t, Vector prob(double, Vector, 
+Matrix RK4(Vector<double> X0, double dt, double t0, int nb_t, Vector<double> prob(double, Vector<double>, 
         int, double*), double* gamma);
 
-Vector compute_times(double t0, double T, double dt_G, int P);
+Vector<double> compute_times(double t0, double T, double dt_G, double dt_F, int n_proc,
+        Vector<int>* tab_nb_t_G_p, Vector<int>* tab_nb_t_F_p);
 
 bool sol_converge(Matrix X0_k, Matrix X0_knext, double eps=1e-9);

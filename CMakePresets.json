@@ -46,7 +46,7 @@
             "name": "doxygen",
             "inherits": "default",
             "displayName": "doxygen",
-            "description": "Build Feel++ doxygen documentation",
+            "description": "Build doxygen documentation",
             "binaryDir": "${sourceDir}/build/doxygen",
             "cacheVariables": {
                 "ENABLE_DOXYGEN": "ON"
@@ -74,11 +74,6 @@
         {
             "name": "default",
             "configurePreset": "default",
-            "filter":{
-                "include":{
-                    "name":"feelpp"
-                }
-            },
             "output": {
                 "outputOnFailure": true
             },

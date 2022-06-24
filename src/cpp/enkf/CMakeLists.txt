@@ -18,7 +18,7 @@ set(CMAKE_CXX_FLAGS "-I /Users/macosx/desktop/eigen.0")
 #    FetchContent_Populate(pybind11)
 #    add_subdirectory(${pybind11_SOURCE_DIR} ${pybind11_BINARY_DIR})
 #endif()
-pybind11_add_module(_enkf enkf_wrapper.cpp)
+# pybind11_add_module(_enkf enkf_wrapper.cpp)
 target_link_libraries(
   enkf.e
   PRIVATE project_options

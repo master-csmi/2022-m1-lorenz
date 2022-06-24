@@ -9,33 +9,33 @@ add_library(project_options INTERFACE)
 # target_compile_features(project_options INTERFACE cxx_std_17)
 target_compile_features(project_options INTERFACE cxx_std_20)
 
-# if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
-#   option(ENABLE_BUILD_WITH_TIME_TRACE "Enable -ftime-trace to generate time tracing .json files on clang" OFF)
-#   if(ENABLE_BUILD_WITH_TIME_TRACE)
-#     target_compile_options(project_options INTERFACE -ftime-trace)
-#   endif()
-# endif()
+if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+  option(ENABLE_BUILD_WITH_TIME_TRACE "Enable -ftime-trace to generate time tracing .json files on clang" OFF)
+  if(ENABLE_BUILD_WITH_TIME_TRACE)
+    target_compile_options(project_options INTERFACE -ftime-trace)
+  endif()
+endif()
 
 # Link this 'library' to use the warnings specified in CompilerWarnings.cmake
 add_library(project_warnings INTERFACE)
 
 # enable cache system
-# include(cmake/Cache.cmake)
+include(cmake/Cache.cmake)
 
 # standard compiler warnings
 include(cmake/CompilerWarnings.cmake)
 set_project_warnings(project_warnings)
 
 # sanitizer options if supported by compiler
-# include(cmake/Sanitizers.cmake)
-# enable_sanitizers(project_options)
+include(cmake/Sanitizers.cmake)
+enable_sanitizers(project_options)
 
 # enable doxygen
 include(cmake/Doxygen.cmake)
 enable_doxygen()
 
 # allow for static analysis options
-# include(cmake/StaticAnalyzers.cmake)
+include(cmake/StaticAnalyzers.cmake)
 
 option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
 option(ENABLE_TESTING "Enable Test Builds" ON)
@@ -62,11 +62,11 @@ set(Boost_ADDITIONAL_VERSIONS "1.61" "1.62" "1.63" "1.64" "1.65" "1.66" "1.67" "
 set(BOOST_COMPONENTS_REQUIRED date_time filesystem system program_options unit_test_framework ${FEELPP_BOOST_MPI} regex serialization iostreams)
 FIND_PACKAGE(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS ${BOOST_COMPONENTS_REQUIRED})
 
-# if(ENABLE_TESTING)
-# enable_testing()
-# message("Building Tests. Be sure to check out test/constexpr_tests for constexpr testing")
-# add_subdirectory(test)
-# endif()
+if(ENABLE_TESTING)
+  enable_testing()
+  message("Building Tests. Be sure to check out test/constexpr_tests for constexpr testing")
+  add_subdirectory(tests/cpp)
+endif()
 target_include_directories(project_options  INTERFACE ${MPI_CXX_HEADER_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp)
 
 add_subdirectory(src/cpp)

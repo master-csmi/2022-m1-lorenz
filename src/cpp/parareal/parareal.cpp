@@ -131,8 +131,9 @@ Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(d
         nb_t_F = tab_nb_t_F_p.sum();
     
     // each fine time step between t0 and T
-    Vector<double> t(nb_t_F);
+    Vector<double> t;
     if(world_rank==0){
+        t.resize(nb_t_F);
         t(0) = t0;
         for(int i=1; i<nb_t_F; i++){
             t(i) = t(i-1) + dt_F;
@@ -160,12 +161,14 @@ Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(d
 
     k++;
 
-    bool converge = false;
+    // bool converge = false;
 
     Matrix X0_kp(n_proc,dim);
     X0_kp = Matrix::Zero(n_proc,dim);
 
     Vector<double> to_send(dim);
+
+    int converge = 0;
 
     while(not converge){             
         if(world_rank==0){
@@ -195,7 +198,8 @@ Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(d
         
         MPI_Barrier(MPI_COMM_WORLD);
 
-        MPI_Bcast(&converge, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
+        // MPI_Bcast(&converge, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
+        MPI_Bcast(&converge, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
         if(world_rank==0)
             X0_k = X0_kp; 

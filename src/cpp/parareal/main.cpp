@@ -9,8 +9,8 @@ int main (){
     MPI_Comm_rank ( MPI_COMM_WORLD , & world_rank );
     MPI_Comm_size ( MPI_COMM_WORLD , & n_proc );
 
-    if(world_rank==0)
-        delete_old_files();
+    // if(world_rank==0)
+    //     delete_old_files();
 
     double gamma[3] = {10.,8./3,28.};
     Vector<double> X0(3); X0 << 5., 5., 5.;

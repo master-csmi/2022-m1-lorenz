@@ -1,7 +1,24 @@
 add_executable(enkf.e main.cpp enkf.cpp enkf_fct.cpp)
 #https://github.com/bab2min/EigenRand/releases 
 # version 0.4.0 alpha
-set(CMAKE_CXX_FLAGS " -std=c++17 -I /Users/macosx/desktop/eigen.0")
+set(CMAKE_CXX_FLAGS "-I /Users/macosx/desktop/eigen.0")
+#include_directories("/Users/macosx/desktop/pybind11")
+
+
+
+#include(FetchContent)
+#FetchContent_Declare(
+#    pybind11
+#    GIT_REPOSITORY https://github.com/pybind/pybind11
+#    GIT_TAG        v2.2.3
+#)
+
+#FetchContent_GetProperties(pybind11)
+#if(NOT pybind11_POPULATED)
+#    FetchContent_Populate(pybind11)
+#    add_subdirectory(${pybind11_SOURCE_DIR} ${pybind11_BINARY_DIR})
+#endif()
+pybind11_add_module(_enkf enkf_wrapper.cpp)
 target_link_libraries(
   enkf.e
   PRIVATE project_options

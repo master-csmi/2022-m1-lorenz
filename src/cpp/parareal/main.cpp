@@ -1,5 +1,6 @@
 #include <parareal/parareal.hpp>
 #include <parareal/utils.hpp>
+#include <parareal/write_csv.hpp>
 #include <mpi.h>
 
 int main (){
@@ -8,8 +9,11 @@ int main (){
     MPI_Comm_rank ( MPI_COMM_WORLD , & world_rank );
     MPI_Comm_size ( MPI_COMM_WORLD , & n_proc );
 
+    // if(world_rank==0)
+    //     delete_old_files();
+
     double gamma[3] = {10.,8./3,28.};
-    Vector X0(3); X0 << 5., 5., 5.;
+    Vector<double> X0(3); X0 << 5., 5., 5.;
     double t0 = 0.;
     double T = 2.;
     double dt_G = 0.1;

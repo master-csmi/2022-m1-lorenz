@@ -6,7 +6,6 @@ __pycache__/
 build/
 docs/sphinx/_build
 
-
 docs/presentation/presentation*
 !docs/presentation/presentation.tex
 
@@ -22,3 +21,5 @@ docs/meeting/parareal/diapo_1/diapo_1*
 examples/cpp/enkf/plotlorenz1.csv
 examples/cpp/enkf/plotlorenz2.csv
 examples/cpp/enkf/plotetat.csv
+
+examples/cpp/parareal/data/*

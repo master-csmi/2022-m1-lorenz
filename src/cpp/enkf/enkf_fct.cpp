@@ -1,5 +1,9 @@
 #include"enkf_fct.hpp"
-
+void essaie()
+{
+    MyMatrix A=MyMatrix::Zero(1,1);
+    std::cout << "A \n  "<<A<<std::endl;
+}
 MyMatrix mean(MyMatrix M,int a)
 {
     MyMatrix Mean;

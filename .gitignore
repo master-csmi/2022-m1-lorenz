@@ -22,4 +22,8 @@ examples/cpp/enkf/plotlorenz1.csv
 examples/cpp/enkf/plotlorenz2.csv
 examples/cpp/enkf/plotetat.csv
 
+.DS_Store
+__pycache__/
+.pytest_cache/
+docs/sphinx/_build/
 examples/cpp/parareal/data/*

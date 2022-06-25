@@ -41,7 +41,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Setup PYTHONPATH
       run: |
-        echo "PYTHONPATH=." >> $GITHUB_ENV
+        echo "PYTHONPATH=src/python" >> $GITHUB_ENV
     - name: Test with pytest
       run: |
         pytest
@@ -67,7 +67,7 @@ jobs:
           pip install -r requirements.txt
       - name: Setup PYTHONPATH
         run: |
-          echo "PYTHONPATH=." >> $GITHUB_ENV 
+          echo "PYTHONPATH=../../src/python" >> $GITHUB_ENV 
       - name: Run sphinx
         working-directory: docs/sphinx/
         run: make html 
@@ -75,4 +75,5 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
           branch: gh-pages # The branch the action should deploy to.
+          target_folder: python
           folder: docs/sphinx/_build/html # The folder the action should deploy.

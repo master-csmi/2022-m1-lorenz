@@ -1,0 +1,9 @@
+PROJECT_NAME           = "Lorenz"
+PROJECT_NUMBER         = 1.0
+PROJECT_BRIEF          = "C++"
+OUTPUT_DIRECTORY       = 
+OUTPUT_LANGUAGE        = English
+GENERATE_LATEX         = NO
+EXTRACT_ALL            = YES
+INPUT                  = ../../src/cpp/
+RECURSIVE              = YES

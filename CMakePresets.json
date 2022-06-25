@@ -1,0 +1,96 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 21,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Default Config",
+            "description": "Default build using Makefile generator",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/default",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_BUILD_TYPE": "Release",
+                "CONAN_CMD":"$env{HOME}/.local/bin/conan",
+                "WARNINGS_AS_ERRORS":false
+            },
+            "vendor": {
+                "example.com/ExampleIDE/1.0": {
+                    "autoFormat": true
+                }
+            }
+        },
+        {
+            "name": "dbg",
+            "displayName": "Debug Config",
+            "description": "Debug build using Makefile generator",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/dbg",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "WARNINGS_AS_ERRORS":false
+            },
+            "vendor": {
+                "example.com/ExampleIDE/1.0": {
+                    "autoFormat": true
+                }
+            }
+        },
+        {
+            "name": "doxygen",
+            "inherits": "default",
+            "displayName": "doxygen",
+            "description": "Build Feel++ doxygen documentation",
+            "binaryDir": "${sourceDir}/build/doxygen",
+            "cacheVariables": {
+                "ENABLE_DOXYGEN": "ON"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default",
+            "jobs": 10
+        },
+        {
+            "name": "dbg",
+            "configurePreset": "dbg",
+            "jobs": 10
+        },
+        {
+            "name": "doxygen",
+            "configurePreset": "doxygen",
+            "targets": ["doxygen"]
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default",
+            "filter":{
+                "include":{
+                    "name":"feelpp"
+                }
+            },
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "jobs":2,
+                "noTestsAction": "error",
+                "stopOnFailure": false,
+                "repeat": {
+                    "mode": "until-pass",
+                    "count": 3
+                }
+            }
+        }
+    ]
+}

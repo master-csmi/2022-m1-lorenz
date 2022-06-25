@@ -1,18 +1,4 @@
-#include <stdio.h>
-#include <iostream>
-#include <fstream>
-#include <cmath>
-#include <math.h>
-#include <iomanip>
-#include <sstream>
-#include<time.h>
-#include <Eigen/Dense>
-#include <Eigen/Eigenvalues>
-#include <Eigen/Cholesky>
-#include <EigenRand/EigenRand>
-
-using namespace Eigen;
-typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> MyMatrix;
+#include"enkf_fct.hpp"
 
 MyMatrix mean(MyMatrix M,int a)
 {
@@ -64,11 +50,7 @@ MyMatrix read_sensor_model(int index,MyMatrix lorenz_1)
     MyMatrix z;
     int dim_z=lorenz_1.cols();
     z=MyMatrix::Zero(dim_z,1);
-    for(int i=0;i<dim_z;i++)
-    {
-        
-        z(i,0)=lorenz_1(index,i);
-    }
+    z=lorenz_1.row(index).transpose();
     return z;
 } 
 MyMatrix fx(MyMatrix X,double t,double dt,MyMatrix p)
@@ -114,27 +96,19 @@ MyMatrix RK4(int dim_x,MyMatrix p,MyMatrix X0,int N,double T)
     K3=MyMatrix(dim_x,1);
     K4=MyMatrix(dim_x,1);
     tab_t=MyMatrix(N+1,1);
-    X(0,0)=X0(0);
-    X(0,1)=X0(1);
-    X(0,2)=X0(2);
+    X.row(0)=X0.transpose();
     tab_t(0)=0;
 
     double t=0;
     for(int n=1;n<N+1;n++)
     {
-        X_n_1=MyMatrix(dim_x,1);
-        X_n_1(0,0)=X(n-1,0);
-        X_n_1(1,0)=X(n-1,1);
-        X_n_1(2,0)=X(n-1,2);
-        K1=f_lorenz(t,X_n_1,p);
-        K2=f_lorenz(t+dt/2, X_n_1 + 1./2. * K1 * dt,p);
-        K3=f_lorenz(t+dt/2,X_n_1 + 1./2. * K2 * dt,p);
-        K4=f_lorenz(t+dt, X_n_1+ K3 * dt,p);
+        K1=f_lorenz(t,X.row(n-1).transpose() ,p);
+        K2=f_lorenz(t+dt/2, X.row(n-1).transpose() + 1./2. * K1 * dt,p);
+        K3=f_lorenz(t+dt/2,X.row(n-1).transpose()  + 1./2. * K2 * dt,p);
+        K4=f_lorenz(t+dt, X.row(n-1).transpose() + K3 * dt,p);
         tab_t(n)=t+dt;
-        X_n=X_n_1+(dt/6.* (K1+(2.*K2)+(2.*K3)+K4));
-        X(n,0)=X_n(0,0);
-        X(n,1)=X_n(1,0);
-        X(n,2)=X_n(2,0);
+        X.row(n)=X.row(n-1).transpose() +(dt/6.* (K1+(2.*K2)+(2.*K3)+K4));
+        
     }
     return X;
     

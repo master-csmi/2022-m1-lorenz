@@ -7,3 +7,4 @@ pandas
 sphinx
 breathe
 conan
+sphinx_rtd_theme

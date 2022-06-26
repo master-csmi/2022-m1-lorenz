@@ -1,10 +1,10 @@
 #include <Eigen/Core>
 
-#include <catch2/catch.hpp>
+#include <Eigen/Core>
+#define BOOST_TEST_MODULE test_eigen
+#include <boost/test/unit_test.hpp>
 
-
-
-TEST_CASE("eigen", "[basic]")
+BOOST_AUTO_TEST_CASE(test_eigen_0)
 {
     typedef Eigen::Matrix<float, 3, 3> MyMatrix33f;
     typedef Eigen::Matrix<float, 3, 1> MyVector3f;
@@ -21,5 +21,5 @@ TEST_CASE("eigen", "[basic]")
     a << 1, 2, 3,
         4, 5, 6,
         7, 8, 9;
-    REQUIRE(a(1,2) == 6);
+    BOOST_CHECK(a(1,2) == 6);
 }

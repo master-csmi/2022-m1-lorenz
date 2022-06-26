@@ -1,0 +1,3 @@
+[submodule "src/cpp/EigenRand"]
+	path = src/cpp/EigenRand
+	url = https://github.com/bab2min/EigenRand.git

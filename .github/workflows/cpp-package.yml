@@ -21,7 +21,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04]
+        os: [ubuntu-20.04,ubuntu-22.04]
 
     steps:
     - uses: actions/checkout@v2
@@ -41,7 +41,7 @@ jobs:
       # We'll use this as our working directory for all subsequent commands
       run: |
         sudo apt update
-        sudo apt install libboost-mpi-python1.71-dev libboost-test1.71-dev libboost-date-time1.71-dev libboost-filesystem1.71-dev libboost-serialization1.71-dev libboost-program-options1.71-dev libboost-regex1.71-dev
+        sudo apt install libboost-mpi-python-dev libboost-test-dev libboost-date-time-dev libboost-filesystem-dev libboost-serialization-dev libboost-program-options-dev libboost-regex-dev
         sudo apt install pybind11
         cmake -E make_directory ${{runner.workspace}}/build
 

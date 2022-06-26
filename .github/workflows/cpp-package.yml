@@ -40,7 +40,8 @@ jobs:
       # Some projects don't allow in-source building, so create a separate build directory
       # We'll use this as our working directory for all subsequent commands
       run: |
-        apt install libboost-mpi-python1.71-dev libboost-test1.71-dev
+        sudo apt update
+        sudo apt install libboost-mpi-python1.71-dev libboost-test1.71-dev
         cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Install conan

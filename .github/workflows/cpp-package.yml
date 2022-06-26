@@ -41,7 +41,7 @@ jobs:
       # We'll use this as our working directory for all subsequent commands
       run: |
         sudo apt update
-        sudo apt install libboost-mpi-python1.71-dev libboost-test1.71-dev libboost-date-time1.71-dev libboost-filesystem1.71-dev libboost-serialization1.71-dev
+        sudo apt install libboost-mpi-python1.71-dev libboost-test1.71-dev libboost-date-time1.71-dev libboost-filesystem1.71-dev libboost-serialization1.71-dev libboost-program-options1.71-dev
         cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Install conan

@@ -2,13 +2,14 @@
 #include <cmath>
 #include <Eigen/Dense>
 #include <mpi.h>
+#include <boost/mpi.hpp>
 
 #include <parareal/parareal.hpp>
 #include <parareal/utils.hpp>
 #include <parareal/write_csv.hpp>
 
-Matrix parareal(Vector<double> X0_t0, double t0, double T, Vector<double> prob(double, 
-        Vector<double>, double*), double dt_G, double dt_F, double* gamma, 
+Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double> prob(double, 
+        Vector<double> const&, double*), double dt_G, double dt_F, double* gamma, 
         int world_rank, const int n_proc, bool write_csv){
 
     /*

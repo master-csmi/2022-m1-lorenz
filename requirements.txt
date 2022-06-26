@@ -4,3 +4,4 @@ matplotlib
 scipy
 mpi4py
 pandas
+breathe

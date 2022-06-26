@@ -1,7 +1,7 @@
 add_executable(enkf.e main.cpp enkf.cpp enkf_fct.cpp)
 #https://github.com/bab2min/EigenRand/releases 
 # version 0.4.0 alpha
-set(CMAKE_CXX_FLAGS "-I /Users/macosx/desktop/eigen.0")
+
 #include_directories("/Users/macosx/desktop/pybind11")
 
 
@@ -27,3 +27,4 @@ target_link_libraries(
           CONAN_PKG::fmt
           CONAN_PKG::spdlog
           CONAN_PKG::eigen)
+target_include_directories(enkf.e PUBLIC ${PROJECT_SOURCE_DIR}/src/cpp/EigenRand)

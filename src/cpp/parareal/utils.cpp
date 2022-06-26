@@ -1,6 +1,6 @@
 #include <parareal/utils.hpp>
 
-Vector<double> lorenz(double /*t*/, Vector<double> X, double* gamma){
+Vector<double> lorenz(double /*t*/, Vector<double> const& X, double* gamma){
     Vector<double> sol(X.cols());
     sol << gamma[0] * (X[1]-X[0]), X[0] * (gamma[2]-X[2])-X[1],
          X[0]*X[1]-gamma[1]*X[2];
@@ -8,8 +8,8 @@ Vector<double> lorenz(double /*t*/, Vector<double> X, double* gamma){
     return sol;
 }
 
-Matrix RK4(Vector<double> X0, double dt, double t0, int nb_t, 
-        Vector<double> prob(double, Vector<double>, double*), double* gamma){
+Matrix RK4(Vector<double> const& X0, double dt, double t0, int nb_t, 
+        Vector<double> prob(double, Vector<double> const&, double*), double* gamma){
 
     int dim = static_cast<int>(X0.cols());
     Matrix X(1,dim); X << X0;
@@ -78,7 +78,7 @@ Vector<double> compute_times(double t0, double T, double dt_G, double dt_F, int 
     return times;
 }
 
-bool sol_converge(Matrix X0_k, Matrix X0_knext, double eps){
+bool sol_converge(Matrix const& X0_k, Matrix const& X0_knext, double eps){
     Matrix diff = X0_knext-X0_k;
     return diff.cwiseAbs().maxCoeff() < eps;
 }

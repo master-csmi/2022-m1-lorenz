@@ -4,6 +4,8 @@ project(lorenz CXX)
 include(cmake/StandardProjectSettings.cmake)
 include(cmake/PreventInSourceBuilds.cmake)
 
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+
 # Link this 'library' to set the c++ standard / compile-time options requested
 add_library(project_options INTERFACE)
 # target_compile_features(project_options INTERFACE cxx_std_17)
@@ -34,6 +36,7 @@ enable_sanitizers(project_options)
 include(cmake/Doxygen.cmake)
 enable_doxygen()
 
+
 # allow for static analysis options
 include(cmake/StaticAnalyzers.cmake)
 
@@ -47,7 +50,7 @@ set(CONAN_EXTRA_REQUIRES "")
 set(CONAN_EXTRA_OPTIONS "")
 
 # set(CONAN_EXTRA_REQUIRES ${CONAN_EXTRA_REQUIRES} eigen/3.3.9)
-set(CONAN_EXTRA_REQUIRES ${CONAN_EXTRA_REQUIRES} eigen/3.4.0)
+set(CONAN_EXTRA_REQUIRES ${CONAN_EXTRA_REQUIRES} eigen/3.4.0 )
 
 include(cmake/Conan.cmake)
 run_conan()
@@ -59,7 +62,7 @@ if(NOT Boost_ARCHITECTURE)
 endif()
 
 set(Boost_ADDITIONAL_VERSIONS "1.61" "1.62" "1.63" "1.64" "1.65" "1.66" "1.67" "1.68" "1.69" "1.70" "1.71")
-set(BOOST_COMPONENTS_REQUIRED date_time filesystem system program_options unit_test_framework ${FEELPP_BOOST_MPI} regex serialization iostreams)
+set(BOOST_COMPONENTS_REQUIRED date_time filesystem system program_options unit_test_framework mpi regex serialization )
 FIND_PACKAGE(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS ${BOOST_COMPONENTS_REQUIRED})
 
 if(ENABLE_TESTING)
@@ -70,3 +73,4 @@ endif()
 target_include_directories(project_options  INTERFACE ${MPI_CXX_HEADER_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp)
 
 add_subdirectory(src/cpp)
+add_subdirectory(docs)

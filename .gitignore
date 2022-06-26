@@ -27,3 +27,4 @@ __pycache__/
 .pytest_cache/
 docs/sphinx/_build/
 examples/cpp/parareal/data/*
+node_modules/

@@ -17,7 +17,7 @@ template<class T> using Vector = Eigen::Matrix<T,1,Eigen::Dynamic>;
  * @param gamma System parameters.
  * @return Vector<double> The value of the Lorenz system.
  */
-Vector<double> lorenz(double t, Vector<double> X, double* gamma);
+Vector<double> lorenz(double t, Vector<double> const& X, double* gamma);
 
 /**
  * @brief Runge Kutta order 4 method.
@@ -30,8 +30,8 @@ Vector<double> lorenz(double t, Vector<double> X, double* gamma);
  * @param gamma System parameters.
  * @return Matrix Solution calculated by the method.
  */
-Matrix RK4(Vector<double> X0, double dt, double t0, int nb_t, 
-        Vector<double> prob(double, Vector<double>, double*), double* gamma);
+Matrix RK4(Vector<double> const& X0, double dt, double t0, int nb_t, 
+        Vector<double> prob(double, Vector<double> const&, double*), double* gamma);
 
 /**
  * @brief Compute time used to the system resolution.
@@ -57,4 +57,4 @@ Vector<double> compute_times(double t0, double T, double dt_G, double dt_F, int 
  * @return true 
  * @return false 
  */
-bool sol_converge(Matrix X0_k, Matrix X0_knext, double eps=1e-9);
+bool sol_converge(Matrix const& X0_k, Matrix const& X0_knext, double eps=1e-9);

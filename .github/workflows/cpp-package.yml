@@ -46,49 +46,9 @@ jobs:
       run: |
         python3 -m pip install --upgrade pip setuptools
         python3 -m pip install conan
-        source ~/.profile
     - name: Configure CMake
-      # Use a bash shell so we can use the same syntax for environment variable
-      # access regardless of the host operating system
-      shell: bash
-      working-directory: ${{runner.workspace}}/build
-      # Note the current convention is to use the -S and -B options here to specify source
-      # and build directories, but this is only available with CMake 3.13 and higher.
-      # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      #
-      # We need to source the profile file to make sure conan is in PATH
-      run: |
-        source ~/.profile
-        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+      run: cmake --preset default
     - name: Build
-      working-directory: ${{runner.workspace}}/build
-      shell: bash
-      # Execute the build.  You can specify a specific target with "--target <NAME>"
-      run: cmake --build . --config $BUILD_TYPE
-
+      run: cmake --build --preset default
     - name: Test
-      working-directory: ${{runner.workspace}}/build
-      shell: bash
-      # Execute tests defined by the CMake configuration.
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest -C $BUILD_TYPE
-
-  # docs:
-
-  #   runs-on: ubuntu-latest
-  #   if: |
-  #     !contains(github.event.head_commit.message, 'skip docs')
-  #   steps:
-  #     - uses: actions/checkout@v3
-
-  #     # - name: Configure Doxygen Preset
-  #     #   run: cmake --preset doxygen -DDOXYGEN_EXECUTABLE=.
-  #     # - name: Build Doxygen
-  #     #   run: cmake --build --preset doxygen
-  #     # - name: Deploy 🚀
-  #     #   uses: JamesIves/github-pages-deploy-action@v4.3.3
-  #     #   with:
-  #     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     #     BRANCH: gh-pages
-  #     #     target_folder: cpp
-  #     #     folder: build/doxygen/doc/api/html # The folder the action should deploy.
+      run: ctest --preset default

@@ -17,6 +17,7 @@
                 "CMAKE_CXX_COMPILER": "clang++",
                 "CMAKE_BUILD_TYPE": "Release",
                 "CONAN_CMD":"$env{HOME}/.local/bin/conan",
+                "SPHINX_EXECUTABLE": "$env{HOME}/.local/bin/sphinx-build",
                 "WARNINGS_AS_ERRORS":false
             },
             "vendor": {

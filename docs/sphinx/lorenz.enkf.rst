@@ -1,11 +1,12 @@
-lorenz.enkf package
-===================
+Enkf package
+============
 
-Submodules
-----------
 
-lorenz.enkf.enkf module
------------------------
+Python Module 
+-------------
+
+Enkf.Enkf contents
+------------------
 
 .. automodule:: lorenz.enkf.enkf
    :members:
@@ -15,7 +16,16 @@ lorenz.enkf.enkf module
 Module contents
 ---------------
 
-.. automodule:: lorenz.enkf
+.. automodule:: lorenz.parareal
    :members:
    :undoc-members:
    :show-inheritance:
+
+
+C++ Module Contents
+-------------------
+
+.. doxygenclass:: EnsembleKalmanFilter
+   :project: lorenz
+   :members:
+

@@ -6,7 +6,8 @@ target_link_libraries(
           CONAN_PKG::docopt.cpp
           CONAN_PKG::fmt
           CONAN_PKG::spdlog
-          CONAN_PKG::eigen)
+          CONAN_PKG::eigen
+          )
 target_link_libraries(
   parareal.e
-  PUBLIC MPI::MPI_CXX)
+  PUBLIC Boost::mpi MPI::MPI_CXX)

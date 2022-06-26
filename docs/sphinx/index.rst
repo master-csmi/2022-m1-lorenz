@@ -10,7 +10,8 @@ Welcome to Lorenz's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   modules
+   lorenz
+   doxygen_files
 
 Indices and tables
 ==================

@@ -4,4 +4,6 @@ matplotlib
 scipy
 mpi4py
 pandas
+sphinx
 breathe
+conan

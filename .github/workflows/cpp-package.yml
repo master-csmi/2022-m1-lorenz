@@ -51,6 +51,7 @@ jobs:
       run: |
         python3 -m pip install --upgrade pip setuptools
         python3 -m pip install conan
+        python3 -m pip install sphinx
     - name: Configure CMake
       run: cmake --preset default
     - name: Build

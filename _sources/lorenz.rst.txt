@@ -1,4 +1,4 @@
-lorenz package
+Lorenz package
 ==============
 
 Subpackages
@@ -9,6 +9,7 @@ Subpackages
 
    lorenz.enkf
    lorenz.parareal
+
 
 Module contents
 ---------------

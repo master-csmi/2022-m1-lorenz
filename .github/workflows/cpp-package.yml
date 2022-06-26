@@ -46,12 +46,11 @@ jobs:
         sudo apt install pybind11-dev doxygen
         cmake -E make_directory ${{runner.workspace}}/build
 
-    - name: Install conan
+    - name: Install Python requirements
       shell: bash
-      run: |
+      run: | 
         python3 -m pip install --upgrade pip setuptools
-        python3 -m pip install conan
-        python3 -m pip install sphinx
+        python3 -m pip install -r requirements.txt
     - name: Configure CMake
       run: cmake --preset default
     - name: Build

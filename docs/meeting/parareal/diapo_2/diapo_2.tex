@@ -1,0 +1,53 @@
+%% Requires compilation with XeLaTeX or LuaLaTeX
+\documentclass[10pt,xcolor={table,dvipsnames},t]{beamer}
+%\documentclass[compress]{beamer}
+\usetheme{diapo}
+\usepackage{amsmath}
+\usepackage[bottom]{footmisc}
+\usepackage{multirow}
+\usepackage[francais]{babel}
+
+\title[Lorenz]{Application de la méthode para-real à la simulation d'EDP dans Feel++}
+\subtitle{Présentation 2}
+\author[name]{LECOURTIER Frédérique}
+\institute{\large Université de Strasbourg}
+\date{\today}
+
+\begin{document}
+	
+	\begin{frame}
+		\titlepage
+	\end{frame}
+	
+	\AtBeginSection[]{
+		\begin{frame}
+			\vfill
+			\centering
+			\begin{beamercolorbox}[sep=5pt,shadow=true,rounded=true]{subtitle}
+				\usebeamerfont{title}\insertsectionhead\par%
+			\end{beamercolorbox}
+			\vfill
+		\end{frame}
+	}
+	
+	\begin{frame}{Fait la semaine dernière}
+		\begin{enumerate}[\textbullet]
+			\item Méthode para-real en C++ fonctionne dans différents cas (comparaison avec les résultats python).
+			\item Organisation du repository, création d'un cmake et utilisation de l'interface de vscode.
+			\item Documentation du code et utilisation de doxygen. \\ \;
+			\item Workflow github pour générer automatiquement la documentation du code (non abouti).
+			\item Workflow github pour faire les tests en utilisant ctest (non abouti).
+		\end{enumerate}
+	\end{frame}
+	
+	\begin{frame}{Étapes pour cette semaine}
+		\begin{enumerate}[\textbullet]
+			\item Faire fonctionner les actions github.
+			\item Faire des tests pour vérifier le code. \\ \;
+			\item Implémenter la résolution de l'équation de Laplace en C++ avec Feel++.
+			\item Commencer à implémenter la résolution de l'équation de la chaleur en C++ avec Feel++.
+		\end{enumerate}
+	\end{frame}
+	
+	
+\end{document}

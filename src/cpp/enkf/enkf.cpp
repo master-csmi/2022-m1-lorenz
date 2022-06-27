@@ -38,6 +38,7 @@ EnsembleKalmanFilter::EnsembleKalmanFilter(double dim_x,double dim_z,MyMatrix x,
             
     //Initialise
     std::mt19937_64 urng( time(NULL) );
+    //Rand::P8_mt19937_64 urng{ time(NULL)  };
     auto gen1 = Rand::makeMvNormalGen(x, P);
     M_sigmas = (gen1.generate(urng, N)).transpose();
 }

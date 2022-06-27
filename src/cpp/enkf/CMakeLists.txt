@@ -1,6 +1,11 @@
-add_executable(enkf.e main.cpp enkf.cpp enkf_fct.cpp)
+#
+#add_library(enkf SHARED enkf_fct.cpp enkf.cpp )
+add_executable(enkf.e main.cpp enkf_fct.cpp enkf.cpp )
 #https://github.com/bab2min/EigenRand/releases 
 # version 0.4.0 alpha
+
+#set(CMAKE_CXX_FLAGS "-I /Users/macosx/desktop/EigenRand")
+
 
 #include_directories("/Users/macosx/desktop/pybind11")
 
@@ -18,7 +23,9 @@ add_executable(enkf.e main.cpp enkf.cpp enkf_fct.cpp)
 #    FetchContent_Populate(pybind11)
 #    add_subdirectory(${pybind11_SOURCE_DIR} ${pybind11_BINARY_DIR})
 #endif()
+
 # pybind11_add_module(_enkf enkf_wrapper.cpp)
+
 target_link_libraries(
   enkf.e
   PRIVATE project_options
@@ -27,4 +34,6 @@ target_link_libraries(
           CONAN_PKG::fmt
           CONAN_PKG::spdlog
           CONAN_PKG::eigen)
+
 target_include_directories(enkf.e PUBLIC ${PROJECT_SOURCE_DIR}/src/cpp/EigenRand)
+

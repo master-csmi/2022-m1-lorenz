@@ -1,8 +1,8 @@
 {
   "description": "Web server",
   "scripts": {
-    "doxygen": "node-srv -p 8011 build/doxygen/docs/doxygen/lorenz",
-    "sphinx": "node-srv -p 8010 build/doxygen/docs/sphinx"
+    "doxygen": "node-srv -p 8011 build/docs/docs/doxygen/lorenz",
+    "sphinx": "node-srv -p 8010 build/docs/docs/sphinx"
   },
   "devDependencies": {
     "node-srv": "^3.0.3"

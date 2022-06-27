@@ -69,11 +69,11 @@ jobs:
         run: |
           echo "PYTHONPATH=../../src/python" >> $GITHUB_ENV 
       - name: Run sphinx
-        working-directory: docs/sphinx/
-        run: make html 
+        run: |
+          cmake --preset docs
+          cmake --build --preset docs
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
           branch: gh-pages # The branch the action should deploy to.
-          target_folder: python
-          folder: docs/sphinx/_build/html # The folder the action should deploy.
+          folder: build/docs/docs/sphinx/ # The folder the action should deploy.

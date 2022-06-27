@@ -32,9 +32,7 @@ set_project_warnings(project_warnings)
 include(cmake/Sanitizers.cmake)
 enable_sanitizers(project_options)
 
-# enable doxygen
-include(cmake/Doxygen.cmake)
-enable_doxygen()
+
 
 
 # allow for static analysis options
@@ -73,4 +71,12 @@ endif()
 target_include_directories(project_options  INTERFACE ${MPI_CXX_HEADER_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp)
 
 add_subdirectory(src/cpp)
-add_subdirectory(docs)
+
+option(ENABLE_DOC OFF)
+if (ENABLE_DOC)
+  # enable doxygen
+  include(cmake/Doxygen.cmake)
+  enable_doxygen()
+  
+  add_subdirectory(docs)
+endif()

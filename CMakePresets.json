@@ -44,13 +44,23 @@
             }
         },
         {
-            "name": "doxygen",
+            "name": "docs",
             "inherits": "default",
-            "displayName": "doxygen",
-            "description": "Build doxygen documentation",
-            "binaryDir": "${sourceDir}/build/doxygen",
+            "displayName": "docs",
+            "description": "Build documentation",
+            "binaryDir": "${sourceDir}/build/docs",
             "cacheVariables": {
-                "ENABLE_DOXYGEN": "ON"
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_BUILD_TYPE": "Release",
+                "WARNINGS_AS_ERRORS": false,
+                "ENABLE_DOC": "ON",
+                "CONAN_CMD": "$env{HOME}/.local/bin/conan",
+                "SPHINX_EXECUTABLE": "$env{HOME}/.local/bin/sphinx-build"
+            },
+            "vendor": {
+                "example.com/ExampleIDE/1.0": {
+                    "autoFormat": true
+                }
             }
         }
     ],
@@ -66,9 +76,9 @@
             "jobs": 10
         },
         {
-            "name": "doxygen",
-            "configurePreset": "doxygen",
-            "targets": ["doxygen"]
+            "name": "docs",
+            "configurePreset": "docs",
+            "targets": ["Doxygen","Sphinx"]
         }
     ],
     "testPresets": [

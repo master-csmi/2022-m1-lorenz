@@ -62,7 +62,7 @@ if(NOT Boost_ARCHITECTURE)
 endif()
 
 set(Boost_ADDITIONAL_VERSIONS "1.61" "1.62" "1.63" "1.64" "1.65" "1.66" "1.67" "1.68" "1.69" "1.70" "1.71")
-set(BOOST_COMPONENTS_REQUIRED date_time filesystem system program_options unit_test_framework mpi regex serialization )
+set(BOOST_COMPONENTS_REQUIRED unit_test_framework mpi serialization  )
 FIND_PACKAGE(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS ${BOOST_COMPONENTS_REQUIRED})
 
 if(ENABLE_TESTING)

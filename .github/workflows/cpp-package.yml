@@ -42,15 +42,11 @@ jobs:
       # We'll use this as our working directory for all subsequent commands
       run: |
         sudo apt update
-        sudo apt install libboost-mpi-python-dev libboost-test-dev libboost-date-time-dev libboost-filesystem-dev libboost-serialization-dev libboost-program-options-dev libboost-regex-dev
+        sudo apt install libboost-mpi-dev libboost-test-dev libboost-date-time-dev libboost-filesystem-dev libboost-serialization-dev libboost-program-options-dev libboost-regex-dev
         sudo apt install pybind11-dev doxygen
-        cmake -E make_directory ${{runner.workspace}}/build
-
-    - name: Install Python requirements
-      shell: bash
-      run: | 
         python3 -m pip install --upgrade pip setuptools
         python3 -m pip install -r requirements.txt
+        cmake -E make_directory ${{runner.workspace}}/build
     - name: Configure CMake
       run: cmake --preset default
     - name: Build

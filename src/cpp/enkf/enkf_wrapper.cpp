@@ -2,14 +2,11 @@
 #include <pybind11/pybind11.h>
 namespace py = pybind11;
 
-int add(int i, int j) {
-    return i + j;
-}
+
+
 PYBIND11_MODULE(_enkf, m) {
     m.doc() = "welcome to enkf module"; 
     m.def("add", &add, "A function that adds two numbers");
-    m.def("essaie", &essaie, "essaie");
-    
     //m.def("mean", &mean, "A function that returns an average based on the columns (a=0) or rows (a=1)");
     //m.def("f_lorenz", &f_lorenz, "Computes the Lorenz system for a given time, point and parameters.");
     //m.def("hx_model", &hx_model, "Measurement function. Convert state x into a measurement.");

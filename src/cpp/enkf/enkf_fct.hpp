@@ -22,7 +22,7 @@
 using namespace Eigen;
 typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> MyMatrix;
 
-void essaie();
+int add(int i,int j);
 /**
  * @brief A function that returns an average based on the columns (a=0) or rows (a=1)
  * 

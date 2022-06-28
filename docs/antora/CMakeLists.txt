@@ -2,7 +2,7 @@ set(APPLICATION_DOC_DIR "${CMAKE_INSTALL_DOCDIR}")
 
 set(ANTORA_OUTPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/public")
 
-# find_program (NPM_EXECUTABLE NAMES npm)
+find_program (NPM_EXECUTABLE NAMES npm)
 
 if ( NPM_EXECUTABLE )
     add_custom_command(OUTPUT "${ANTORA_OUTPUT_DIR}" ALL

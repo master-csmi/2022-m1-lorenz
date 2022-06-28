@@ -31,3 +31,6 @@ __pycache__/
 docs/sphinx/_build/
 examples/cpp/parareal/data/*
 node_modules/
+
+docs/antora/cache
+docs/antora/public

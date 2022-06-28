@@ -22,7 +22,7 @@ asciidoc:
     numbered: true
     allow-uri-read: true
     hide-uri-scheme: true
-    feelpp: Feel++
+    lorenz: Lorenz
     angiotk: AngioTK
     4fastsim: 4FastSim
     stem: latexmath

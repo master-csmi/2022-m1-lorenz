@@ -1,10 +1,9 @@
-= MyProject
+= Lorenz project
 
-This is a {feelpp} Template Project. 
-It serves as a template for {feelpp} projects.
+This is an explanation of the Parareal method and Data assimilation method.
 
 The features include
 
-* xref:cmake.adoc[cmake environment]
-* xref:antora.adoc[antora environment]
-* xref:vscode.adoc[vscode integration]
+* xref:lorenz.adoc[Lorenz system]
+* xref:parareal.adoc[Parareal method]
+* xref:enkf.adoc[Data assimilation method]

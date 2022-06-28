@@ -1,7 +1,7 @@
 = Antora environment
 
 Antora is our static website generator. 
-We use it to generate the documentation of the project and upload it to docs.feelpp.org[{feelpp} docs] website.
+We use it to generate the documentation of the project and upload it to docs.feelpp.org[{lorenz} docs] website.
 
 .To generate the documentation
 ----

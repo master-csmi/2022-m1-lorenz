@@ -1,6 +1,7 @@
 {
   "description": "Web server",
   "scripts": {
+    "antora": "node-srv -p 8012 docs/antora/public",
     "doxygen": "node-srv -p 8011 build/docs/docs/doxygen/lorenz",
     "sphinx": "node-srv -p 8010 build/docs/docs/sphinx"
   },

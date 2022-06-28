@@ -1,0 +1,6 @@
+= Github Actions
+
+Github actions are setup to 
+
+* build the documentation using Antora and upload them to docs.feelpp.org[{feelpp} docs] upon any change in the repo.
+* build a sample {feelpp} code

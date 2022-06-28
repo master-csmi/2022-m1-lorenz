@@ -1,0 +1,10 @@
+= MyProject
+
+This is a {feelpp} Template Project. 
+It serves as a template for {feelpp} projects.
+
+The features include
+
+* xref:cmake.adoc[cmake environment]
+* xref:antora.adoc[antora environment]
+* xref:vscode.adoc[vscode integration]

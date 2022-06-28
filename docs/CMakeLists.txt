@@ -59,3 +59,5 @@ add_custom_target(Sphinx ALL DEPENDS ${SPHINX_INDEX_FILE})
 include(GNUInstallDirs)
 install(DIRECTORY ${SPHINX_BUILD}
     DESTINATION ${CMAKE_INSTALL_DOCDIR})
+
+add_subdirectory(antora)

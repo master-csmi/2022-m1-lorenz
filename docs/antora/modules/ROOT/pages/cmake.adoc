@@ -1,0 +1,9 @@
+= Cmake environment
+
+The CMakeLists.txt is setup with {feelpp}.
+A sample {feelpp} application is available in `src`.
+
+* cpack is configured
+* ctest is configured
+
+latexmath:[C = \alpha + \beta Y^{\gamma} + \epsilon]

@@ -1,0 +1,43 @@
+{
+  "private": true,
+  "name": "feelpp-project",
+  "description": "The Feelpp documentation",
+  "version": "0.1.0",
+  "license": "AGPL-3.0",
+  "author": "The Feelpp Team",
+  "homepage": "https://github.com/feelpp/feelpp-project#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feelpp/feelpp-project.git"
+  },
+  "bugs": {
+    "url": "https://github.com/feelpp/feelpp-project/issues"
+  },
+  "contributors": [
+    {
+      "name": "Christophe Prud'homme",
+      "email": "christophe.prudhomme@cemosis.fr"
+    }
+  ],
+  "scripts": {
+    "prose": "write-good --parse **/*.adoc",
+    "serve": "http-server public/ -d -i",
+    "antora": "antora --stacktrace generate --cache-dir cache --redirect-facility disabled --clean site.yml",
+    "validate": "antora --stacktrace generate --cache-dir cache --redirect-facility disabled --generator ./generator/xref-validator.js --clean site.yml",
+    "linkcheck": "broken-link-checker --filter-level 3 --recursive --verbose"
+  },
+  "dependencies": {
+    "@antora/cli": "^2.3.4",
+    "@antora/site-generator-default": "^2.3.4"
+  },
+  "devDependencies": {
+    "broken-link-checker": "^0.7.8",
+    "http-server": "^0.11.1",
+    "write-good": "^0.13.1"
+  },
+  "keywords": [
+    "antora",
+    "asciidoc",
+    "documentation"
+  ]
+}

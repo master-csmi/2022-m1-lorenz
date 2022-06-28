@@ -78,7 +78,7 @@
         {
             "name": "docs",
             "configurePreset": "docs",
-            "targets": ["Doxygen","Sphinx"]
+            "targets": ["Doxygen","Sphinx","Antora"]
         }
     ],
     "testPresets": [

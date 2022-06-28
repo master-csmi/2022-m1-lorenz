@@ -1,0 +1,31 @@
+site:
+  title: Project // Docs
+  url: https://feelpp.github.io/feelpp-project/
+  start_page: myproject:ROOT:index.adoc
+content:
+  sources:
+  - url: https://github.com/feelpp/feelpp-project
+    branches: master
+    start_path: docs
+ui:
+  bundle:
+    url: https://gitlab.com/feelpp/antora-ui-default/-/jobs/artifacts/feelpp/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true
+output:
+  clean: true
+  dir: public
+  
+asciidoc:
+  attributes:
+    project_version: 0.109
+    deploymentRoot: ""
+    numbered: true
+    allow-uri-read: true
+    hide-uri-scheme: true
+    feelpp: Feel++
+    angiotk: AngioTK
+    4fastsim: 4FastSim
+    stem: latexmath
+    hemotumpp: Hemotum++
+    eye2brain: Eye2Brain
+    swimmer: Swimmer

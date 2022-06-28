@@ -1,20 +1,16 @@
 set(APPLICATION_DOC_DIR "${CMAKE_INSTALL_DOCDIR}")
 
-set(ANTORA_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/public")
-message("${ANTORA_OUTPUT_DIR}")
-find_program (NPM_EXECUTABLE NAMES npm)
+set(ANTORA_OUTPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/public")
 
-# Doxygen won't create this for us
-file(MAKE_DIRECTORY ${ANTORA_OUTPUT_DIR})
+# find_program (NPM_EXECUTABLE NAMES npm)
 
 if ( NPM_EXECUTABLE )
     add_custom_command(OUTPUT "${ANTORA_OUTPUT_DIR}" ALL
-        COMMENT "Building documentation... "
-        COMMAND "${npm}" install 
-        COMMAND "${npm}" run antora 
-        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+        COMMENT "Building antora... "
+        COMMAND npm install 
+        COMMAND npm run antora
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
-
     if ( NOT TARGET Antora )
         add_custom_target(Antora ALL DEPENDS "${ANTORA_OUTPUT_DIR}")
     else()

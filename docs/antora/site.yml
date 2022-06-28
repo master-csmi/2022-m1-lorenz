@@ -1,12 +1,12 @@
 site:
   title: Project // Docs
   url: https://feelpp.github.io/feelpp-project/
-  start_page: myproject:ROOT:index.adoc
+  start_page: lorenz:ROOT:index.adoc
 content:
   sources:
-  - url: https://github.com/feelpp/feelpp-project
-    branches: master
-    start_path: docs
+  - url: https://github.com/master-csmi/2022-m1-lorenz
+    branches: main
+    start_path: docs/antora
 ui:
   bundle:
     url: https://gitlab.com/feelpp/antora-ui-default/-/jobs/artifacts/feelpp/raw/build/ui-bundle.zip?job=bundle-stable

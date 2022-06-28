@@ -1,4 +1,4 @@
-name: myproject
+name: lorenz
 title: Lorenz Project
 version: '1.0.0'
 start_page: ROOT:index.adoc

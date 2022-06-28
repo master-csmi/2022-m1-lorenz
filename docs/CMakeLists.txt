@@ -36,6 +36,7 @@ configure_file(${SPHINX_SOURCE}/conf.py.in ${SPHINX_SOURCE}/conf.py @ONLY)
 # - Doxygen has rerun
 # - Our doc files have been updated
 # - The Sphinx config has been updated
+
 add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
     COMMAND
     ${SPHINX_EXECUTABLE} -b html

@@ -1,4 +1,4 @@
-= Antora environment
+= Parareal method
 
 Antora is our static website generator. 
 We use it to generate the documentation of the project and upload it to docs.feelpp.org[{lorenz} docs] website.

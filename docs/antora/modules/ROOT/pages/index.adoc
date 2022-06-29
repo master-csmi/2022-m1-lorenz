@@ -2,7 +2,7 @@
 
 This is an explanation of the Parareal method and Data assimilation method.
 
-The features include
+The features include :
 
 * xref:lorenz.adoc[Lorenz system]
 * xref:parareal.adoc[Parareal method]

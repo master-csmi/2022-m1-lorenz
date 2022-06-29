@@ -19,10 +19,10 @@ file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR})
 
 # Only regenerate Doxygen when the Doxyfile or public headers change
 add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
+    COMMENT "Building doxygen..."
     DEPENDS ${CAT_CUTIFIER_PUBLIC_HEADERS}
     COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
     MAIN_DEPENDENCY ${DOXYFILE_OUT} ${DOXYFILE_IN}
-    COMMENT "Generating docs"
     VERBATIM)
 
 # Nice named target so we can run the job easily
@@ -38,6 +38,7 @@ configure_file(${SPHINX_SOURCE}/conf.py.in ${SPHINX_SOURCE}/conf.py @ONLY)
 # - The Sphinx config has been updated
 
 add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
+    COMMENT "Building sphinx..."
     COMMAND
     ${SPHINX_EXECUTABLE} -b html
 
@@ -50,8 +51,7 @@ add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
     # Other docs files you want to track should go here (or in some variable)
     ${SPHINX_SOURCE}/index.rst
     ${DOXYGEN_INDEX_FILE}
-    MAIN_DEPENDENCY ${SPHINX_SOURCE}/conf.py
-    COMMENT "Generating documentation with Sphinx")
+    MAIN_DEPENDENCY ${SPHINX_SOURCE}/conf.py)
 
 # Nice named target so we can run the job easily
 add_custom_target(Sphinx ALL DEPENDS ${SPHINX_INDEX_FILE})

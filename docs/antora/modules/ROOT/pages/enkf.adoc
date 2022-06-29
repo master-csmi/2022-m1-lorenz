@@ -1,4 +1,4 @@
-= Using VSCode 
+= Data assimilation method 
 
 The project is configured to integrate VSCode using Docker Container.
 

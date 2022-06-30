@@ -1,10 +1,9 @@
 #include <Eigen/Core>
 
-#include <Eigen/Core>
-#define BOOST_TEST_MODULE test_eigen
+#define BOOST_TEST_MODULE test_parareal
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_CASE(test_eigen_0)
+BOOST_AUTO_TEST_CASE(test_parareal_0)
 {
     typedef Eigen::Matrix<float, 3, 3> MyMatrix33f;
     typedef Eigen::Matrix<float, 3, 1> MyVector3f;

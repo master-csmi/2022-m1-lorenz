@@ -47,9 +47,12 @@ jobs:
         python3 -m pip install --upgrade pip setuptools
         python3 -m pip install -r requirements.txt
         cmake -E make_directory ${{runner.workspace}}/build
-        wget -qO - http://apt.feelpp.org/apt.gpg | sudo apt-key add
-        echo "deb http://apt.feelpp.org/ubuntu/focal focal latest" | sudo tee -a /etc/apt/sources.list.d/feelpp.list
-        sudo apt update
+    - name: Install feelpp
+      uses: feelpp/action-install-feelpp@v1.3
+      with:
+        dist: ubuntu
+        flavor: focal
+        install: libfeelpp1 feelpp-tools libfeelpp-dev libfeelpp-toolboxes1-all-dev feelpp-toolboxes
     - name: Configure CMake
       run: cmake --preset default
     - name: Build

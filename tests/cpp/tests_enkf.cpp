@@ -2,9 +2,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_SUITE(parareal)
+BOOST_AUTO_TEST_SUITE(enkf)
 
-BOOST_AUTO_TEST_CASE(test_parareal_0)
+BOOST_AUTO_TEST_CASE(test_enkf_0)
 {
     typedef Eigen::Matrix<float, 3, 3> MyMatrix33f;
     typedef Eigen::Matrix<float, 3, 1> MyVector3f;

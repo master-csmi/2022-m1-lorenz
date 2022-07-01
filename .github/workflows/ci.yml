@@ -21,7 +21,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: self-ubuntu-22.04
+        os: [self-ubuntu-22.04]
       
 
     steps:

@@ -21,8 +21,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        -{os:ubuntu-20.04,dist:focal}
-        -{os:ubuntu-22.04,dist:jammy}
+        # -{os:self-ubuntu-20.04,dist:focal}
+        -{os:self-ubuntu-22.04,dist:jammy}
 
     steps:
     - uses: actions/checkout@v2
@@ -42,18 +42,9 @@ jobs:
       # Some projects don't allow in-source building, so create a separate build directory
       # We'll use this as our working directory for all subsequent commands
       run: |
-        sudo apt update
-        sudo apt install libboost-mpi-dev libboost-test-dev libboost-date-time-dev libboost-filesystem-dev libboost-serialization-dev libboost-program-options-dev libboost-regex-dev
-        sudo apt install pybind11-dev doxygen
         python3 -m pip install --upgrade pip setuptools
         python3 -m pip install -r requirements.txt
         cmake -E make_directory ${{runner.workspace}}/build
-    - name: Install feelpp
-      uses: feelpp/action-install-feelpp@main
-      with:
-        dist: ubuntu
-        flavor: ${{matrix.dist}}
-        install: libfeelpp1 feelpp-tools libfeelpp-dev
     - name: Configure CMake
       run: cmake --preset default
     - name: Build

@@ -179,7 +179,7 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
                 coarse_k_j = RK4(X0_kp.row(j-1),dt_G,times[j-1],tab_nb_t_G_p[j-1],
                         prob,gamma).bottomRows<1>();
                 X0_kp.row(j) = coarse_k_j + fine_k.row(j-1) - coarse_k.row(j-1);
-                to_send = X0_k.row(j);
+                to_send = X0_kp.row(j);
                 MPI_Send(to_send.data(), dim, MPI_DOUBLE, j, j, MPI_COMM_WORLD);
                 coarse_k.row(j-1) = coarse_k_j;
             }

@@ -21,8 +21,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # -{os:self-ubuntu-20.04,dist:focal}
-        -{os:self-ubuntu-22.04,dist:jammy}
+        include:
+          # -{os:self-ubuntu-20.04,dist:focal}
+          -{os:self-ubuntu-22.04,dist:jammy}
+      
 
     steps:
     - uses: actions/checkout@v2

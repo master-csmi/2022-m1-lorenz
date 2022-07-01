@@ -1,8 +1,6 @@
 = 2022-m1-lorenz
 
-[![Build_cpp_20.04](https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/ci.yml/badge.svg)](https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/ci.yml)
-[![Build_python](https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/ci.yml/badge.svg)](https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/ci.yml)
-
+[![CI](https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/ci.yml/badge.svg)](https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/ci.yml)
 
 == Description of the projet: Data assimilation for the Lorenz system
 

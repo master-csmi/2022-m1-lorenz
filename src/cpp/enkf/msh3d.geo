@@ -71,21 +71,23 @@ Line(19) = {2, 6};
 //+
 Line(20) = {5, 1};
 //+
+
+//+
 Curve Loop(1) = {5, 6, 7, 8};
 //+
-Plane Surface(1) = {1};
+Curve Loop(2) = {2, 3, 4, 1};
 //+
-Curve Loop(2) = {12, 9, 10, 11};
+Curve Loop(3) = {12, 9, 10, 11};
 //+
-Plane Surface(2) = {2};
+Plane Surface(1) = {1, 2, 3};
 //+
-Curve Loop(3) = {2, 3, 4, 1};
+Curve Loop(4) = {13, 14, 15, -3};
 //+
-Plane Surface(3) = {3};
+Plane Surface(2) = {4};
 //+
-Curve Loop(4) = {14, 15, -3, 13};
+Plane Surface(3) = {1};
 //+
-Plane Surface(4) = {4};
+Plane Surface(4) = {3};
 //+
 Curve Loop(5) = {16, -19, 2, 13};
 //+
@@ -95,14 +97,14 @@ Curve Loop(6) = {17, 20, 1, 19};
 //+
 Plane Surface(6) = {6};
 //+
-Curve Loop(7) = {17, 18, -14, 16};
+Curve Loop(7) = {4, -20, 18, 15};
 //+
 Plane Surface(7) = {7};
 //+
-Curve Loop(8) = {20, -4, -15, -18};
+Curve Loop(8) = {17, 18, -14, 16};
 //+
 Plane Surface(8) = {8};
 //+
-Surface Loop(1) = {5, 7, 6, 8, 3, 4};
+Surface Loop(1) = {5, 8, 6, 7, 1, 3, 2, 4};
 //+
 Volume(1) = {1};

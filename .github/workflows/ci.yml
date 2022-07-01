@@ -48,11 +48,11 @@ jobs:
         python3 -m pip install -r requirements.txt
         cmake -E make_directory ${{runner.workspace}}/build
     - name: Install feelpp
-      uses: feelpp/action-install-feelpp@v1.3
+      uses: feelpp/action-install-feelpp@main
       with:
         dist: ubuntu
         flavor: focal
-        install: libfeelpp1 feelpp-tools libfeelpp-dev libfeelpp-toolboxes1-all-dev feelpp-toolboxes
+        install: libfeelpp1 feelpp-tools libfeelpp-dev
     - name: Configure CMake
       run: cmake --preset default
     - name: Build

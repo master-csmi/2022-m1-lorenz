@@ -1,6 +1,6 @@
 = 2022-m1-lorenz
 
-[![CI](https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/ci.yml/badge.svg)](https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/ci.yml)
+image:https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/ci.yml/badge.svg[link=https://github.com/master-csmi/2022-m1-lorenz/actions/workflows/ci.yml]
 
 == Description of the projet: Data assimilation for the Lorenz system
 

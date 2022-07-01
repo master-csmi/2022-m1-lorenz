@@ -20,7 +20,7 @@ int main (){
     double dt_G = 0.1;
     double dt_F = 0.01;
 
-    parareal(X0, t0, T, lorenz, dt_G, dt_F, gamma, world_rank, n_proc);
+    parareal(X0, t0, T, lorenz, dt_G, dt_F, gamma, world_rank, n_proc, false);
 
     MPI_Finalize ();
 

@@ -160,8 +160,6 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
         FOLLOWING ITERATIONS (until the solution converge)
     ============================================ */
 
-    k++;
-
     // bool converge = false;
 
     Matrix X0_kp(n_proc,dim);

@@ -66,6 +66,7 @@ set(BOOST_COMPONENTS_REQUIRED unit_test_framework mpi serialization  )
 FIND_PACKAGE(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS ${BOOST_COMPONENTS_REQUIRED})
 
 
+
 if(ENABLE_DOCS)
   # enable doxygen
   include(cmake/Doxygen.cmake)
@@ -74,6 +75,7 @@ if(ENABLE_DOCS)
   add_subdirectory(docs)
 endif()
 
+target_include_directories(project_options INTERFACE ${MPI_CXX_HEADER_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp)
 add_subdirectory(src/cpp)
 
 if(ENABLE_TESTING)
@@ -82,4 +84,3 @@ if(ENABLE_TESTING)
   add_subdirectory(tests/cpp)
 endif()
 
-target_include_directories(project_options INTERFACE ${MPI_CXX_HEADER_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp)

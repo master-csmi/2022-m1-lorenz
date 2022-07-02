@@ -104,7 +104,7 @@ jobs:
       - name: Setup Python and Node
         run: |
           echo "PYTHONPATH=../../src/python" >> $GITHUB_ENV 
-          $HOME/.nvm/nvm.sh
+          source $HOME/.nvm/nvm.sh
           nvm install --lts
       - name: Generate Documentation
         run: |

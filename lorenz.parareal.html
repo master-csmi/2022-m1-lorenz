@@ -14,7 +14,6 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -45,7 +44,7 @@
 <li class="toctree-l3"><a class="reference internal" href="lorenz.enkf.html">Enkf package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">lorenz.parareal package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lorenz-parareal-parareal-module">lorenz.parareal.parareal module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-lorenz.parareal.parareal">lorenz.parareal.parareal module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-lorenz.parareal.plot_sol">lorenz.parareal.plot_sol module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-lorenz.parareal.utils">lorenz.parareal.utils module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-lorenz.parareal">Module contents</a></li>
@@ -85,15 +84,67 @@
            <div itemprop="articleBody">
              
   <section id="lorenz-parareal-package">
-<h1>lorenz.parareal package<a class="headerlink" href="#lorenz-parareal-package" title="Permalink to this heading"></a></h1>
+<h1>lorenz.parareal package<a class="headerlink" href="#lorenz-parareal-package" title="Permalink to this headline"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="lorenz-parareal-parareal-module">
-<h2>lorenz.parareal.parareal module<a class="headerlink" href="#lorenz-parareal-parareal-module" title="Permalink to this heading"></a></h2>
+<section id="module-lorenz.parareal.parareal">
+<span id="lorenz-parareal-parareal-module"></span><h2>lorenz.parareal.parareal module<a class="headerlink" href="#module-lorenz.parareal.parareal" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="lorenz.parareal.parareal.compute_sol_k">
+<span class="sig-prename descclassname"><span class="pre">lorenz.parareal.parareal.</span></span><span class="sig-name descname"><span class="pre">compute_sol_k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X0_k_j</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lorenz/parareal/parareal.html#compute_sol_k"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lorenz.parareal.parareal.compute_sol_k" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the solution at the current iteration and do a gather.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fin</strong> (<em>numpy.ndarray</em>) – Fine solution on the current process at the
+current iteration.</p></li>
+<li><p><strong>X0_k_j</strong> (<em>numpy.ndarray</em>) – Initial point on the current process at the
+current iteration.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Ndarray with the number of values of solution for each process
+and the entire solution between t0 and T.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lorenz.parareal.parareal.parareal_method">
+<span class="sig-prename descclassname"><span class="pre">lorenz.parareal.parareal.</span></span><span class="sig-name descname"><span class="pre">parareal_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X0_t0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prob</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fct_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fct_write</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt_G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt_F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_csv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lorenz/parareal/parareal.html#parareal_method"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lorenz.parareal.parareal.parareal_method" title="Permalink to this definition"></a></dt>
+<dd><p>Parareal method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X0_t0</strong> (<em>list</em>) – Initial point.</p></li>
+<li><p><strong>t0</strong> (<em>float</em>) – Starting time.</p></li>
+<li><p><strong>T</strong> (<em>float</em>) – Finish time.</p></li>
+<li><p><strong>prob</strong> (<em>function</em>) – Function which represent the ODE.</p></li>
+<li><p><strong>fct_res</strong> (<em>function</em>) – Function which represent the integrator.</p></li>
+<li><p><strong>fct_write</strong> (<em>function</em>) – Function which write the solution in csv files.</p></li>
+<li><p><strong>dt_G</strong> (<em>float</em>) – Coarse time step.</p></li>
+<li><p><strong>dt_F</strong> (<em>float</em>) – Time step.</p></li>
+<li><p><strong>gamma</strong> (<em>tuple</em><em>, </em><em>optional</em>) – System parameters. Defaults to None.</p></li>
+<li><p><strong>write_csv</strong> (<em>bool</em><em>, </em><em>optional</em>) – Boolean to true if we want to write the
+solutions in a csv file. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Solution at the last iteration.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-lorenz.parareal.plot_sol">
-<span id="lorenz-parareal-plot-sol-module"></span><h2>lorenz.parareal.plot_sol module<a class="headerlink" href="#module-lorenz.parareal.plot_sol" title="Permalink to this heading"></a></h2>
+<span id="lorenz-parareal-plot-sol-module"></span><h2>lorenz.parareal.plot_sol module<a class="headerlink" href="#module-lorenz.parareal.plot_sol" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="lorenz.parareal.plot_sol.plot_3D">
 <span class="sig-prename descclassname"><span class="pre">lorenz.parareal.plot_sol.</span></span><span class="sig-name descname"><span class="pre">plot_3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lorenz/parareal/plot_sol.html#plot_3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lorenz.parareal.plot_sol.plot_3D" title="Permalink to this definition"></a></dt>
@@ -217,7 +268,7 @@ and exact solution.</p>
 
 </section>
 <section id="module-lorenz.parareal.utils">
-<span id="lorenz-parareal-utils-module"></span><h2>lorenz.parareal.utils module<a class="headerlink" href="#module-lorenz.parareal.utils" title="Permalink to this heading"></a></h2>
+<span id="lorenz-parareal-utils-module"></span><h2>lorenz.parareal.utils module<a class="headerlink" href="#module-lorenz.parareal.utils" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="lorenz.parareal.utils.E_j_k">
 <span class="sig-prename descclassname"><span class="pre">lorenz.parareal.utils.</span></span><span class="sig-name descname"><span class="pre">E_j_k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_pts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solx_exacte</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lorenz/parareal/utils.html#E_j_k"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lorenz.parareal.utils.E_j_k" title="Permalink to this definition"></a></dt>
@@ -415,7 +466,7 @@ is different).</p></li>
 
 </section>
 <section id="module-lorenz.parareal">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-lorenz.parareal" title="Permalink to this heading"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-lorenz.parareal" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="lorenz.parareal.toto">
 <span class="sig-prename descclassname"><span class="pre">lorenz.parareal.</span></span><span class="sig-name descname"><span class="pre">toto</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/lorenz/parareal.html#toto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lorenz.parareal.toto" title="Permalink to this definition"></a></dt>

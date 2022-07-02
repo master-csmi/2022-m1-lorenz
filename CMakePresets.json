@@ -46,14 +46,13 @@
         {
             "name": "docs",
             "inherits": "default",
-            "displayName": "docs",
+            "displayName": "Documentation Generation",
             "description": "Build documentation",
             "binaryDir": "${sourceDir}/build/docs",
             "cacheVariables": {
-                "CMAKE_CXX_COMPILER": "clang++",
                 "CMAKE_BUILD_TYPE": "Release",
                 "WARNINGS_AS_ERRORS": false,
-                "ENABLE_DOC": "ON",
+                "ENABLE_DOCS": "ON",
                 "CONAN_CMD": "$env{HOME}/.local/bin/conan",
                 "SPHINX_EXECUTABLE": "$env{HOME}/.local/bin/sphinx-build"
             },
@@ -78,7 +77,7 @@
         {
             "name": "docs",
             "configurePreset": "docs",
-            "targets": ["Doxygen","Sphinx","Antora"]
+            "targets": ["docs","Doxygen","Sphinx","Antora"]
         }
     ],
     "testPresets": [

@@ -17,13 +17,12 @@ env:
 
 jobs:
   build_cpp:
-
     runs-on: ${{ matrix.os }}
+    if: |
+      !contains(github.event.head_commit.message, 'skip build')
     strategy:
       matrix:
         os: [self-ubuntu-22.04]
-      
-
     steps:
     - uses: actions/checkout@v2
     - name: Checkout submodules
@@ -55,13 +54,14 @@ jobs:
   build_python:
 
     runs-on: self-ubuntu-22.04
+    if: |
+      !contains(github.event.head_commit.message, 'skip build')
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.8"]
         # python-version: ["3.8", "3.9", "3.10"]
-    if: |
-      !contains(github.event.head_commit.message, 'skip build')
+    
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
@@ -97,30 +97,19 @@ jobs:
         uses: actions/setup-python@v3
         with:   
           python-version: 3.8
-      - name: Cache
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-conan-modules
-        with:
-          path: |
-            ${{ env.CONAN_USER_HOME }}
-            ~/.cache/pip
-          key: ${{ runner.os }}-${{ env.BUILD_TYPE }}-${{ hashFiles('CMakeLists.txt') }}-${{ hashFiles('cmake/Conan.cmake') }}
-      - name: Set up MPI
-        uses: mpi4py/setup-mpi@v1
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install sphinx
-          python -m pip install sphinx_rtd_theme
           pip install -r requirements.txt
-      - name: Setup PYTHONPATH
+      - name: Setup Python and Node
         run: |
           echo "PYTHONPATH=../../src/python" >> $GITHUB_ENV 
-      - name: Run sphinx
+          source $HOME/.nvm/nvm.sh
+          nvm install --lts
+      - name: Generate Documentation
         run: |
           cmake --preset docs
-          cmake --build --preset docs
+          cmake --build --preset docs docs
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:

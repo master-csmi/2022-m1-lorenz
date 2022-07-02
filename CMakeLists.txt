@@ -10,8 +10,8 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 # Link this 'library' to set the c++ standard / compile-time options requested
 add_library(project_options INTERFACE)
-# target_compile_features(project_options INTERFACE cxx_std_17)
-target_compile_features(project_options INTERFACE cxx_std_20)
+target_compile_features(project_options INTERFACE cxx_std_17)
+#target_compile_features(project_options INTERFACE cxx_std_20)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
   option(ENABLE_BUILD_WITH_TIME_TRACE "Enable -ftime-trace to generate time tracing .json files on clang" OFF)
@@ -42,7 +42,7 @@ include(cmake/StaticAnalyzers.cmake)
 
 option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
 option(ENABLE_TESTING "Enable Test Builds" ON)
-
+option(ENABLE_DOCS "Enable Documentation Generation" OFF)
 
 
 # Set up some extra Conan dependencies based on our needs before loading Conan
@@ -65,20 +65,22 @@ set(Boost_ADDITIONAL_VERSIONS "1.61" "1.62" "1.63" "1.64" "1.65" "1.66" "1.67" "
 set(BOOST_COMPONENTS_REQUIRED unit_test_framework mpi serialization  )
 FIND_PACKAGE(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS ${BOOST_COMPONENTS_REQUIRED})
 
+
+
+if(ENABLE_DOCS)
+  # enable doxygen
+  include(cmake/Doxygen.cmake)
+  enable_doxygen()
+
+  add_subdirectory(docs)
+endif()
+
+target_include_directories(project_options INTERFACE ${MPI_CXX_HEADER_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp)
+add_subdirectory(src/cpp)
+
 if(ENABLE_TESTING)
   enable_testing()
   message("Building Tests. Be sure to check out test/constexpr_tests for constexpr testing")
   add_subdirectory(tests/cpp)
 endif()
-target_include_directories(project_options  INTERFACE ${MPI_CXX_HEADER_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp)
 
-add_subdirectory(src/cpp)
-
-option(ENABLE_DOC OFF)
-if (ENABLE_DOC)
-  # enable doxygen
-  include(cmake/Doxygen.cmake)
-  enable_doxygen()
-  
-  add_subdirectory(docs)
-endif()

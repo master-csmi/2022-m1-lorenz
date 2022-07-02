@@ -17,12 +17,12 @@ env:
 
 jobs:
   build_cpp:
-
     runs-on: ${{ matrix.os }}
+    if: |
+      !contains(github.event.head_commit.message, 'skip build')
     strategy:
       matrix:
-        os: [ubuntu-20.04,ubuntu-22.04]
-
+        os: [self-ubuntu-22.04]
     steps:
     - uses: actions/checkout@v2
     - name: Checkout submodules
@@ -41,9 +41,6 @@ jobs:
       # Some projects don't allow in-source building, so create a separate build directory
       # We'll use this as our working directory for all subsequent commands
       run: |
-        sudo apt update
-        sudo apt install libboost-mpi-dev libboost-test-dev libboost-date-time-dev libboost-filesystem-dev libboost-serialization-dev libboost-program-options-dev libboost-regex-dev
-        sudo apt install pybind11-dev doxygen
         python3 -m pip install --upgrade pip setuptools
         python3 -m pip install -r requirements.txt
         cmake -E make_directory ${{runner.workspace}}/build
@@ -56,22 +53,21 @@ jobs:
     
   build_python:
 
-    runs-on: ubuntu-latest
+    runs-on: self-ubuntu-22.04
+    if: |
+      !contains(github.event.head_commit.message, 'skip build')
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.8"]
         # python-version: ["3.8", "3.9", "3.10"]
-    if: |
-      !contains(github.event.head_commit.message, 'skip build')
+    
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:   
         python-version: ${{ matrix.python-version }}
-    - name: Set up MPI
-      uses: mpi4py/setup-mpi@v1
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -85,14 +81,14 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Setup PYTHONPATH
       run: |
-        echo "PYTHONPATH=src/python" >> $GITHUB_ENV
+        echo "PYTHONPATH=src/python:$HOME/.local" >> $GITHUB_ENV
     - name: Test with pytest
       run: |
-        pytest
+        pytest-3
 
   docs:
 
-    runs-on: ubuntu-latest
+    runs-on: self-ubuntu-22.04
     if: |
       !contains(github.event.head_commit.message, 'skip docs')
     steps:
@@ -101,21 +97,19 @@ jobs:
         uses: actions/setup-python@v3
         with:   
           python-version: 3.8
-      - name: Set up MPI
-        uses: mpi4py/setup-mpi@v1
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install sphinx
-          python -m pip install sphinx_rtd_theme
           pip install -r requirements.txt
-      - name: Setup PYTHONPATH
+      - name: Setup Python and Node
         run: |
           echo "PYTHONPATH=../../src/python" >> $GITHUB_ENV 
-      - name: Run sphinx
+          source $HOME/.nvm/nvm.sh
+          nvm install --lts
+      - name: Generate Documentation
         run: |
           cmake --preset docs
-          cmake --build --preset docs
+          cmake --build --preset docs docs
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:

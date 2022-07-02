@@ -12,7 +12,7 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('/nvme0/prudhomm/Devel/CSMI/2022-m1-lorenz/src/python'))
+sys.path.insert(0, os.path.abspath('/mnt/c/Users/lecou/OneDrive - etu.unistra.fr/Master/M1/S2/Stage/project/src/python'))
 
 
 # -- Project information -----------------------------------------------------

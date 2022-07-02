@@ -1,5 +1,8 @@
 #include"enkf_fct.hpp"
-
+int add(int i, int j) 
+{
+    return i + j;
+}
 MyMatrix mean(MyMatrix M,int a)
 {
     MyMatrix Mean;

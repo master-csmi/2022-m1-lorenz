@@ -62,3 +62,5 @@ install(DIRECTORY ${SPHINX_BUILD}
     DESTINATION ${CMAKE_INSTALL_DOCDIR})
 
 add_subdirectory(antora)
+
+add_custom_target(docs ALL DEPENDS Doxygen Sphinx Antora)

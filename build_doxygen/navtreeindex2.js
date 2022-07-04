@@ -1,5 +1,9 @@
 var NAVTREEINDEX2 =
 {
+"class_eigen_1_1_rand_1_1_cauchy_gen.html#ab675b19fef39377107525db6f8a47f8d":[6,0,0,1,34,2],
+"class_eigen_1_1_rand_1_1_cauchy_gen.html#ac90c41122cc313af85039d303f8f7da9":[6,0,0,1,34,0],
+"class_eigen_1_1_rand_1_1_cauchy_gen.html#aee574ac4fc807aaa914c5965f6cc8405":[6,0,0,1,34,4],
+"class_eigen_1_1_rand_1_1_chi_squared_gen.html":[6,0,0,1,33],
 "class_eigen_1_1_rand_1_1_chi_squared_gen.html#a071bc9c8273abdeee759057b4acd72bf":[6,0,0,1,33,2],
 "class_eigen_1_1_rand_1_1_chi_squared_gen.html#a185045eba876512f7ebd258cbb5f2519":[6,0,0,1,33,3],
 "class_eigen_1_1_rand_1_1_chi_squared_gen.html#a9c7ad0397f3ffb8186f3bc09d30ef877":[6,0,0,1,33,7],
@@ -245,9 +249,5 @@ var NAVTREEINDEX2 =
 "class_eigen_1_1_rand_1_1_uniform_real_gen.html#ac8b9b833af616861fbf374ecd4f741b7":[6,0,0,1,13,1],
 "class_eigen_1_1_rand_1_1_uniform_real_gen.html#acf7e46b2326acdfa8f36fd0721c7281e":[6,0,0,1,13,5],
 "class_eigen_1_1_rand_1_1_weibull_gen.html":[6,0,0,1,31],
-"class_eigen_1_1_rand_1_1_weibull_gen.html#a238c7a4c581a7eaf92bb48ca9ba082c3":[6,0,0,1,31,6],
-"class_eigen_1_1_rand_1_1_weibull_gen.html#a5474b4a38feb283719004f0a23ecead1":[6,0,0,1,31,1],
-"class_eigen_1_1_rand_1_1_weibull_gen.html#a59b97d497bfd7847806fa0126bcede26":[6,0,0,1,31,2],
-"class_eigen_1_1_rand_1_1_weibull_gen.html#a894a0a23387189153f0f0060a1bd3648":[6,0,0,1,31,3],
-"class_eigen_1_1_rand_1_1_weibull_gen.html#aa7a30ae8943475d8f4d270962f1274dc":[6,0,0,1,31,4]
+"class_eigen_1_1_rand_1_1_weibull_gen.html#a238c7a4c581a7eaf92bb48ca9ba082c3":[6,0,0,1,31,6]
 };

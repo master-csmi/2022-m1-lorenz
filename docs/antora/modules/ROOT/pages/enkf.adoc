@@ -1,12 +1,3 @@
 = Data assimilation method 
 
-The project is configured to integrate VSCode using Docker Container.
-
-`ssh-keyscan` is used on `github.com` to register the public key of github in $HOME/.ssh/known_hosts and avoid having git auth issues the first time we log into the container and push/pull to/from github.
-
-The following extensions are installed in Docker:
-
-* cpptools
-* cmaketools
-* cmake
-* asciidoctor-vscode
+To be added.

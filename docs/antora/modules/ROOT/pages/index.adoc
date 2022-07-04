@@ -1,6 +1,8 @@
-= Lorenz project
+= Lorenz project report
 
-This is an explanation of the Parareal method and Data assimilation method.
+The main goals of this project was to implement a parallel time resolution method for the Lorenz system, and to realize the data assimilation using the EnKF method. 
+
+This project is realized by two Master 1 students of the master CSMI : LECOURTIER Frédérique and AYDOGDU Melissa. It is managed by (see http://www.cemosis.fr/[Cemosis]) which is the "Centre de Modélisation et de Simulation de Strasbourg" (Strasbourg Modeling and Simulation Center). Cemosis is hosted by the Institute of Advanced Mathematical Research (IRMA) and was created in January 2013. 
 
 The features include :
 

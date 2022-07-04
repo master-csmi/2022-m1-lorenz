@@ -1,8 +1,6 @@
 = Lorenz system
 :stem: latexmath
 
-This is a test !
-
 This system defines a 3 dimensional trajectory by differential equations with 3 parameters.
 
 [stem]

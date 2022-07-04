@@ -1,6 +1,6 @@
 site:
   title: Lorenz project report
-  url: https://feelpp.github.io/feelpp-project/
+  url: https://master-csmi.github.io/2022-m1-lorenz
   start_page: lorenz:ROOT:index.adoc
 content:
   sources:

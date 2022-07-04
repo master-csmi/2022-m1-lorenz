@@ -1,10 +1,16 @@
 name: CI
 
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
+
 on:
   push:
-    branches: [ main ]
+    branches: [ 56-deploy-github-pages ]
   pull_request:
-    branches: [ main ]
+    branches: [ 56-deploy-github-pages ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)

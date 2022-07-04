@@ -110,8 +110,21 @@ jobs:
         run: |
           cmake --preset docs
           cmake --build --preset docs docs
-      - name: Deploy 🚀
+      - name: Deploy sphinx 🚀
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
           branch: gh-pages # The branch the action should deploy to.
+          target-folder: build_sphinx
           folder: build/docs/docs/sphinx/ # The folder the action should deploy.
+      - name: Deploy doxygen 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          target-folder: build_doxygen
+          folder: build/docs/docs/doxygen/lorenz # The folder the action should deploy.
+      - name: Deploy antora 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          target-folder: build_antora
+          folder: docs/antora/public/lorenz/1.0.0 # The folder the action should deploy.

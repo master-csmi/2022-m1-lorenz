@@ -1,10 +1,10 @@
 site:
   title: Lorenz project report
-  url: https://feelpp.github.io/feelpp-project/
+  url:  http://127.0.0.1:8080/lorenz/1.0.0/index.html
   start_page: lorenz:ROOT:index.adoc
 content:
   sources:
-  - url: .
+  - url: ../..
     branches: main
     start_path: docs/antora
 ui:
@@ -17,11 +17,12 @@ output:
   
 asciidoc:
   attributes:
-    project_version: 0.109
+    project_version: 0.1
     deploymentRoot: ""
     numbered: true
     allow-uri-read: true
     hide-uri-scheme: true
+    feelpp: Feel++
     lorenz: Lorenz
     angiotk: AngioTK
     4fastsim: 4FastSim

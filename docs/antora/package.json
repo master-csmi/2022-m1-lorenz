@@ -1,7 +1,7 @@
 {
   "private": true,
-  "name": "feelpp-project",
-  "description": "The Feelpp documentation",
+  "name": "lorenz",
+  "description": "Lorenz projet documentation",
   "version": "0.1.0",
   "license": "AGPL-3.0",
   "author": "The Feelpp Team",

@@ -15,11 +15,8 @@ Their work is focused on the numarical simulation and mathematical modelling of 
 ## Description of the projet
 
 Main goals of this project :
-- Implement a parallel time resolution method for the Lorenz system : the para-real method. Parareal computes the numerical solution for multiple time steps in parallel. It is categorized as a parallel-across-the-steps method. See the following diagramm :
-
-    <img src="./parareal_method.jpg" width="600">
-
-- Realize the data assimilation using the EnKF method.
+- Implement a parallel time resolution method for the Lorenz system. 
+- Realize the data assimilation using the EnKF method (see [Eigenrand github repository](https://github.com/bab2min/EigenRand)).
 
 ## Compile
 

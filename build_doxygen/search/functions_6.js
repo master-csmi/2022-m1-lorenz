@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hx_5fmodel_492',['hx_model',['../enkf__fct_8hpp.html#a3115eb5cf19ac1f9669b5a9c772afc52',1,'enkf_fct.cpp']]]
+  ['mean_58',['mean',['../enkf__fct_8hpp.html#a32d4f9c8a65e170d3be70332d6897ff8',1,'enkf_fct.cpp']]]
 ];

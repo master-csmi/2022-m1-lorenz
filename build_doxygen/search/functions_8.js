@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['lognormal_494',['lognormal',['../namespace_eigen_1_1_rand.html#aba61209d9808df866bb43a3f3e606865',1,'Eigen::Rand']]],
-  ['lognormalgen_495',['LognormalGen',['../class_eigen_1_1_rand_1_1_lognormal_gen.html#afbe816f0ec55e0d705ae4de2329a436e',1,'Eigen::Rand::LognormalGen']]],
-  ['lognormallike_496',['lognormalLike',['../namespace_eigen_1_1_rand.html#a4467c633e48627e870eedc270d4d536d',1,'Eigen::Rand']]],
-  ['lorenz_497',['lorenz',['../utils_8hpp.html#afe3e558c9d3118842985857a5cc85384',1,'utils.cpp']]]
+  ['read_5fsensor_5fmodel_61',['read_sensor_model',['../enkf__fct_8hpp.html#a619dcf5a0d3e33ee316fded3827b1818',1,'enkf_fct.cpp']]],
+  ['rk4_62',['RK4',['../utils_8hpp.html#ac782e498587be7db28a6105fdb05593e',1,'RK4(Vector&lt; double &gt; const &amp;X0, double dt, double t0, int nb_t, Vector&lt; double &gt; prob(double, Vector&lt; double &gt; const &amp;, double *), double *gamma):&#160;utils.cpp'],['../enkf__fct_8hpp.html#acbf9a1fa342433bfb47b9ca2beaf2a7a',1,'RK4(int dim_x, MyMatrix p, MyMatrix X0, int N, double T):&#160;enkf_fct.cpp']]]
 ];

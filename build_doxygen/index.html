@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Lorenz: EigenRand : The Fastest C++11-compatible random distribution generator for Eigen</title>
+<title>Lorenz: Data assimilation for the Lorenz system</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -93,21 +93,41 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">EigenRand : The Fastest C++11-compatible random distribution generator for Eigen </div>  </div>
+<div class="title">Data assimilation for the Lorenz system </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>EigenRand is a header-only library for <a href="http://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a>, providing vectorized random number engines and vectorized random distribution generators. Since the classic Random functions of Eigen relies on an old C function <code>rand()</code>, there is no way to control random numbers and no guarantee for quality of generated numbers. In addition, Eigen's Random is slow because rand() is hard to vectorize.</p>
-<p>EigenRand provides a variety of random distribution functions similar to C++11 standard's random functions, which can be vectorized and easily integrated into Eigen's expressions of Matrix and Array.</p>
-<p>You can get 5~10 times speed by just replacing old Eigen's Random or unvectorizable c++11 random number generators with EigenRand.</p>
-<p>EigenRand currently supports only x86-64 architecture (SSE, AVX, AVX2) and ARM64 NEON (experimental).</p>
-<p>EigenRand is distributed under the MIT License.</p>
-<p>If you want to contribute or report bugs, please visit Github repository <a href="https://github.com/bab2min/EigenRand">https://github.com/bab2min/EigenRand</a>.</p>
-<ul>
-<li><a class="el" href="getting_started.html">Getting Started </a></li>
-<li><a class="el" href="list_of_supported_distribution.html">List of Supported Random Distribution </a></li>
-<li><a class="el" href="performance.html">Performance </a> </li>
+<div class="textblock"><p><a class="anchor" id="md__scratch_runner_actions_runner__work_2022_m1_lorenz_2022_m1_lorenz_docs_doxygen_mainpage"></a> </p>
+<h1><a class="anchor" id="autotoc_md1"></a>
+Authors</h1>
+<p>This project is realized by two Master 1 students of the master CSMI : LECOURTIER Frédérique and AYDOGDU Melissa.</p>
+<p>It is managed by <a href="http://www.cemosis.fr/">Cemosis</a> which is the "Centre de Modélisation et de Simulation de Strasbourg" (Strasbourg Modeling and Simulation Center).</p>
+<p>Cemosis is hosted by the Institute of Advanced Mathematical Research (IRMA) and was created in January 2013.</p>
+<p>Cemosis relies currently on the team Modeling and Control of the IRMA.</p>
+<p>Their work is focused on the numarical simulation and mathematical modelling of different phenomena.</p>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Description of the projet</h1>
+<p>Main goals of this project :</p><ul>
+<li>Implement a parallel time resolution method for the Lorenz system.</li>
+<li>Realize the data assimilation using the EnKF method (see <a href="https://github.com/bab2min/EigenRand">Eigenrand github repository</a>).</li>
 </ul>
-</div></div><!-- PageDoc -->
+<h1><a class="anchor" id="autotoc_md3"></a>
+Compile</h1>
+<h2><a class="anchor" id="autotoc_md4"></a>
+Cmake</h2>
+<p>Install cmake &gt;= 3.21 using e.g. apt from kitware, snap on ubunty 20.04 or homebrew.</p>
+<p>Install from <a href="https://apt.kitware.com/">Kitware APT</a> </p><pre class="fragment">sudo apt-get update
+sudo apt-get install gpg wget
+echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ focal main' | sudo tee /etc/apt/sources.list.d/kitware.list &gt;/dev/null
+sudo apt-get update
+sudo apt install cmake
+</pre><p> Install cmake on Ubuntu using snap. </p><pre class="fragment">snap install cmake
+</pre><p> Install cmake on homebrew. </p><pre class="fragment">brew install cmake
+</pre> <h2><a class="anchor" id="autotoc_md5"></a>
+Compile</h2>
+<p>VScode provides an interface for CMake Presets (see <code>CMakePresets.json</code>).</p>
+<p>Configure and build the <code>default</code> preset. </p><pre class="fragment">cmake --preset default
+cmake --build --preset default
+</pre> </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

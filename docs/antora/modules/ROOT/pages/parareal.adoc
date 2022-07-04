@@ -1,18 +1,3 @@
 = Parareal method
 
-Antora is our static website generator. 
-We use it to generate the documentation of the project and upload it to docs.feelpp.org[{lorenz} docs] website.
-
-.To generate the documentation
-----
-cd docs
-antora site.yml
-----
-
-.To visualizethe documentation
-----
-# from topevel directory
-node-srv docs/public
-# from docs/
-node-srv docs
-----
+Para-real method is a parallel-in-time integration method which was introduced in 2001 by Lions, Maday and Turinici (see https://en.wikipedia.org/wiki/Parareal#Parallel-in-time_integration_methods[Parareal]). Parareal computes the numerical solution for multiple time steps in parallel and it is categorized as a parallel-across-the-steps method.

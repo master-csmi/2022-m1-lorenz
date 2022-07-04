@@ -5,19 +5,19 @@ This system defines a 3 dimensional trajectory by differential equations with 3 
 
 [stem]
 ++++
-\begin{aligned}  
+\left\{\begin{aligned}  
 x'&=\sigma(y-x) \\
 y'&=x(r-z)-y \\
 z'&=xy-bz
-\end{aligned}
+\end{aligned}\right.
 ++++
 
 Here, stem:[x] is proportional to the rate of convection, stem:[y] is related to the horizontal temperature variation, and stem:[z] is the vertical temperature variation.
 
 We have also three parameters all strictly positive:
+
 * stem:[\sigma > 0]  relates to the Prandtl number. This number is a dimensionless quantity that puts the viscosity of a fluid in correlation with the thermal conductivity;
 * stem:[r > 0]  relates to the Rayleigh number, it is a control parameter, representing the temperature difference between the top and bottom of the tank;
 * stem:[b > 0] relates to the physical dimensions of the layer of fluid uniformly heated from below and cooled from above.
-\end{enumerate}
 
-We can see that this system is non-linear, because in the second differential equation ( stem:[\frac{dy}{dt}]) we can see the term stem:[xz] and in the third differential equation (stem:[\frac{dz}{dt}]) we have stem:[xy]. The three differential equations form a coupled system. 
+We can see that this system is non-linear, because in the second differential equation (stem:[\frac{dy}{dt}]) we can see the term stem:[xz] and in the third differential equation (stem:[\frac{dz}{dt}]) we have stem:[xy]. The three differential equations form a coupled system. 

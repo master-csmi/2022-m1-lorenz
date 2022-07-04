@@ -4,7 +4,7 @@ site:
   start_page: lorenz:ROOT:index.adoc
 content:
   sources:
-  - url: https://github.com/master-csmi/2022-m1-lorenz
+  - url: .
     branches: main
     start_path: docs/antora
 ui:

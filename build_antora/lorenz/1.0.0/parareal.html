@@ -182,12 +182,6 @@ MathJax.Hub.Config({
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="enkf.html">Data assimilation method</a>
   </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="githubactions.html">Github Actions</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="rename.html">Renaminge the project</a>
-  </li>
 </ul>
   </li>
 </ul>
@@ -232,6 +226,83 @@ MathJax.Hub.Config({
 <h1 class="page">Parareal method</h1>
 <div class="paragraph">
 <p>Para-real method is a parallel-in-time integration method which was introduced in 2001 by Lions, Maday and Turinici (see <a href="https://en.wikipedia.org/wiki/Parareal#Parallel-in-time_integration_methods">Parareal</a>). Parareal computes the numerical solution for multiple time steps in parallel and it is categorized as a parallel-across-the-steps method.</p>
+</div>
+<div class="paragraph">
+<p>Parareal method needs a decomposition of the time interval \([t_0,T\)] into $P$ slices \([t_j,t_{j+1}\)] with  \(j\in\{0,\dots,P-1\}\), where \(P\) is the number of process units. As we want to parallelize the algorithm, each time slice is assigned to one process.</p>
+</div>
+<div class="paragraph">
+<p>We denote by \(F\) an integrator which is of high accuracy and \(G\) which is of low accuracy. Also, \(F\) will be very expensive in terms of calculation but very accurate, and \(G\) will be very cheap but very imprecise. We denote by \(\Delta t_F\) the time step and by \(\Delta t_G\) the coarse time step.</p>
+</div>
+<div class="paragraph">
+<p>We denote by \(U_j^k\), \(j\in\{0,\dots,P\}\) the initial point at time \(t_j\) and at iteration \(k\). We also denote \(F(U_{j-1}^k)\), \(j\in\{1,\dots,P\}\) the result of the fine integrator between \(t_{j-1}\) and \(t_j\) which starts from the initial point \(U_{j-1}^k\) at iteration \(k\) and respectively \(G(U_{j-1}^k)\), \(j\in\{1,\dots,P\}\) the result of the coarse integrator between \(t_{j-1}\) and \(t_j\) which starts from the initial point \(U_{j-1}^k\) at iteration \(k\). Then, a series of steps is performed until the solution of the system converges.</p>
+</div>
+<div class="paragraph">
+<p>At iteration \(k=0\) :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Step 1 : At iteration \(k=0\), we have an initial point \(U_0^0=X_0\).</p>
+<div class="imageblock">
+<div class="content">
+<img src="img/parareal_1.jpg" alt="Step 1 of the method">
+</div>
+</div>
+</li>
+<li>
+<p>Step 2 : We start by applying the function \(G\) on all intervals \([t_j,t_{j+1}\)] and we denote by \(U_j^0=G(U_{j-1}^0)\) the values of \(G\) at \(t_j\).</p>
+<div class="paragraph">
+<p>Note that this part of the method must be done sequentially because if we parallelize the task, the process \(j\) should wait until the process \(j-1\) has finished before starting.</p>
+</div>
+</li>
+<li>
+<p>Step 3 : We can then calculate from each \(U_j^0\) the fine solution between \(t_j\) and \(t_{j+1}\) : \(F(U_j^0)\). This is an operation that must be parallelized.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>At iteration \(k=1\) :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Step 4 : We can then continue to iteration \(k=1\) where we need the values \(G(U_j^0)\) and \(F(U_j^0)\) calculated at the previous iteration (\(k=0\)).</p>
+<div class="paragraph">
+<p>We will also keep the initial point at time \(t_0\) : \(U_0^1=U_0^0\).</p>
+</div>
+</li>
+<li>
+<p>Step 5 : We can then calculate \(G(U_0^1)\) which allows us to obtain the point \(U_1^1\) by the following formula:</p>
+<div class="stemblock">
+<div class="content">
+\[U_j^1=G(U_{j-1}^1)+(F(U_{j-1}^0)-G(U_{j-1}^0)).\]
+</div>
+</div>
+<div class="paragraph">
+<p>Note that due to \(U_0^1=U_0^0\), we have \(G(U_0^1)=G(U_0^0)\) and therefore \(U_1^1=F(U_0^0)\).</p>
+</div>
+<div class="paragraph">
+<p>We then compute in the same way the following \(G(U_j^1)\) and the associated \(U_{j+1}^1\) points. This step can be done sequentially for the same reason as in step 2.</p>
+</div>
+</li>
+<li>
+<p>Step 6 : We can then calculate from each \(U_j^1\) the fine solution between \(t_j\) and \(t_{j+1}\) : \(F(U_j^1)\). This is an operation that must be parallelized.</p>
+<div class="paragraph">
+<p>Note that due to \(U_0^1=U_0^0\), we also have \(F(U_0^1)=F(U_0^0)\).</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Then we repeat steps 3 to 6 until \(U_j^k-U_j^{k-1}\rightarrow 0 \quad \forall j\in\{0,\dots,P-1\}\).</p>
+</div>
+<div class="paragraph">
+<p>We have at iteration \(k\):</p>
+</div>
+<div class="stemblock">
+<div class="content">
+\[U_j^k=G(U_{j-1}^k)+(F(U_{j-1}^{k-1})-G(U_{j-1}^{k-1}))\]
+</div>
 </div>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

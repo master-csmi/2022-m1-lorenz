@@ -245,7 +245,7 @@ MathJax.Hub.Config({
 <p>Step 1 : At iteration \(k=0\), we have an initial point \(U_0^0=X_0\).</p>
 <div class="imageblock">
 <div class="content">
-<img src="img/parareal_1.jpg" alt="Step 1 of the method">
+<img src="_images/parareal_1.jpg" alt="Step 1 of the method" width="480" height="360">
 </div>
 </div>
 </li>
@@ -254,9 +254,19 @@ MathJax.Hub.Config({
 <div class="paragraph">
 <p>Note that this part of the method must be done sequentially because if we parallelize the task, the process \(j\) should wait until the process \(j-1\) has finished before starting.</p>
 </div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/parareal_2.jpg" alt="Step 2 of the method" width="480" height="360">
+</div>
+</div>
 </li>
 <li>
 <p>Step 3 : We can then calculate from each \(U_j^0\) the fine solution between \(t_j\) and \(t_{j+1}\) : \(F(U_j^0)\). This is an operation that must be parallelized.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/parareal_3.jpg" alt="Step 3 of the method" width="480" height="360">
+</div>
+</div>
 </li>
 </ul>
 </div>
@@ -269,6 +279,11 @@ MathJax.Hub.Config({
 <p>Step 4 : We can then continue to iteration \(k=1\) where we need the values \(G(U_j^0)\) and \(F(U_j^0)\) calculated at the previous iteration (\(k=0\)).</p>
 <div class="paragraph">
 <p>We will also keep the initial point at time \(t_0\) : \(U_0^1=U_0^0\).</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/parareal_4.jpg" alt="Step 4 of the method" width="480" height="360">
+</div>
 </div>
 </li>
 <li>
@@ -284,11 +299,21 @@ MathJax.Hub.Config({
 <div class="paragraph">
 <p>We then compute in the same way the following \(G(U_j^1)\) and the associated \(U_{j+1}^1\) points. This step can be done sequentially for the same reason as in step 2.</p>
 </div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/parareal_5.jpg" alt="Step 5 of the method" width="480" height="360">
+</div>
+</div>
 </li>
 <li>
 <p>Step 6 : We can then calculate from each \(U_j^1\) the fine solution between \(t_j\) and \(t_{j+1}\) : \(F(U_j^1)\). This is an operation that must be parallelized.</p>
 <div class="paragraph">
 <p>Note that due to \(U_0^1=U_0^0\), we also have \(F(U_0^1)=F(U_0^0)\).</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/parareal_6.jpg" alt="Step 6 of the method" width="480" height="360">
+</div>
 </div>
 </li>
 </ul>

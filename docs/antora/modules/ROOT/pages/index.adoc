@@ -9,3 +9,4 @@ The features include :
 * xref:lorenz.adoc[Lorenz system]
 * xref:parareal.adoc[Parareal method]
 * xref:enkf.adoc[Data assimilation method]
+* xref:bibliography.adoc[Bibliography]

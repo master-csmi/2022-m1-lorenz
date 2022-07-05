@@ -1,0 +1,19 @@
+= Bibliography
+:stem: latexmath
+
+* Reference for the Lorenz System Part:
+** https://www2.physics.ox.ac.uk/sites/default/files/profiles/read/lect6-43147.pdf[THREE DIMENSIONAL SYSTEMS, Lecture 6 : The Lorenz Equations.].
+** https://ftp.emc.ncep.noaa.gov/mmb/sref/Doc/lorenz_fcst.pdf[John Stockie and Ken Wong. Laboratory: A Simple Model of the Unpredictability
+of Weather: The Lorenz Equations.]
+** https://docs.dart.ucar.edu/en/latest/guide/lorenz-63-model.html[University Corporation for Atmospheric Research. The Lorenz 63 model and its
+relevance to data assimilation.]
+
+* Reference for the Parareal Part:
+** https://en.wikipedia.org/w/index.php?title=Parareal&oldid=1047894968[Parareal.]
+** https://linkinghub.elsevier.com/retrieve/pii/S0764444200017936[Jacques-Louis Lions, Yvon Maday, and Gabriel Turinici. Résolution d’EDP par
+un schéma en temps pararéel.]
+** http://www.ctresources.info/csets/chapter.html?id=403[Y. Maday. The Parareal in Time Algorithm.]
+
+* Reference for Data Assimilation Part:
+** https://www.eccorev.fr/IMG/pdf/Assimilationdonnees_EBlayo.pdf[Eric Blayo. An introduction to data assimilation.]
+** https://team.inria.fr/airsea/files/2012/03/Nodet_Intro_DataAssimilation.pdf[Maelle Nodet. Introduction to Data Assimilation.]

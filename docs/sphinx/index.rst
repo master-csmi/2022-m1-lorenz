@@ -10,8 +10,8 @@ Welcome to Lorenz's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   lorenz
-   doxygen_files
+   lorenz.parareal
+   lorenz.enkf
 
 Indices and tables
 ==================

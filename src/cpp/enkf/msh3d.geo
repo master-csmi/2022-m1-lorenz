@@ -108,3 +108,21 @@ Plane Surface(8) = {8};
 Surface Loop(1) = {5, 8, 6, 7, 1, 3, 2, 4};
 //+
 Volume(1) = {1};
+//+
+Physical Surface("Window1", 21) = {3};
+//+
+Physical Surface("Window2", 22) = {4};
+//+
+Physical Surface("Wall1", 23) = {1};
+//+
+Physical Surface("Wall2", 24) = {2};
+//+
+Physical Surface("Wall3", 25) = {8};
+//+
+Physical Surface("Wall4", 26) = {6};
+//+
+Physical Surface("Floor", 27) = {7};
+//+
+Physical Surface("Roof", 28) = {5};
+//+
+Physical Volume("Room", 29) = {1};

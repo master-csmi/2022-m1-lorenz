@@ -13,7 +13,7 @@ x^a=Lx^b+Ky^0
 
 == Kalman Filter
 The Kalman filter method consists in looking for $x^a$ an analysis, this analysis will be a linear combination of what we already know, our model and our observations.
-\newline Now let's try to see the formula of the kalman filter method in a multi-dimensional case.
+Now let's try to see the formula of the kalman filter method in a multi-dimensional case.
 [stem]
 ++++
 \left\{\begin{aligned}

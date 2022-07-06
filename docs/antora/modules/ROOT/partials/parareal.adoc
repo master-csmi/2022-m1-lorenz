@@ -1,0 +1,7 @@
+:stem: latexmath
+
+
+* https://en.wikipedia.org/w/index.php?title=Parareal&oldid=1047894968[Parareal.]
+* https://linkinghub.elsevier.com/retrieve/pii/S0764444200017936[Jacques-Louis Lions, Yvon Maday, and Gabriel Turinici. Résolution d’EDP par
+un schéma en temps pararéel.]
+* http://www.ctresources.info/csets/chapter.html?id=403[Y. Maday. The Parareal in Time Algorithm.]

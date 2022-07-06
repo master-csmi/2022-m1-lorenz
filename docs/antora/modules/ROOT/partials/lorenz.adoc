@@ -1,0 +1,8 @@
+:stem: latexmath
+
+
+* https://www2.physics.ox.ac.uk/sites/default/files/profiles/read/lect6-43147.pdf[THREE DIMENSIONAL SYSTEMS, Lecture 6 : The Lorenz Equations.].
+* https://ftp.emc.ncep.noaa.gov/mmb/sref/Doc/lorenz_fcst.pdf[John Stockie and Ken Wong. Laboratory: A Simple Model of the Unpredictability
+of Weather: The Lorenz Equations.]
+* https://docs.dart.ucar.edu/en/latest/guide/lorenz-63-model.html[University Corporation for Atmospheric Research. The Lorenz 63 model and its
+relevance to data assimilation.]

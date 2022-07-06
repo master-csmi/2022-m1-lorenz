@@ -1,6 +1,7 @@
 = Lorenz system
 :stem: latexmath
 
+== Introduction to the Lorenz system
 This system defines a 3 dimensional trajectory by differential equations with 3 parameters.
 
 [stem]
@@ -21,3 +22,6 @@ We have also three parameters all strictly positive:
 * stem:[b > 0] relates to the physical dimensions of the layer of fluid uniformly heated from below and cooled from above.
 
 We can see that this system is non-linear, because in the second differential equation (stem:[\frac{dy}{dt}]) we can see the term stem:[xz] and in the third differential equation (stem:[\frac{dz}{dt}]) we have stem:[xy]. The three differential equations form a coupled system. 
+
+== Bibliography for the Lorenz part
+include::partial$lorenz.adoc[]

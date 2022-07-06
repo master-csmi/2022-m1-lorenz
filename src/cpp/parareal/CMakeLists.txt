@@ -1,4 +1,4 @@
-add_executable(parareal.e main.cpp parareal.cpp utils.cpp write_csv.cpp laplacian.cpp)
+add_executable(parareal.e main.cpp parareal.cpp utils.cpp write_csv.cpp)
 target_link_libraries(
   parareal.e
   PRIVATE project_options
@@ -6,8 +6,7 @@ target_link_libraries(
           CONAN_PKG::docopt.cpp
           CONAN_PKG::fmt
           CONAN_PKG::spdlog
-          CONAN_PKG::eigen
-          Feelpp::feelpp)
+          CONAN_PKG::eigen)
 target_link_libraries(
   parareal.e
   PUBLIC Boost::mpi MPI::MPI_CXX)

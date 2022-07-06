@@ -1,7 +1,6 @@
 #include <parareal/parareal.hpp>
 #include <parareal/utils.hpp>
 #include <parareal/write_csv.hpp>
-#include "parareal/laplacian.hpp"
 #include <mpi.h>
 
 int main (){

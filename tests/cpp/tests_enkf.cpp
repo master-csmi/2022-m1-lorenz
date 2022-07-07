@@ -35,24 +35,70 @@ MyMatrix read_sensor_harmonique(double t)
 
 BOOST_AUTO_TEST_SUITE(enkf)
 
-BOOST_AUTO_TEST_CASE(test_enkf_0)
+BOOST_AUTO_TEST_CASE(test_enkf_1)
 {
-    typedef Eigen::Matrix<float, 3, 3> MyMatrix33f;
-    typedef Eigen::Matrix<float, 3, 1> MyVector3f;
-    typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> MyMatrix;
+    using namespace Eigen;
+    typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> MyMatrix;
+    MyMatrix lorenz_1,lorenz_2;
+    double T,dt;
+    int N,N2;
+    MyMatrix p{{12.},{6.},{12.}};
+    MyMatrix X_0{{-10.},{-10.},{25.}}; 
+    MyMatrix P{{0,0,0},{0,0,0},{0,0,0}};
+    MyMatrix Q{{0.001,0,0},{0,0.001,0},{0,0,0.001}};
+    MyMatrix R{{0,0,0},{0,0,0},{0,0,0}};
+    T=1;
+    N=int(T/0.001);
+    
+    std::cout << "p:  "<<p<<std::endl;
+    std::cout << "X_0:  "<<X_0<<std::endl;
+    lorenz_1=RK4(3,p,X_0,N,T,&f_lorenz);
+    std::cout << "lorenz1 \n  "<<lorenz_1<<std::endl;
+    N2=int(T/0.01);
+    dt=0.01;
+    lorenz_2=RK4(3,p,X_0,N2,T,&f_lorenz);
+    std::cout << "lorenz2 \n  "<<lorenz_2<<std::endl;
 
-    MyMatrix33f a;
-    MyVector3f v;
-    MyMatrix m(10, 15);
+    EnsembleKalmanFilter E1(3,3,X_0,P,dt, 20, &hx_model,&fx_2);
+    E1.set_Q(Q);
+    E1.set_R(R);
+    int M=10;
+    int index=M;
+    double time=0;
 
-    a = MyMatrix33f::Zero();     // fill matrix elements with zeros
-    a = MyMatrix33f::Identity(); // fill matrix as Identity matrix
-    v = MyVector3f::Random();    // fill matrix elements with random values
+    MyMatrix etat,tab_temps;
+    etat=MyMatrix::Zero(lorenz_2.rows(),lorenz_2.cols());
+    tab_temps=MyMatrix::Zero(lorenz_2.rows(),1);
 
-    a << 1, 2, 3,
-        4, 5, 6,
-        7, 8, 9;
-    BOOST_CHECK(a(1,2) == 6);
+
+    
+    etat.row(0)=((E1.get_x()).col(0)).transpose();
+    tab_temps(0,0)=time;
+    int compteur_=1;
+    while(time<T)
+    {
+        MyMatrix z=read_sensor_model(index,lorenz_1);
+        E1.predict();
+        E1.update(z);
+        index+=M;
+        time+=dt;
+        etat.row(compteur_)=((E1.get_x()).col(0)).transpose();
+        tab_temps(compteur_,0)=time;
+        compteur_+=1;
+
+    }
+
+    int taille_tab_etat=etat.rows();
+    int compteur=0;
+    for (int i=0;i<taille_tab_etat;i++)
+    {
+        if (((lorenz_2.row(i)(0)-etat.row(i)(0))<1e-2) and ((lorenz_2.row(i)(1)-etat.row(i)(1))<1e-2) and ((lorenz_2.row(i)(2)-etat.row(i)(2))<1e2) )
+        {
+            compteur+=1;
+        }
+    }
+    BOOST_CHECK(compteur == taille_tab_etat);
+    
 }
 BOOST_AUTO_TEST_CASE(test_enkf_2)
 {
@@ -97,7 +143,6 @@ BOOST_AUTO_TEST_CASE(test_enkf_2)
     while(time<1-dt)
     {
         MyMatrix z=read_sensor_model(index,lorenz_1);
-        std::cout << "z\n  "<<z<<std::endl;
         E1.predict();
         E1.update(z);
         index+=M;
@@ -108,7 +153,7 @@ BOOST_AUTO_TEST_CASE(test_enkf_2)
 
     }
     
-
+    
     int taille_tab_etat=etat.rows();
     int compteur=0;
     for (int i=0;i<taille_tab_etat;i++)
@@ -118,6 +163,7 @@ BOOST_AUTO_TEST_CASE(test_enkf_2)
             compteur+=1;
         }
     }
+    
     BOOST_CHECK(compteur == taille_tab_etat);
     
 }

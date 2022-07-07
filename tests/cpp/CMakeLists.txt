@@ -1,3 +1,5 @@
+
+include_directories(../../src/cpp/EigenRand)
 add_executable(tests_enkf tests_main.cpp tests_enkf.cpp)
 target_link_libraries(tests_enkf PRIVATE project_warnings project_options CONAN_PKG::eigen Boost::unit_test_framework)
 add_test(tests_enkf ${PROJECT_BINARY_DIR}/bin/tests_enkf)

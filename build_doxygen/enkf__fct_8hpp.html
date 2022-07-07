@@ -134,6 +134,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>add</b> (int i, int j)
 <tr class="memitem:ada0ea719a1410c2456a691d2838234ea"><td class="memItemLeft" align="right" valign="top">MyMatrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enkf__fct_8hpp.html#ada0ea719a1410c2456a691d2838234ea">f_lorenz</a> (double t, MyMatrix X, MyMatrix p)</td></tr>
 <tr class="memdesc:ada0ea719a1410c2456a691d2838234ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the Lorenz system for a given time, point and parameters.  <a href="enkf__fct_8hpp.html#ada0ea719a1410c2456a691d2838234ea">More...</a><br /></td></tr>
 <tr class="separator:ada0ea719a1410c2456a691d2838234ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21cdde6f0cf38de3793843a726017bd4"><td class="memItemLeft" align="right" valign="top"><a id="a21cdde6f0cf38de3793843a726017bd4"></a>
+MyMatrix&#160;</td><td class="memItemRight" valign="bottom"><b>f_ocillateur</b> (double t, MyMatrix X, MyMatrix p)</td></tr>
+<tr class="separator:a21cdde6f0cf38de3793843a726017bd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3115eb5cf19ac1f9669b5a9c772afc52"><td class="memItemLeft" align="right" valign="top">MyMatrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enkf__fct_8hpp.html#a3115eb5cf19ac1f9669b5a9c772afc52">hx_model</a> (MyMatrix x)</td></tr>
 <tr class="memdesc:a3115eb5cf19ac1f9669b5a9c772afc52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measurement function. Convert state x into a measurement.  <a href="enkf__fct_8hpp.html#a3115eb5cf19ac1f9669b5a9c772afc52">More...</a><br /></td></tr>
 <tr class="separator:a3115eb5cf19ac1f9669b5a9c772afc52"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -146,9 +149,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>add</b> (int i, int j)
 <tr class="memitem:a9b9032434555e76b372fbddbb58d3a0f"><td class="memItemLeft" align="right" valign="top">MyMatrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enkf__fct_8hpp.html#a9b9032434555e76b372fbddbb58d3a0f">fx_2</a> (double dt, MyMatrix X)</td></tr>
 <tr class="memdesc:a9b9032434555e76b372fbddbb58d3a0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Will compute the next position using RK4 for a given time and parameter.  <a href="enkf__fct_8hpp.html#a9b9032434555e76b372fbddbb58d3a0f">More...</a><br /></td></tr>
 <tr class="separator:a9b9032434555e76b372fbddbb58d3a0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbf9a1fa342433bfb47b9ca2beaf2a7a"><td class="memItemLeft" align="right" valign="top">MyMatrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enkf__fct_8hpp.html#acbf9a1fa342433bfb47b9ca2beaf2a7a">RK4</a> (int dim_x, MyMatrix p, MyMatrix X0, int N, double T)</td></tr>
-<tr class="memdesc:acbf9a1fa342433bfb47b9ca2beaf2a7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This fonction return resolution with RK4 for the lorenz system.  <a href="enkf__fct_8hpp.html#acbf9a1fa342433bfb47b9ca2beaf2a7a">More...</a><br /></td></tr>
-<tr class="separator:acbf9a1fa342433bfb47b9ca2beaf2a7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad45689604c75103871ed59262236ef8"><td class="memItemLeft" align="right" valign="top">MyMatrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enkf__fct_8hpp.html#aad45689604c75103871ed59262236ef8">RK4</a> (int dim_x, MyMatrix p, MyMatrix X0, int N, double T, MyMatrix(*f)(double t, MyMatrix X0, MyMatrix P))</td></tr>
+<tr class="memdesc:aad45689604c75103871ed59262236ef8"><td class="mdescLeft">&#160;</td><td class="mdescRight">This fonction return resolution with RK4 for the lorenz system.  <a href="enkf__fct_8hpp.html#aad45689604c75103871ed59262236ef8">More...</a><br /></td></tr>
+<tr class="separator:aad45689604c75103871ed59262236ef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Some fonction to apply the enkf method . </p>
@@ -394,8 +397,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>add</b> (int i, int j)
 
 </div>
 </div>
-<a id="acbf9a1fa342433bfb47b9ca2beaf2a7a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acbf9a1fa342433bfb47b9ca2beaf2a7a">&#9670;&nbsp;</a></span>RK4()</h2>
+<a id="aad45689604c75103871ed59262236ef8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad45689604c75103871ed59262236ef8">&#9670;&nbsp;</a></span>RK4()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -428,7 +431,13 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>add</b> (int i, int j)
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>T</em>&#160;</td>
+          <td class="paramname"><em>T</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">MyMatrix(*)(double t, MyMatrix X0, MyMatrix P)&#160;</td>
+          <td class="paramname"><em>f</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

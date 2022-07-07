@@ -43,6 +43,16 @@ MyMatrix f_lorenz(double t,MyMatrix X,MyMatrix p)
     f(2)=X(0)*X(1)-p(1)*X(2);
     return f; 
 }
+MyMatrix f_ocillateur(double t,MyMatrix X,MyMatrix p)
+{
+    MyMatrix f;
+    f=MyMatrix(2,1);
+    f(0)=X(1);
+    f(1)=-pow(p(0),2)*X(0);
+    return f; 
+
+}
+
 MyMatrix hx_model(MyMatrix x)
 {
     return x;
@@ -88,27 +98,28 @@ MyMatrix fx_2(double dt,MyMatrix X)
     return X_p;
 }
 
-MyMatrix RK4(int dim_x,MyMatrix p,MyMatrix X0,int N,double T)
+MyMatrix RK4(int dim_x,MyMatrix p,MyMatrix X0,int N,double T,MyMatrix (*f)(double t,MyMatrix X0,MyMatrix P))
 {
     double dt=T/N;
     MyMatrix X,K1,K2,K3,K4,tab_t,X_n_1,X_n;
-    X=MyMatrix(N+1,dim_x);
-    K1=MyMatrix(dim_x,1);
-    X_n=MyMatrix(dim_x,1);
-    K2=MyMatrix(dim_x,1);
-    K3=MyMatrix(dim_x,1);
-    K4=MyMatrix(dim_x,1);
+    X=MyMatrix::Zero(N+1,dim_x);
+    K1=MyMatrix::Zero(dim_x,1);
+    X_n=MyMatrix::Zero(dim_x,1);
+    K2=MyMatrix::Zero(dim_x,1);
+    K3=MyMatrix::Zero(dim_x,1);
+    K4=MyMatrix::Zero(dim_x,1);
     tab_t=MyMatrix(N+1,1);
     X.row(0)=X0.transpose();
     tab_t(0)=0;
 
+
     double t=0;
     for(int n=1;n<N+1;n++)
     {
-        K1=f_lorenz(t,X.row(n-1).transpose() ,p);
-        K2=f_lorenz(t+dt/2, X.row(n-1).transpose() + 1./2. * K1 * dt,p);
-        K3=f_lorenz(t+dt/2,X.row(n-1).transpose()  + 1./2. * K2 * dt,p);
-        K4=f_lorenz(t+dt, X.row(n-1).transpose() + K3 * dt,p);
+        K1=f(t,X.row(n-1).transpose() ,p);
+        K2=f(t+dt/2, X.row(n-1).transpose() + 1./2. * K1 * dt,p);
+        K3=f(t+dt/2,X.row(n-1).transpose()  + 1./2. * K2 * dt,p);
+        K4=f(t+dt, X.row(n-1).transpose() + K3 * dt,p);
         tab_t(n)=t+dt;
         X.row(n)=X.row(n-1).transpose() +(dt/6.* (K1+(2.*K2)+(2.*K3)+K4));
         

@@ -89,6 +89,12 @@
         "semaphore": "cpp",
         "stack": "cpp",
         "valarray": "cpp",
-        "stop_token": "cpp"
+        "stop_token": "cpp",
+        "any": "cpp",
+        "strstream": "cpp",
+        "hash_map": "cpp",
+        "hash_set": "cpp",
+        "slist": "cpp",
+        "future": "cpp"
     }
 }

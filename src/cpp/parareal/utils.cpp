@@ -18,8 +18,6 @@ Matrix RK4(Vector<double> const& X0, double dt, double t0, int nb_t,
     Vector<double> K1(dim), K2(dim), K3(dim), K4(dim);
     Vector<double> X_prec(dim);
     
-    // while ( (t+dt)<=T or std::abs(t+dt-T)<1e-6){
-    // while ( (t+dt)<=T ){ 
     for(int i=1; i<nb_t; i++){
         X_prec = X.bottomRows<1>();
         K1=prob(t, X_prec, gamma);

@@ -211,8 +211,8 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
 
         if(write_csv){
             if(world_rank==0){
-                write_sol_k(k,t,sol_k);
-                write_X0_k(k,times,X0_k);
+                write_sol_k(k+1,t,sol_k);
+                write_X0_k(k+1,times,X0_k);
             }
         }
 
@@ -220,8 +220,6 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
     }
 
     if(world_rank==0){
-        // std::cout << "sol : " <<  solution << std::endl << std::endl;
-        // std::cout << "init_pts : " <<  init_pts << std::endl << std::endl;
         std::cout << k << " iterations" << std::endl;
     }
 

@@ -1,5 +1,5 @@
 SetFactory("OpenCASCADE");
-h = DefineNumber[0.1, Name "Parameters/h"];
+h = 0.1
 
 Point(1) = {1, 0, 0, h};
 Point(2) = {0, 1, 0, h};

@@ -1,8 +1,5 @@
 add_executable(laplacian.e laplacian.cpp)
 
-# feelpp_add_application(laplacian.e SRCS laplacian.cpp INCLUDE_IN_ALL DEFS FEELPP_DIM=2)
-# feelpp_add_testcase(cases PREFIX qs)
-
 target_link_libraries(
   laplacian.e
   PRIVATE project_options
@@ -17,6 +14,7 @@ target_link_libraries(
   laplacian.e
   PUBLIC Boost::mpi MPI::MPI_CXX)
 
+target_compile_definitions(laplacian.e PUBLIC FEELPP_DIM=2)
 
 add_executable(heat.e heat.cpp)
 
@@ -33,3 +31,5 @@ target_link_libraries(
 target_link_libraries(
   heat.e
   PUBLIC Boost::mpi MPI::MPI_CXX)
+
+# feelpp_add_testcase(cases PREFIX qs)

@@ -1,6 +1,9 @@
-#include <parareal/parareal.hpp>
-#include <parareal/utils.hpp>
-#include <parareal/write_csv.hpp>
+// #include <parareal/parareal.hpp>
+// #include <parareal/utils.hpp>
+// #include <parareal/write_csv.hpp>
+#include "parareal.hpp"
+#include "utils.hpp"
+#include "write_csv.hpp"
 #include <mpi.h>
 #include <ctime>
 

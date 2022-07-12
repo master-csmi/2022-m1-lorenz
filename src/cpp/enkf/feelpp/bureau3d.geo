@@ -125,4 +125,4 @@ Physical Surface("Floor", 27) = {7};
 //+
 Physical Surface("Roof", 28) = {5};
 //+
-Physical Volume("Room", 29) = {1};
+Physical Volume("Omega", 29) = {1};

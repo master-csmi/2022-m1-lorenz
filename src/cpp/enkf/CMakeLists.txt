@@ -3,6 +3,7 @@ add_library(
     enkf_fct.cpp 
     enkf.cpp)
 target_link_libraries(enkf PUBLIC CONAN_PKG::eigen)
+target_include_directories(enkf PUBLIC ${PROJECT_SOURCE_DIR}/src/cpp/EigenRand)
 
 add_executable(enkf.e main.cpp)
 #https://github.com/bab2min/EigenRand/releases 

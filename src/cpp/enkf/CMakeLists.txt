@@ -1,6 +1,10 @@
-#
+add_library(
+    enkf SHARED 
+    enkf_fct.cpp 
+    enkf.cpp)
+
 #add_library(enkf SHARED enkf_fct.cpp enkf.cpp )
-add_executable(enkf.e main.cpp enkf_fct.cpp enkf.cpp )
+add_executable(enkf.e main.cpp)
 #https://github.com/bab2min/EigenRand/releases 
 # version 0.4.0 alpha
 
@@ -34,6 +38,10 @@ target_link_libraries(
           CONAN_PKG::fmt
           CONAN_PKG::spdlog
           CONAN_PKG::eigen)
+
+target_link_libraries(
+  enkf.e
+  PUBLIC enkf)
 
 target_include_directories(enkf.e PUBLIC ${PROJECT_SOURCE_DIR}/src/cpp/EigenRand)
 

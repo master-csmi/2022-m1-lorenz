@@ -1,9 +1,12 @@
 
 #include <boost/test/unit_test.hpp>
 //#include <../../src/cpp/enkf/enkf.hpp>
-#include <../../src/cpp/enkf/enkf_fct.hpp>
-#include <../../src/cpp/enkf/enkf.cpp>
-#include <../../src/cpp/enkf/enkf_fct.cpp>
+// #include <../../src/cpp/enkf/enkf_fct.hpp>
+// #include <../../src/cpp/enkf/enkf.cpp>
+// #include <../../src/cpp/enkf/enkf_fct.cpp>
+#include <enkf/enkf_fct.hpp>
+#include <enkf/enkf.cpp>
+#include <enkf/enkf_fct.cpp>
 
 MyMatrix fx_harmonique(double dt,MyMatrix X)
 {

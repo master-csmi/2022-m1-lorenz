@@ -42,6 +42,10 @@ MyMatrix mean(MyMatrix M,int a);
  */
 MyMatrix f_lorenz(double t,MyMatrix X,MyMatrix p);
 
+
+MyMatrix f_ocillateur(double t,MyMatrix X,MyMatrix p);
+
+
 /**
  * @brief Measurement function. Convert state x into a measurement.
  * 
@@ -89,4 +93,4 @@ MyMatrix fx_2(double dt,MyMatrix X);
  * @param T A double that represents the time interval
  * @return Return the matrix with the positions for each discritisition.
  */
-MyMatrix RK4(int dim_x,MyMatrix p,MyMatrix X0,int N,double T);
+MyMatrix RK4(int dim_x,MyMatrix p,MyMatrix X0,int N,double T,MyMatrix (*f)(double t,MyMatrix X0,MyMatrix P));

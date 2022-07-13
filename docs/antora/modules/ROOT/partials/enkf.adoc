@@ -1,0 +1,5 @@
+:stem: latexmath
+
+
+* https://www.eccorev.fr/IMG/pdf/Assimilationdonnees_EBlayo.pdf[Eric Blayo. An introduction to data assimilation.]
+* https://team.inria.fr/airsea/files/2012/03/Nodet_Intro_DataAssimilation.pdf[Maelle Nodet. Introduction to Data Assimilation.]

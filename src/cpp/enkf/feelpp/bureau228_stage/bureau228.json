@@ -1,0 +1,114 @@
+{
+    "Name": "Heat Equation",
+    "ShortName":"Heat",
+    // "Models":
+    // {
+    //     "use-model-name":1,
+    //     "heat":
+    //     {
+    //         "equations":""
+    //     }
+    // },
+    "Parameters":
+    {
+        "sigma_radiation":5.67e-8,
+        "eps":0.8,
+        "T0":300
+        // "Ti":{
+        //     "value": 292,
+        //     "min": 285,
+        //     "max": 303
+        // },
+        // "Te":{
+        //     "value": 278,
+        //     "min": 270,
+        //     "max": 310
+        // },
+        // "ke":{
+        //     "value": 1.5,
+        //     "min": 0.4,
+        //     "max": 4
+        // },
+        // "kw":{
+        //     "value": 3,
+        //     "min": 1.5,
+        //     "max": 6
+        // },
+        // "ki":{
+        //     "value": 2,
+        //     "min": 1,
+        //     "max": 3
+        // },
+        // "Q":{
+        //     "value":5,
+        //     "min":0,
+        //     "max":5
+        // }
+    },
+    "Materials":
+    {
+        "air":{
+            "markers":"Room",
+            "rho":"1",
+            "k":"0.03",
+            "Cp":"1004"
+        }
+    },
+    "BoundaryConditions":
+    {
+        "heat":
+        {           
+            "convective_heat_flux":
+            {
+                "ext_walls":
+                {
+                    "markers":["LowerBackWall","UpperBackWall"],
+                    "h": 1.5,
+                    "Text":278
+                    //"expr1":"ke:ke",
+                    //"expr2":"293.15+(t<10)*(Te-293.15)/10*t+(t>(10-1e-4))*(Te-293.15):Te:t"
+                },
+                "int_walls":
+                {
+                    "markers":["Floor","Ceiling","RightWall","LeftWall","FrontWall","Door"],
+                    "h": 2,
+                    "Text":292
+                    // "expr1": "ki:ki",
+                    // "expr2":"293.15+(t<10)*(Ti-293.15)/10*t+(t>(10-1e-4))*(Ti-293.15):Ti:t"
+                }
+            },
+            "flux":
+            {
+                "ext_windows":
+                {
+                    "markers":["LowerWindow","UpperWindow"],
+                    "expr":"sigma_radiation*eps*((T0+273.15)^4-(heat_T+273.15)^4):sigma_radiation:eps:T0:heat_T"                  
+                }
+            }
+        }
+    },
+    "InitialConditions":
+    {
+        "temperature":
+        {
+            "Expression":
+            {
+                "ic":
+                {
+                    "expr":"293.15"
+                }
+            }
+        }
+    },
+    "PostProcess":
+    {
+        "use-model-name":1,
+        "heat":
+        {
+            "Exports":
+            {
+                "fields":["temperature","pid"]
+            }
+        }
+    }
+}

@@ -68,3 +68,5 @@ In addition, we have:
 ++++
 \bar{x}^a=\frac{1}{m}\sum_{i=1}^mx_i^a~~,~~~~[X_a]_i=\frac{x_i^a-\bar{x}^a}{\sqrt{m-1}} 
 ++++
+== Bibliography for the data assimilation part
+include::partial$enkf.adoc[]

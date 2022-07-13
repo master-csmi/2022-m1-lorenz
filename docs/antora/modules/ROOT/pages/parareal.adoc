@@ -1,6 +1,8 @@
 = Parareal method
 :stem: latexmath
 
+== Explanation of the method
+
 Para-real method is a parallel-in-time integration method which was introduced in 2001 by Lions, Maday and Turinici (see https://en.wikipedia.org/wiki/Parareal#Parallel-in-time_integration_methods[Parareal]). Parareal computes the numerical solution for multiple time steps in parallel and it is categorized as a parallel-across-the-steps method.
 
 Parareal method needs a decomposition of the time interval stem:[[t_0,T]] into $P$ slices stem:[[t_j,t_{j+1}]] with  stem:[j\in\{0,\dots,P-1\}], where stem:[P] is the number of process units. As we want to parallelize the algorithm, each time slice is assigned to one process.
@@ -60,3 +62,6 @@ We have at iteration stem:[k]:
 ++++
 U_j^k=G(U_{j-1}^k)+(F(U_{j-1}^{k-1})-G(U_{j-1}^{k-1}))
 ++++
+
+== Bibliography for the Parareal part
+include::partial$parareal.adoc[]

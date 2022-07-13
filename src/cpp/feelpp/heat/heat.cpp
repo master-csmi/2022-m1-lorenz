@@ -1,26 +1,19 @@
-// #include <feel/feelcore/environment.hpp>
-// #include <feel/feeldiscr/pch.hpp>
-// #include <feel/feelfilters/unitsquare.hpp>
-// #include <feel/feelfilters/exporter.hpp>
-
 #include <feel/feel.hpp>
 
-int main(int argc, char**argv )
+int main(int argc, char**argv)
 {
     using namespace Feel;
     using Feel::cout;
-    po::options_description laplacianoptions( "Laplacian options" );
+    po::options_description laplacianoptions( "Heat options" );
     laplacianoptions.add_options()
         ( "no-solve", po::value<bool>()->default_value( false ), "No solve" )
         ;
 
     Environment env( _argc=argc, _argv=argv,
                    _desc=laplacianoptions,
-                   _about=about(_name="laplacian",
+                   _about=about(_name="heat",
                                 _author="Feel++ Consortium",
                                 _email="feelpp-devel@feelpp.org"));
-
-    // static const unsigned short int FEELPP_DIM = 2; //modif
 
     auto thechecker = checker( _name= "L1/H1 convergence", 
                             _solution_key="toto"

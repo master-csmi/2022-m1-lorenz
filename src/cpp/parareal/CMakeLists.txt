@@ -3,7 +3,7 @@ add_library(
     parareal.cpp 
     utils.cpp 
     write_csv.cpp)
-target_link_libraries(parareal PUBLIC Boost::mpi MPI::MPI_CXX)
+target_link_libraries(parareal PUBLIC Boost::mpi MPI::MPI_CXX CONAN_PKG::eigen)
 
 add_executable(parareal.e main.cpp)
 target_link_libraries(

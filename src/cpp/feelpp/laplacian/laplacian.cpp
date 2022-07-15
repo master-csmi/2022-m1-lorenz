@@ -77,7 +77,7 @@ int main(int argc, char**argv)
     toc("Exporter");
 
     // compute l2 and h1 norm of u-u_h where u=solution
-    auto norms = [=]( std::string const& solution ) ->std::map<std::string,double>
+    auto norms = [=]( std::string const& solution ) -> std::map<std::string,double>
         {
             tic();
             double l2 = normL2(_range=elements(mesh), _expr=idv(u)-expr(solution) );
@@ -89,6 +89,25 @@ int main(int argc, char**argv)
         };
 
     int status = thechecker.runOnce( norms, rate::hp( mesh->hMax(), Vh->fe()->order() ) );
+
+    // std::string file = Environment::logsRepository();
+
+    std::string filename = Environment::logsRepository() + "/values.csv";
+
+    // std::cout << "filename : " << filename << std::endl;
+
+    double L2 = normL2(_range=elements(mesh), _expr=idv(u)-solution );
+    double H1 = normH1(_range=elements(mesh), _expr=idv(u)-solution, _grad_expr=gradv(u)-grad<2>(solution)  );
+
+    std::ofstream ofile(filename);
+    ofile << "L2, H1\n";
+    ofile << L2 << ", " << H1 << "\n";
+    ofile.close();
+
+    // std::cout << tc::red
+    //      << " . " << Environment::about().appName() << " files are stored in " << tc::red << Environment::appRepository()
+    //      << tc::reset << std::endl;
+    // std::cout << " .. logfiles :" << Environment::logsRepository() << std::endl;
 
     // exit status = 0 means no error
     return !status;

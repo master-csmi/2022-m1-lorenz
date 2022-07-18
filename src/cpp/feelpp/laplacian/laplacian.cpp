@@ -52,6 +52,8 @@ int main(int argc, char**argv)
     toc("a");
     a+=integrate(_range=markedfaces(mesh,"Robin"), _expr=r_1*idt(u)*id(v));
     a+=on(_range=markedfaces(mesh,"Dirichlet"), _rhs=l, _element=u, _expr=g );
+
+    
     //! if no markers Robin Neumann or Dirichlet are present in the mesh then
     //! impose Dirichlet boundary conditions over the entire boundary
     if ( !mesh->hasAnyMarker({"Robin", "Neumann","Dirichlet"}) )
@@ -90,11 +92,7 @@ int main(int argc, char**argv)
 
     int status = thechecker.runOnce( norms, rate::hp( mesh->hMax(), Vh->fe()->order() ) );
 
-    // std::string file = Environment::logsRepository();
-
     std::string filename = Environment::logsRepository() + "/values.csv";
-
-    // std::cout << "filename : " << filename << std::endl;
 
     double L2 = normL2(_range=elements(mesh), _expr=idv(u)-solution );
     double H1 = normH1(_range=elements(mesh), _expr=idv(u)-solution, _grad_expr=gradv(u)-grad<2>(solution)  );
@@ -103,11 +101,6 @@ int main(int argc, char**argv)
     ofile << "L2, H1\n";
     ofile << L2 << ", " << H1 << "\n";
     ofile.close();
-
-    // std::cout << tc::red
-    //      << " . " << Environment::about().appName() << " files are stored in " << tc::red << Environment::appRepository()
-    //      << tc::reset << std::endl;
-    // std::cout << " .. logfiles :" << Environment::logsRepository() << std::endl;
 
     // exit status = 0 means no error
     return !status;

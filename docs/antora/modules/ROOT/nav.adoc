@@ -1,7 +1,13 @@
-* {lorenz} project
-** xref:index.adoc[Introduction]
-** xref:lorenz.adoc[Lorenz system]
-** xref:parareal.adoc[Parareal method]
-** xref:enkf.adoc[Data assimilation method]
-** xref:bibliography.adoc[Bibliography]
+* xref:index.adoc[Project description]
+* xref:lorenz.adoc[Lorenz system]
+
+* xref:parareal.adoc[Parareal method]
+** xref:parareal/explanation.adoc[Explanation]
+** xref:parareal/laplacian.adoc[Laplacian application]
+** xref:parareal/heat.adoc[Heat application]
+** xref:parareal/bibliography.adoc[Bibliography]
+
+* xref:enkf.adoc[Data assimilation method]
+
+* xref:bibliography.adoc[Bibliography]
 

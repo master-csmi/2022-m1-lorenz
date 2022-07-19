@@ -1,0 +1,2 @@
+= Bibliography for the Parareal part
+include::partial$parareal.adoc[]

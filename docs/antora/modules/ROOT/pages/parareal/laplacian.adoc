@@ -1,0 +1,14 @@
+= Laplacian appliaction
+:stem: latexmath
+
+A first simple problem is the Laplacian problem :
+[stem]
+++++
+\left\{\begin{aligned}
+    -\Delta u &= f \quad&&\Omega \\
+    u&=g \quad&&\Gamma_D \\
+    \frac{\partial u}{\partial n} &=h \quad &&\Gamma_N \\
+    \frac{\partial u}{\partial n}+u &=l \quad &&\Gamma_R \\
+\end{aligned}\right.
+++++	
+

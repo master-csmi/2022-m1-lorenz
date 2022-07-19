@@ -2,6 +2,6 @@
 
 
 * https://en.wikipedia.org/w/index.php?title=Parareal&oldid=1047894968[Parareal.]
-* https://linkinghub.elsevier.com/retrieve/pii/S0764444200017936[Jacques-Louis Lions, Yvon Maday, and Gabriel Turinici. Résolution d’EDP par
+* https://hal.archives-ouvertes.fr/hal-00798372/file/CRAS_01_lions_maday_turinici.pdf[Jacques-Louis Lions, Yvon Maday, and Gabriel Turinici. Résolution d’EDP par
 un schéma en temps pararéel.]
-* http://www.ctresources.info/csets/chapter.html?id=403[Y. Maday. The Parareal in Time Algorithm.]
+* https://www.ljll.math.upmc.fr/publications/2008/R08030.pdf[Y. Maday. The Parareal in Time Algorithm.]

@@ -6,8 +6,11 @@ __pycache__/
 build/
 docs/sphinx/_build
 
-docs/presentation/presentation*
-!docs/presentation/presentation.tex
+docs/presentation/project/presentation*
+!docs/presentation/project/presentation.tex
+
+docs/presentation/internship/presentation*
+!docs/presentation/internship/presentation.tex
 
 docs/gantt/gantt*
 !docs/gantt/gantt.tex

@@ -37,4 +37,5 @@ docs/antora/public
 
 results
 
-examples/cpp/feelpp/laplacian/circle/
+examples/cpp/feelpp/laplacian/circle/output/
+examples/cpp/feelpp/laplacian/circle/values.csv

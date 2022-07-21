@@ -52,6 +52,8 @@ int main(int argc, char**argv)
     toc("a");
     a+=integrate(_range=markedfaces(mesh,"Robin"), _expr=r_1*idt(u)*id(v));
     a+=on(_range=markedfaces(mesh,"Dirichlet"), _rhs=l, _element=u, _expr=g );
+
+    
     //! if no markers Robin Neumann or Dirichlet are present in the mesh then
     //! impose Dirichlet boundary conditions over the entire boundary
     if ( !mesh->hasAnyMarker({"Robin", "Neumann","Dirichlet"}) )
@@ -77,7 +79,7 @@ int main(int argc, char**argv)
     toc("Exporter");
 
     // compute l2 and h1 norm of u-u_h where u=solution
-    auto norms = [=]( std::string const& solution ) ->std::map<std::string,double>
+    auto norms = [=]( std::string const& solution ) -> std::map<std::string,double>
         {
             tic();
             double l2 = normL2(_range=elements(mesh), _expr=idv(u)-expr(solution) );
@@ -89,6 +91,16 @@ int main(int argc, char**argv)
         };
 
     int status = thechecker.runOnce( norms, rate::hp( mesh->hMax(), Vh->fe()->order() ) );
+
+    std::string filename = Environment::logsRepository() + "/values.csv";
+
+    double L2 = normL2(_range=elements(mesh), _expr=idv(u)-solution );
+    double H1 = normH1(_range=elements(mesh), _expr=idv(u)-solution, _grad_expr=gradv(u)-grad<2>(solution)  );
+
+    std::ofstream ofile(filename);
+    ofile << "L2, H1\n";
+    ofile << L2 << ", " << H1 << "\n";
+    ofile.close();
 
     // exit status = 0 means no error
     return !status;

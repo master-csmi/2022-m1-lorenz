@@ -70,8 +70,9 @@
 \end{frame}
 
 \begin{frame}{Example with the Lorenz system}
-	\texttt{$$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5), \quad t_0=0, \quad T=20$$}
-	$$P=4,\quad \Delta t_G=0.1, \quad \Delta t_F=0.01$$
+	\centering
+	$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5), \quad t_0=0, \quad T=20$
+	$P=4,\quad \Delta t_G=0.1, \quad \Delta t_F=0.01$
 	\begin{figure}
 		\centering
 		\begin{minipage}{0.48\linewidth}
@@ -82,32 +83,6 @@
 		\end{minipage}
 		\caption{Solution of the Lorenz system at the first and the last iteration (with C++)}
 	\end{figure}
-\end{frame}
-
-\begin{frame}{Speed-up ?}
-	
-	$$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5), \quad t_0=0.$$
-	\begin{table}[H]
-		\centering
-		\begin{tabular}{| c || c | c | c | c | c |}
-			\hline
-			\multirow{2}{1.5 cm}{$\Delta t$} & \multirow{2}{1.5 cm}{Seq} & \multirow{2}{1.5 cm}{1 proc} & \multirow{2}{1.5 cm}{2 proc} & \multirow{2}{1.5 cm}{3 proc} &\multirow{2}{1.5 cm}{4 proc} \\
-			& & & & & \\
-			\hline 
-			F : 0.0025 & \multirow{2}{1.5 cm}{30s} & \multirow{2}{1.5 cm}{36s} & \multirow{2}{1.5 cm}{10s} & \multirow{2}{1.5 cm}{9,7s} & \multirow{2}{1.5 cm}{9,4s} \\
-			G : 0.025 & & & & & \\
-			\hline 
-			F : 0.00125 & \multirow{2}{1.5 cm}{1m19} & \multirow{2}{1.5 cm}{1m42} & \multirow{2}{1.5 cm}{39s} & \multirow{2}{1.5 cm}{32s} & \multirow{2}{1.5 cm}{29s} \\
-			G : 0.0125 & & & & & \\
-			\hline 
-			F : 0.001 & \multirow{2}{1.5 cm}{1m52} & \multirow{2}{1.5 cm}{3m40} & \multirow{2}{1.5 cm}{1m56} & \multirow{2}{1.5 cm}{1m29} & \multirow{2}{1.5 cm}{1m16} \\
-			G : 0.01 & & & & & \\	 
-			\hline
-		\end{tabular}
-		\caption{Execution time for various time steps ($T=200$).}
-		\label{time}
-	\end{table}
-	
 \end{frame}
 
 \begin{frame}{Order of the parareal method}

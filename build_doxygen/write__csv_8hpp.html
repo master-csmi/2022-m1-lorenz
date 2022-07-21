@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Lorenz: /scratch/runner/actions-runner-2/_work/2022-m1-lorenz/2022-m1-lorenz/src/cpp/parareal/write_csv.hpp File Reference</title>
+<title>Lorenz: /scratch/runner/actions-runner/_work/2022-m1-lorenz/2022-m1-lorenz/src/cpp/parareal/write_csv.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -128,11 +128,51 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="writ
 <tr class="memitem:ab8d2e625889eb21e0448ece43f297dbf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="write__csv_8hpp.html#ab8d2e625889eb21e0448ece43f297dbf">write_X0_k</a> (int k, Vector&lt; double &gt; times, Matrix X0_k)</td></tr>
 <tr class="memdesc:ab8d2e625889eb21e0448ece43f297dbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the initial points at iteration k.  <a href="write__csv_8hpp.html#ab8d2e625889eb21e0448ece43f297dbf">More...</a><br /></td></tr>
 <tr class="separator:ab8d2e625889eb21e0448ece43f297dbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac616873837c3356690a304c27b592239"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="write__csv_8hpp.html#ac616873837c3356690a304c27b592239">write_sol_ex</a> (Vector&lt; double &gt; t, Matrix sol_ex)</td></tr>
+<tr class="memdesc:ac616873837c3356690a304c27b592239"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the exact solution.  <a href="write__csv_8hpp.html#ac616873837c3356690a304c27b592239">More...</a><br /></td></tr>
+<tr class="separator:ac616873837c3356690a304c27b592239"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>To create csv files xith the solution for each iteration. </p>
 <dl class="section author"><dt>Author</dt><dd>Frédérique Lecourtier </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="ac616873837c3356690a304c27b592239"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac616873837c3356690a304c27b592239">&#9670;&nbsp;</a></span>write_sol_ex()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void write_sol_ex </td>
+          <td>(</td>
+          <td class="paramtype">Vector&lt; double &gt;&#160;</td>
+          <td class="paramname"><em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Matrix&#160;</td>
+          <td class="paramname"><em>sol_ex</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write the exact solution. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>Time used to the system resolution. </td></tr>
+    <tr><td class="paramname">sol_ex</td><td>Exact solution. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a453206713d7db1fa965a521d49893294"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a453206713d7db1fa965a521d49893294">&#9670;&nbsp;</a></span>write_sol_k()</h2>
 

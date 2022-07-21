@@ -50,8 +50,8 @@ var NAVTREEINDEX0 =
 "functions_func.html":[1,2,1],
 "globals.html":[2,1,0],
 "globals_func.html":[2,1,1],
-"index.html":[0],
 "index.html":[],
+"index.html":[0],
 "index.html#autotoc_md1":[0,0],
 "index.html#autotoc_md2":[0,1],
 "index.html#autotoc_md3":[0,2],
@@ -72,10 +72,11 @@ var NAVTREEINDEX0 =
 "utils_8hpp.html#afe3e558c9d3118842985857a5cc85384":[2,0,0,0,1,1,3],
 "utils_8hpp_source.html":[2,0,0,0,1,1],
 "write__csv_8hpp.html":[2,0,0,0,1,2],
-"write__csv_8hpp.html#a453206713d7db1fa965a521d49893294":[2,0,0,0,1,2,3],
-"write__csv_8hpp.html#ab8d2e625889eb21e0448ece43f297dbf":[2,0,0,0,1,2,4],
+"write__csv_8hpp.html#a453206713d7db1fa965a521d49893294":[2,0,0,0,1,2,4],
+"write__csv_8hpp.html#ab8d2e625889eb21e0448ece43f297dbf":[2,0,0,0,1,2,5],
 "write__csv_8hpp.html#aba928ba399bc89107fb9f1039ced77e8":[2,0,0,0,1,2,2],
 "write__csv_8hpp.html#ac40093ecf96339c4589f68212b71265f":[2,0,0,0,1,2,1],
+"write__csv_8hpp.html#ac616873837c3356690a304c27b592239":[2,0,0,0,1,2,3],
 "write__csv_8hpp.html#ae0086120f0ef2b72f949ca82e5e61a93":[2,0,0,0,1,2,0],
 "write__csv_8hpp_source.html":[2,0,0,0,1,2]
 };

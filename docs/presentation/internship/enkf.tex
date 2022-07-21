@@ -79,7 +79,6 @@ with $x^a$ the analyzed state, $x^b$ the state of the model and $y^0$ the observ
            &K=BH^T(HBH^T+R)^{-1} \\
     \end{aligned}\right.$$
    With $K$ the gain or weight matrix.
-   The Best Linear Unbiased Estimator (BLUE).
    \begin{figure}[H]
        \pgfimage[width=0.4\linewidth]{images/enkf/schema_kalman_filter.png}
        \caption{Kalman Filter}
@@ -115,7 +114,7 @@ $\sigma=12, \quad b=6, \quad r=12, \quad X_0=(-10,-10,25), \quad t_0=0, \quad T=
 \subsection{Integrate data assimilation to Feel++}
 \begin{frame}[allowframebreaks]{The context}
 \begin{itemize}
-    \item Our goal is to make the simulation of an office in the university of Strasbourg in which we have 10 sensors to measure the temperature.\\
+    \item Our goal is to make the thermal simulation of an office in the university of Strasbourg in which we have 10 sensors to measure the temperature.\\
     \item We want to apply data assimilation and use our sensors to correct the temperature of the room.
 \end{itemize}
 

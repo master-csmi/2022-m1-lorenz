@@ -1,20 +1,37 @@
-\subsection{Theory}
-
-\begin{frame}[allowframebreaks]{Generalities of the parareal method}
+\begin{frame}{What is the parareal method ?}
 	
-	\small
-	What is the parareal method ?
 	\begin{enumerate}[\textbullet]
 		\item parallel-in-time integration method, introduced in 2001 by Lions, Maday and Turinici
 		\item computes the numerical solution for multiple time steps in parallel
 		\item categorized as a parallel-across-the-steps method 
 	\end{enumerate}
 
-	\newpage
+\end{frame}
 
+\begin{frame}{Objectives for parareal method}
+	
+	\begin{enumerate}[\textbullet]
+		\item Implement the parareal method in C++ and then :
+		\begin{itemize}
+			\item Test the method (with oscillator)
+			\item Check convergence and stability results
+			\item Check speed-up and efficiency 
+		\end{itemize}
+		\item Implement the resolution of the heat equation in C++ with Feel++ \\
+		$\Rightarrow \quad $ Implement the resolution of the Laplace equation in C++ with Feel++ \\
+		\item Use the previous implementation of the heat equation with the parareal method
+		\item Check the convergences/accuracies of the diagram
+	\end{enumerate}
+	
+\end{frame}
+
+
+\subsection{Theory}
+
+\begin{frame}{Generalities of the parareal method}
 	Time decomposition :
 	\begin{enumerate}[\textbullet]
-		\item $[t_0,T]=[t_0,t_1]\cup\dots\cup[t_{P-1},t_P]$ with $t_P=T$ and $P=$number of processes
+		\item $[t_0,T]=[t_0,t_1]\cup\dots\cup[t_{P-1},t_P]$ with $t_P=T$ and $P=$ number of processes
 	\end{enumerate}
 
 	\; \\
@@ -32,7 +49,7 @@
 	\end{enumerate}
 	\begin{minipage}{\linewidth}
 		\centering
-		\qquad \includegraphics[width=0.35\linewidth]{images/parareal/explane_F.jpg}
+		\qquad \qquad \qquad \qquad \qquad \qquad \qquad \includegraphics[width=0.35\linewidth]{images/parareal/explane_F.jpg}
 	\end{minipage}
 	
 \end{frame}
@@ -68,35 +85,8 @@
 
 \subsection{Results}
 
-\begin{frame}{Harmonic oscillator - Presentation}
-	\begin{minipage}{0.48\linewidth}
-		Equation :
-		$$\frac{d^2 x}{d t^2}+\omega_0^2 x = 0$$
-	\end{minipage}
-	\begin{minipage}{0.48\linewidth}
-		Exact solution :
-		$$x(t) = x_0 \cos(\omega_{0}t+\phi_0).$$ 
-	\end{minipage}	
-	with
-	\begin{enumerate}[\textbullet]
-		\item $\omega_0$ a pulsation
-		\item $x_0$ : the amplitude of the oscillations
-		\item $\phi_0$ : the phase at the origin
-	\end{enumerate}
-	We have the period $\quad Pe=\frac{2\pi}{\omega_0}$
 
-	\; \\
-	
-	2nd order differential equation $\rightarrow$ system of two first order equations :
-		
-	$$\qquad \frac{d x}{d t}=v \quad \Rightarrow \quad \left\{\;\begin{aligned}
-		\frac{d x}{d t}&=v \\
-		\frac{d v}{d t}&=-\omega_0^2 x
-	\end{aligned}\right.
-	$$  
-	
-	\end{frame}
-	\begin{frame}{Harmonic oscillator - Parareal method}
+\begin{frame}{Harmonic oscillator - Parareal method}
 	
 	$$P=3, \quad x(0)=0,\quad v(0)=1, \quad\omega_0=5, \quad x_0=\frac{-1}{5}, \quad \phi_0=\frac{\pi}{2}$$
 	

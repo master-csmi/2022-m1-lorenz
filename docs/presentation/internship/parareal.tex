@@ -69,88 +69,23 @@
 	We have at iteration $k$ : \qquad	$U_j^k=G(U_{j-1}^k)+(F(U_{j-1}^{k-1})-G(U_{j-1}^{k-1}))$
 \end{frame}
 
-\begin{frame}{Order of the method}
-	The parareal method is of order k if there is a constant $c_k$ such that :
-	\begin{equation*}
-		\forall j\in\{0,\dots,P-1\} \qquad \mathcal{E}(j,k)\le c_k(\Delta t_G)^k
-	\end{equation*}
-	with
-	$$\mathcal{E}(j,k)=|U_j^k-U_{ex}(t_j)|+\max_{t\in[t_j,t_{j+1}]}|U_k(t)-U_{ex}(t)|$$
+\begin{frame}{Example with the Lorenz system}
+	$$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5), \quad t_0=0, \quad T=20$$
+	$$P=4,\quad \Delta t_G=0.1, \quad \Delta t_F=0.01$$
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.62\linewidth]{images/parareal/explane_order.jpg}
-		\caption{Explanation of the order property}
+		\begin{minipage}{0.48\linewidth}
+			\includegraphics[width=\linewidth]{"images/parareal/lorenz_sol_0.png"}
+		\end{minipage}
+		\begin{minipage}{0.48\linewidth}
+			\includegraphics[width=\linewidth]{"images/parareal/lorenz_sol_4.png"}
+		\end{minipage}
+		\caption{Solution of the Lorenz system at the first and the last iteration (with C++)}
 	\end{figure}
 \end{frame}
 
-\subsection{Results}
-
-
-\begin{frame}{Harmonic oscillator - Parareal method}
+\begin{frame}{Speed-up ?}
 	
-	$$P=3, \quad x(0)=0,\quad v(0)=1, \quad\omega_0=5, \quad x_0=\frac{-1}{5}, \quad \phi_0=\frac{\pi}{2}$$
-	
-	\begin{minipage}{0.6\linewidth}
-		\begin{figure}
-			\centering
-			\includegraphics[width=\linewidth]{"images/parareal/osci_1.jpg"}
-			\caption{Parareal method applied to the harmonic oscillator}
-		\end{figure}
-	\end{minipage} \;
-	\begin{minipage}{0.38\linewidth}
-		\begin{figure}
-			\centering
-			\includegraphics[width=\linewidth]{"images/parareal/osci_cvg_1.jpg"}
-			\caption{Convergence property of parareal method with the harmonic oscillator}
-		\end{figure}
-	\end{minipage}
-	
-\end{frame}
-
-\begin{frame}{Lorenz - 3D solution}
-	$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5), \quad t_0=0, \quad \Delta t_G=0.1, \quad \Delta t_F=0.01$
-	\begin{figure}
-		\centering
-		\includegraphics[width=0.7\linewidth]{"images/parareal/lorenz_sol3D.jpg"}
-		\caption{Solution 3D of the Lorenz system with given parameters ($T=20$ and $T=200$)}
-	\end{figure}
-
-	\end{frame}
-	\begin{frame}{Lorenz - 2D solution}
-
-	\begin{minipage}{\linewidth}
-	\begin{figure} 
-		\centering     
-		\includegraphics[width=\linewidth]{"images/parareal/lorenz_exact.jpg"}
-		\caption{Solution of the Lorenz system with given parameters}
-	\end{figure}
-	\end{minipage}
-
-	\end{frame}
-	\begin{frame}{Lorenz - Parareal method (1 process)}
-	
-	\begin{minipage}{\linewidth}
-	\begin{figure}
-		\centering       
-		\includegraphics[width=0.95\linewidth]{"images/parareal/lorenz_1p.jpg"}
-		\caption{Parareal method on the Lorenz system with 1 process}
-	\end{figure}
-	\end{minipage}
-
-	\end{frame}
-	\begin{frame}{Lorenz - Parareal method (3 processes)}
-
-	\begin{minipage}{\linewidth}
-	\begin{figure}
-		\centering       
-		\includegraphics[width=0.85\linewidth]{"images/parareal/lorenz_3p.jpg"}
-		\caption{Parareal method on the Lorenz system with 3 processes}
-	\end{figure}
-	\end{minipage}
-	
-	\end{frame}
-	\begin{frame}{Lorenz - Execution time}
-
 	$$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5), \quad t_0=0.$$
 	\begin{table}[H]
 		\centering
@@ -172,5 +107,143 @@
 		\caption{Execution time for various time steps ($T=200$).}
 		\label{time}
 	\end{table}
-
+	
 \end{frame}
+
+\begin{frame}{Order of the parareal method}
+	The parareal method is of order k if there is a constant $c_k$ such that :
+	\begin{equation*}
+		\forall j\in\{0,\dots,P-1\} \qquad \mathcal{E}(j,k)\le c_k(\Delta t_G)^k
+	\end{equation*}
+	with
+	$$\mathcal{E}(j,k)=|U_j^k-U_{ex}(t_j)|+\max_{t\in[t_j,t_{j+1}]}|U_k(t)-U_{ex}(t)|$$
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.62\linewidth]{images/parareal/explane_order.jpg}
+		\caption{Explanation of the order property}
+	\end{figure}
+\end{frame}
+
+
+\begin{frame}{Harmonic oscillator}
+	
+	$$P=3, \quad x(0)=0,\quad v(0)=1, \quad\omega_0=5, \quad x_0=\frac{-1}{5}, \quad \phi_0=\frac{\pi}{2}$$
+	
+	\begin{minipage}{0.45\linewidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\linewidth]{"images/parareal/osci_sol.png"}
+			\caption{Parareal method applied to the harmonic oscillator (with C++)}
+		\end{figure}
+	\end{minipage} \; \qquad
+	\begin{minipage}{0.45\linewidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\linewidth]{"images/parareal/osci_cvg_1.jpg"}
+			\caption{Convergence property of parareal method with the harmonic oscillator (with Python)}
+		\end{figure}
+	\end{minipage}
+	
+\end{frame}
+
+
+
+
+
+
+\subsection{Application with Feel++}
+
+\begin{frame}{Heat equation}
+	
+	\textbf{The problem :}
+	$$\left\{\begin{aligned}
+		\frac{\partial u}{\partial t}-\Delta u &= f \quad&&(t_0,T)\times\Omega \\
+		u&=0 \quad&&(t_0,T)\times\partial\Omega\\
+		u&=u_0 \quad &&\{0\}\times\Omega
+	\end{aligned}\right.$$
+
+	It describes the time evolution of the temperature $u$ of a medium contained in $\Omega$ under an external heat source $f$; $u_0$ is the initial temperature.
+	
+\end{frame}
+
+\begin{frame}{Laplacian equation}
+	
+	\textbf{The problem :}
+	$$\left\{\begin{aligned}
+		-\Delta u &= f \quad&&\Omega \\
+		u&=g \quad&&\Gamma_D \\
+		\frac{\partial u}{\partial n} &=h \quad &&\Gamma_N \\
+		\frac{\partial u}{\partial n}+u &=l \quad &&\Gamma_R \\
+	\end{aligned}\right.$$
+	
+	\textbf{Weak formulation :} \\
+	Find $\; u:\Omega \mapsto \mathbb{R} \;$ such that $\; u\in H_0^1(\Omega) \;$ and
+	$$\int_\Omega \nabla u \cdot \nabla v + \int_{\Gamma_R}uv = \int_\Omega fv + \int_{\Gamma_N}hv+\int_{\Gamma_R}lv \quad \forall v\in H_0^1(\Omega)$$
+	
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Example with Laplacian}
+	$$\left\{\begin{aligned}
+		-\Delta u &= f \quad&&\Omega \\
+		u&=g \quad&&\Gamma_D \\
+	\end{aligned}\right. \quad \text{with} \quad
+	u=x^2+y^2$$
+	\begin{minipage}{0.31\linewidth}
+		\begin{figure}
+			\includegraphics[width=\linewidth]{"images/parareal/circle.jpg"}
+			\caption{Geometry considered}
+		\end{figure}
+	\end{minipage} \quad
+	\begin{minipage}{0.31\linewidth}
+		\begin{figure}
+			\includegraphics[width=\linewidth]{"images/parareal/circle_mesh.jpg"}
+			\caption{Mesh of the geometry (with Dirichlet condition)}
+		\end{figure}
+	\end{minipage} \quad
+	\begin{minipage}{0.31\linewidth}
+		\begin{figure}
+			\includegraphics[width=\linewidth]{"images/parareal/circle_result.jpg"}
+			\caption{Result (with Paraview)}
+		\end{figure}	
+	\end{minipage}
+
+	\newpage
+	\centering
+	$||u-u_h||_{L^2}\sim h^2 \qquad \qquad ||u-u_h||_{H^1}\sim h^1 $
+	\begin{figure}
+		\includegraphics[width=0.52\linewidth]{"images/parareal/cvg_laplacian.png"}
+		\caption{Convergence order for the Laplacian problem.}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Back to the heat equation}
+	\textbf{Weak formulation :} \\
+	Find $\; u:(t_0,T)\times\Omega \mapsto \mathbb{R} \;$ such that $\; u(t,\cdot)\in H_0^1(\Omega) \;$ and
+	$$\int_\Omega \frac{\partial u}{\partial t}(t,x)v(x)dx+\int_\Omega \nabla u(t,x)\cdot\nabla v(x)dx = \int_\Omega f(t,x)v(x)dx \quad \forall v\in H_0^1(\Omega)$$
+	for almost every $t\in(0,T)$. \\
+	
+	
+\end{frame}
+
+\begin{frame}{Back to the heat equation}
+	\textbf{Weak formulation :} \\
+	Find $\; u:(t_0,T)\times\Omega \mapsto \mathbb{R} \;$ such that $\; u(t,\cdot)\in H_0^1(\Omega) \;$ and
+	$$\boxed{\int_\Omega \frac{\partial u}{\partial t}(t,x)v(x)dx}+\int_\Omega \nabla u(t,x)\cdot\nabla v(x)dx = \int_\Omega f(t,x)v(x)dx \quad \forall v\in H_0^1(\Omega)$$
+	for almost every $t\in(0,T)$. \\ \; \\
+	
+	need to manage the temporal discretizations \\
+	$\Rightarrow$ use of the Feel++ bdf (Backward differencing formula) class :
+	
+	$$\int_\Omega \frac{\partial u}{\partial t}(t,x)v(x)dx \simeq \int_\Omega \frac{u^{n+1}(x)-u^n(x)}{\Delta t}v(x)dx$$
+	
+	(Backward Euler scheme)
+\end{frame}
+
+\begin{frame}{Parareal method with the Heat equation}
+	\textbf{Goal :} To have a function that solves the heat equation between $t_i$ and $t_j$ with an initial condition (by using the previous resolution in C++ with Feel++) and apply the parareal method to it.
+\end{frame}
+
+
+
+
+

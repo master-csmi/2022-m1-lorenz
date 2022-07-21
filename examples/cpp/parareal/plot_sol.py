@@ -16,21 +16,6 @@ def read_sol_ex(filename):
             t_rk4.append(float(row[0]))
             sol_rk4 = np.append(sol_rk4,[float(item) for item in row[1:]])
         sol_rk4 = np.reshape(sol_rk4,[-1,dim])
-
-
-
-    # t_rk4=[]
-    # sol_rk4=np.array([])
-    # with open(filename, newline='') as csvfile:
-    #     reader = csv.reader(csvfile, delimiter=',')
-    #     size=0
-    #     for i,row in enumerate(reader):
-    #         if(i==0):
-    #             size=len(row)-2
-    #         else:
-    #             t_rk4.append(float(row[1]))
-    #             sol_rk4 = np.append(sol_rk4,[float(item) for item in row[2:]])
-    #     sol_rk4 = np.reshape(sol_rk4,[-1,size])
     
     return t_rk4,sol_rk4
 
@@ -73,6 +58,7 @@ plt.plot(t,sol_k[:,0],label="x")
 plt.plot(t_rk4,sol_rk4[:,0],label="x exact")
 plt.plot(times,x0[:,0],".k",label="x0")
 
-plt.legend()
+plt.title("k="+str(k))
+plt.legend(loc='upper right')
 plt.savefig("data/sol_"+str(k)+".png") 
 plt.show()

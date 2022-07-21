@@ -155,7 +155,7 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
             write_sol_k(k,t,sol_k);
             write_X0_k(k,times,X0_k);
 
-            Matrix sol_ex = RK4(X0_t0,dt_F,t0,(T-t0)/dt_F,lorenz,gamma);
+            Matrix sol_ex = RK4(X0_t0,dt_F,t0,(T-t0)/dt_F,prob,gamma);
             write_sol_ex(t,sol_ex);
         }
     }

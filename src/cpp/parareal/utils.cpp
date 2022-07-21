@@ -1,6 +1,16 @@
 // #include <parareal/utils.hpp>
 #include "utils.hpp"
 
+Vector<double> oscillator(double /*t*/, Vector<double> const& X, double* gamma){
+    Vector<double> sol(X.cols()); // X = (x,v)
+    sol << X[1], - gamma[0] * gamma[0] * X[0];
+    return sol;
+}
+
+double oscillator_ex(double t, double* gamma){
+    return gamma[1] * cos(gamma[0]*t+gamma[2]);
+}
+
 Vector<double> lorenz(double /*t*/, Vector<double> const& X, double* gamma){
     Vector<double> sol(X.cols());
     sol << gamma[0] * (X[1]-X[0]), X[0] * (gamma[2]-X[2])-X[1],

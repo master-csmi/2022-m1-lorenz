@@ -10,6 +10,25 @@ using Matrix = Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic,Eigen::RowMajo
 template<class T> using Vector = Eigen::Matrix<T,1,Eigen::Dynamic>;
 
 /**
+ * @brief Compute the value of the Harmonic oscillator.
+ * 
+ * @param t Current time.
+ * @param X Current point.
+ * @param gamma Parameters.
+ * @return Vector<double> The value of the Harmonic oscillator.
+ */
+Vector<double> oscillator(double t, Vector<double> const& X, double* gamma);
+
+/**
+ * @brief Compute the exact solution at the current time of the Harmonic oscillator.
+ * 
+ * @param t Current time.
+ * @param gamma Parameters.
+ * @return double The exact value the Harmonic oscillator.
+ */
+double oscillator_ex(double t, double* gamma);
+
+/**
  * @brief Compute the value of the Lorenz system.
  * 
  * @param t Current time.

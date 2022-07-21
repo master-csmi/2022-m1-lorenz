@@ -13,7 +13,7 @@
     {
         "sigma_radiation":5.67e-8,
         "eps":0.8,
-        "T0":300
+        "T0":324
         // "Ti":{
         //     "value": 292,
         //     "min": 285,
@@ -82,7 +82,7 @@
                 "ext_windows":
                 {
                     "markers":["LowerWindow","UpperWindow"],
-                    "expr":"sigma_radiation*eps*((T0+273.15)^4-(heat_T+273.15)^4):sigma_radiation:eps:T0:heat_T"                  
+                    "expr":"sigma_radiation*eps*((T0)^4-(heat_T+273.15)^4):sigma_radiation:eps:T0:heat_T"                  
                 }
             }
         }

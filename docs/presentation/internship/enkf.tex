@@ -116,7 +116,7 @@ $\sigma=12, \quad b=6, \quad r=12, \quad X_0=(-10,-10,25), \quad t_0=0, \quad T=
 \begin{frame}[allowframebreaks]{The context}
 \begin{itemize}
     \item Our goal is to make the simulation of an office in the university of Strasbourg in which we have 10 sensors to measure the temperature.\\
-    \item We want to make a data assimilation and use our sensors to correct the temperature of the room.
+    \item We want to apply data assimilation and use our sensors to correct the temperature of the room.
 \end{itemize}
 
 \begin{minipage}{0.48\linewidth}
@@ -135,15 +135,15 @@ $\sigma=12, \quad b=6, \quad r=12, \quad X_0=(-10,-10,25), \quad t_0=0, \quad T=
 \end{minipage}
 \newpage
 \begin{itemize}
-    \item Convective heat equation\\
-    $$\rho C_p(\frac{\partial T}{\partial t})+u . \nabla T)-\nabla .(k \nabla T)=Q$$
+    \item Heat equation with convective effects\\
+    $$\rho C_p((\frac{\partial T}{\partial t})+u . \nabla T)-\nabla .(k \nabla T)=Q$$
     Which is completed with boundary conditions and initial value.
     \newline
     \newline
 \renewcommand{\arraystretch}{2}
 \begin{tabular}{|R{2cm}|C{2.5cm}|L{2.5cm}|L{2.5cm}|}
 \hline
-$\rho$ & density & $Kg.m^
+$\rho$ & Air density & $Kg.m^
 {-3}$ & 1.125  \\[0.5cm]
 \hline
 $C_p$ & Specific heat & $J/KgK$ & 1004 \\[0.5cm]
@@ -154,10 +154,10 @@ $u$ & Fluid velocity & $m.s^{-1}$ & unknown \\[0.5cm]
 \hline
 \end{tabular}
 \newpage
-\item Equation of the air movement (Navier-Stokes).
+\item Equation of the air motion (Navier-Stokes).
  $$\left\{\begin{aligned} 
         &\rho (\frac{\partial u}{\partial t}+u.\nabla u)-\nabla.(\mu \nabla u)+\nabla P =-\rho_0 \beta(T-T_{ref})g\\
-        &\nabla u=0 \\
+        &\nabla . u=0 \\
     \end{aligned}\right.$$
 \renewcommand{\arraystretch}{2}
 \begin{tabular}{|R{1cm}|C{5cm}|L{1.5cm}|L{1.5cm}|}
@@ -168,7 +168,7 @@ $\rho$ & fluid density & $Kg.m^
 $u$ & fluid velocity & $m.s^{-1}$ & unknown \\[0.7cm]
 \hline
 $\beta$ & coefficient of thermal expansion & $K^
-{-1}$ & \\[0.7cm]
+{-1}$ &  0.0034 \\[0.7cm]
 \hline
 $\mu$ & dynamic viscosity & $Pa.s$ & $1.81e^{-5}$\\[0.7cm]
 \hline
@@ -216,7 +216,7 @@ $g$ & gravitational acceleration & $m.s^{-2}$ & $9.8$\\[0.7cm]
     \end{figure}
 \end{minipage}
 \begin{itemize}
-    \item For this simulation we do not consider the convection, but we increase k (Conductivity) in order to visualize a heating in the room.
+    \item For this simulation we do not consider the convection, but we increase k (Conductivity) in order to visualize the temperature increase in the room.
 \end{itemize}
 
 \end{frame}

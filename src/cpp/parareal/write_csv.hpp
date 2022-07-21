@@ -32,3 +32,11 @@ void write_sol_k(int k, Vector<double> t, Matrix sol_k);
  * @param X0_k Initial points at iteration k.
  */
 void write_X0_k(int k, Vector<double> times, Matrix X0_k);
+
+/**
+ * @brief Write the exact solution.
+ * 
+ * @param t Time used to the system resolution.
+ * @param sol_ex Exact solution.
+ */
+void write_sol_ex(Vector<double> t, Matrix sol_ex);

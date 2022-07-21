@@ -18,29 +18,32 @@ int main (){
     Vector<double> X0(3); X0 << 5., 5., 5.;
 
     double t0 = 0.;
-    double T = 50000.;
+    double T = 20.;
     double dt_G = 0.01;
     double dt_F = 0.001;
 
-    bool write = false;
+    bool write = true;
 
     // if(world_rank==0)
     //     delete_old_files();
-    time_t start_time;
-    time(&start_time);
-    // std::cout << "Start : " << start_time << std::endl;
+
+    time_t start_time, final_time, time_passed;
+    if(!write){
+        time(&start_time);
+        std::cout << "Start : " << start_time << std::endl;
+    }
 
     Matrix sol_k = parareal(X0, t0, T, lorenz, dt_G, dt_F, gamma, world_rank, n_proc, write);
-    // Matrix sol_k = RK4(X0,dt_F,t0,(T-t0)/dt_F,lorenz,gamma);
 
-    time_t final_time;
-    time(&final_time);
-    // std::cout << "Final : " <<  final_time << std::endl;
+    if(!write){
+        time(&final_time);
+        std::cout << "Final : " <<  final_time << std::endl;
 
-    if(world_rank==0){
-        time_t time_passed = final_time - start_time;
-        std::cout << time_passed << std::endl;
-        std::cout << "Time : " << std::floor(time_passed/60) << "m" << time_passed%60 << "s" << std::endl;
+        if(world_rank==0){
+            time_passed = final_time - start_time;
+            std::cout << time_passed << std::endl;
+            std::cout << "Time : " << std::floor(time_passed/60) << "m" << time_passed%60 << "s" << std::endl;
+        }
     }
 
 

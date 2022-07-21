@@ -42,3 +42,4 @@ results
 
 examples/cpp/feelpp/laplacian/circle/output/
 examples/cpp/feelpp/laplacian/circle/values.csv
+examples/cpp/feelpp/laplacian/circle/cvg_laplacian.png

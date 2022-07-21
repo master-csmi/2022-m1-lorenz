@@ -3,10 +3,41 @@ import matplotlib.pyplot as plt
 import csv
 import math
 
-def read_sol(file_name):
+k = 0
+
+def read_sol_ex(filename):  
+    t_rk4=[]
+    sol_rk4=np.array([])
+    with open(filename, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        for i,row in enumerate(reader):
+            if(i==0):
+                dim = len(row)-1
+            t_rk4.append(float(row[0]))
+            sol_rk4 = np.append(sol_rk4,[float(item) for item in row[1:]])
+        sol_rk4 = np.reshape(sol_rk4,[-1,dim])
+
+
+
+    # t_rk4=[]
+    # sol_rk4=np.array([])
+    # with open(filename, newline='') as csvfile:
+    #     reader = csv.reader(csvfile, delimiter=',')
+    #     size=0
+    #     for i,row in enumerate(reader):
+    #         if(i==0):
+    #             size=len(row)-2
+    #         else:
+    #             t_rk4.append(float(row[1]))
+    #             sol_rk4 = np.append(sol_rk4,[float(item) for item in row[2:]])
+    #     sol_rk4 = np.reshape(sol_rk4,[-1,size])
+    
+    return t_rk4,sol_rk4
+
+def read_sol(filename):
     t=[]
     sol_k=np.array([])
-    with open(file_name, newline='') as csvfile:
+    with open(filename, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         for i,row in enumerate(reader):
             if(i==0):
@@ -17,10 +48,10 @@ def read_sol(file_name):
 
     return t,sol_k,dim
 
-def read_init_pt(file_name):
+def read_init_pt(filename):
     times=[]
     x0=np.array([])
-    with open(file_name, newline='') as csvfile:
+    with open(filename, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         for i,row in enumerate(reader):
             if(i==0):
@@ -31,20 +62,17 @@ def read_init_pt(file_name):
 
     return times,x0,dim
 
-t,sol_k,dim = read_sol("data/solution_0.csv")
-times,x0,dim = read_init_pt("data/solution_0.csv")
+t,sol_k,dim = read_sol("data/solution_"+str(k)+".csv")
+times,x0,dim = read_init_pt("data/init_pts_"+str(k)+".csv")
+t_rk4,sol_rk4 = read_sol_ex("data/solution_ex.csv")
+
 
 fig=plt.figure()
 
 plt.plot(t,sol_k[:,0],label="x")
+plt.plot(t_rk4,sol_rk4[:,0],label="x exact")
 plt.plot(times,x0[:,0],".k",label="x0")
 
+plt.legend()
+plt.savefig("data/sol_"+str(k)+".png") 
 plt.show()
-
-
-
-# print(t)
-# print()
-# print(sol_k)
-# print()
-# print(dim)

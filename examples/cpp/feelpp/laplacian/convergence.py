@@ -27,4 +27,5 @@ plt.loglog(tab_h,normes_H1,label="Norme H1 : pente="+str(np.round(pente_H1,2)))
 print("Pente pour la norme H1 :",pente_H1)
 
 plt.legend()
+plt.savefig("circle/cvg_laplacian.png") 
 plt.show()

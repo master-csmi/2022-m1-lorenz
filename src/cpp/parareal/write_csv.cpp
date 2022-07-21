@@ -50,3 +50,18 @@ void write_X0_k(int k, Vector<double> times, Matrix X0_k){
     }
     ofile.close();
 }
+
+void write_sol_ex(Vector<double> t, Matrix sol_ex){
+    std::ostringstream filename; 
+    filename << "examples/cpp/parareal/data/solution_ex.csv";
+    std::ofstream ofile(filename.str());
+
+    for(int i=0; i < sol_ex.rows(); i++){
+        ofile << t(i) << ", ";
+        for(int j=0; j < sol_ex.cols()-1; j++){
+            ofile << sol_ex(i,j) << ", ";
+        }
+        ofile << sol_ex(i,sol_ex.cols()-1) << std::endl;
+    }
+    ofile.close();
+}

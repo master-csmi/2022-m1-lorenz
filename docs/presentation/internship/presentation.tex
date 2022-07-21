@@ -5,6 +5,15 @@
 \usepackage{amsmath}
 \usepackage[bottom]{footmisc}
 \usepackage{multirow}
+\usepackage{array,multirow,makecell}
+\usepackage[table]{xcolor}
+\setcellgapes{1pt}
+\usepackage{lmodern}
+\setlength{\parindent}{0pt}
+\makegapedcells
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash }b{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash }b{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash }b{#1}}
 
 \title[Lorenz]{Data assimilation for the Lorenz system}
 \subtitle{Presentation (version 0)}

@@ -121,6 +121,32 @@
 	
 \end{frame}
 
+\begin{frame}{Speed-up ?}
+	\begin{enumerate}[\textbullet]
+		\item Why use this method ? \\
+		Useful if the number of iteration is lower than $P$. \\
+		
+		\item We can see that the implementation of the method in C++ is considerably faster than in Python. \\
+		
+		\item Speed-up when we increase the number of processes $P$ ? \\
+		With Python :
+		\begin{table}[H]
+			\centering
+			\begin{tabular}{| c || c | c | c | c | c |}
+				\hline
+				\multirow{2}{1.5 cm}{$\Delta t$} & \multirow{2}{1.5 cm}{Seq (RK4)} & \multirow{2}{1.5 cm}{1 proc} & \multirow{2}{1.5 cm}{2 proc} & \multirow{2}{1.5 cm}{3 proc} &\multirow{2}{1.5 cm}{4 proc} \\
+				& & & & & \\
+				\hline 
+				F : 0.00125 & \multirow{2}{1.5 cm}{1m19} & \multirow{2}{1.5 cm}{1m42} & \multirow{2}{1.5 cm}{39s} & \multirow{2}{1.5 cm}{32s} & \multirow{2}{1.5 cm}{29s} \\
+				G : 0.0125 & & & & & \\	 
+				\hline
+			\end{tabular}
+			\caption{Execution time for the Lorenz system with Python ($T=200$).}
+			\label{time}
+		\end{table}
+	\end{enumerate}
+\end{frame}
+
 
 
 

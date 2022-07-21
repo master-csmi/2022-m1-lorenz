@@ -4,8 +4,8 @@
 # p is the number of process
 
 rootlorenzdir='../../../'
-# executable='./'$rootlorenzdir'build/default/bin/parareal.e'
-executable='mpirun -n 4 ./'$rootlorenzdir'build/default/bin/parareal.e'
+executable='./'$rootlorenzdir'build/default/bin/parareal.e'
+# executable='mpirun -n 2 ./'$rootlorenzdir'build/default/bin/parareal.e'
 filename='out.txt'
 
 sum=0

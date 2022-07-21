@@ -5,7 +5,8 @@
 \usepackage{amsmath}
 \usepackage[bottom]{footmisc}
 \usepackage{multirow}
-\usepackage{cancel}
+\usepackage{setspace}
+\usepackage{caption}
 \usepackage{array,multirow,makecell}
 \usepackage[table]{xcolor}
 \setcellgapes{1pt}
@@ -15,7 +16,7 @@
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash }b{#1}}
 \newcolumntype{C}[1]{>{\centering\arraybackslash }b{#1}}
 
-\title[Lorenz]{Data assimilation for the Lorenz system}
+\title[Lorenz]{Parareal method and data assimilation with Feel++}
 \subtitle{Presentation (version 0)}
 \author[name]{AYDOGDU Melissa, LECOURTIER Frédérique}
 \institute{\large Strasbourg University}
@@ -56,7 +57,7 @@
 		\end{frame}
 	}
 
-	\section{Introduction to the project}
+	\section{Context of the internship}
 
 	\begin{frame}{Cemosis}
 		
@@ -88,19 +89,16 @@
 	\begin{frame}{Objectives}
 		
 		\begin{enumerate}[\textbullet]
-			\item \textbf{to read the following articles :}
+			\item to read the following article about the Heat equation (Chapter 11) : \\ \url{https://link.springer.com/content/pdf/10.1007/978-3-540-85268-1.pdf} \\ \; \\
+			\item to set up a project on Github :
 			\begin{itemize}
-				\item 
+				\item Organisation of the repository (python library, cmake in C++ ...)
+				\item Create isssues to see the progress of the project
+				\item Set up the CI : build-test-doc 
 			\end{itemize}
-			\item \textbf{to implement methods} 
-			\begin{itemize}
-				\item 
-			\end{itemize}
-			\item \textbf{to do an oral presentation and to write a report :}
-			\begin{itemize}
-				\item
-			\end{itemize}
-		\end{enumerate}
+			\includegraphics[width=\linewidth]{images/intro/logo.jpg}
+		\end{enumerate} \; \\
+		Github repository : \url{https://github.com/master-csmi/2022-m1-lorenz}
 	
 	\end{frame}
 	
@@ -152,30 +150,14 @@
 		
 	\end{frame}
 
-	\section{Parareal method}
+	\section{Application of the parareal method to PDE simulation in Feel++}
 
 	\input{parareal.tex}
 	
-	\section{Data assimilation}
+	\section{Application of the data assimilation method with PDE models in Feel++}
 	
 	\input{enkf.tex}
 	
-	\section{Conclusion}
-	
-	\begin{frame}{Conclusion and Perspectives}
-		Main goals achieved :
-		\begin{enumerate}[\textbullet]
-			\item to implement different numerical resolution methods for ODEs
-			\item to implement the parareal method for ODEs models
-			\item to realise data assimilation of ODEs model
-		\end{enumerate} \; \\
-	
-		Some possibilities for the future :
-		\begin{enumerate}[\textbullet]
-			\item try to find a number of processes P which is optimal
-			\item What happens when we take more intervals that are spread over the different processes ?
-			\item apply the data assimilation using real observation 
-		\end{enumerate}
-	\end{frame}
+	\section{A few comments about the internship}
 	
 \end{document}

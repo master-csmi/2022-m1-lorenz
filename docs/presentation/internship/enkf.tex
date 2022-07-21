@@ -2,15 +2,15 @@
 \begin{frame}[allowframebreaks]{Objectives}
 		
     \begin{enumerate}[\textbullet]
-        \item Write a class for the EnKF in C++, inspired by the EnKF written in Python; test the algorithm.
+        \item Write a class for the EnKF in C++, inspired by the EnKF written in Python (FilterPy); Test the algorithm.
         \item To read the following article :
         \begin{itemize}
             \item Fundamentals Of Building Performance Simulation By Beausoleil-Morrison
         \end{itemize}
         
     \item Understand the heat equation and what are the phenomena involved in the modification of the temperature of a building (conduction, convection, radiation).
-    \item Realize with Gmsh the geometry in the figure.
-    \item Write the mathematical problem to be solved if we want to simulate a office then realize the simulation using feelpp toolboxes.
+    \item Realize with Gmsh the geometry of the figure.
+    \item Write the mathematical problem to be solved if we want to simulate an office then realize the simulation using Feel++ toolboxes.
     \item Introduce data assimilation using the sensor and correct the simulation.
     \end{enumerate}
 \end{frame}
@@ -97,16 +97,22 @@ with $x^a$ the analyzed state, $x^b$ the state of the model and $y^0$ the observ
    $$P^f=\frac{1}{m-1}\sum_{i=1}^{m}(x_i^f-\bar{x}^f)(x_i^f-\bar{x}^f)^T~~\text{with}~~\bar{x}^f=\frac{1}{m}\sum_{i=1}^{m}x_i^f $$ .
 \end{frame}
 \begin{frame}{Comparing Cpp results with Python}
-\begin{figure}[H]
-       \pgfimage[width=0.6\linewidth]{images/enkf/Comparaison_python.jpg}
-       \caption{Result with Filterpy}
-   \end{figure}
-   \begin{figure}[H]
-       \pgfimage[width=0.6\linewidth]{images/enkf/Comparaison_cpp.jpg}
-       \caption{Result with Cpp}
-   \end{figure}
+	\centering
+$\sigma=12, \quad b=6, \quad r=12, \quad X_0=(-10,-10,25), \quad t_0=0, \quad T=1$
+\begin{minipage}{0.48\linewidth}
+	\begin{figure}[H]
+		\pgfimage[width=0.9\linewidth]{images/enkf/Comparaison_python.jpg}
+		\caption{Result with Filterpy}
+	\end{figure}
+\end{minipage}
+\begin{minipage}{0.48\linewidth}
+	\begin{figure}[H]
+		\pgfimage[width=0.9\linewidth]{images/enkf/Comparaison_cpp.jpg}
+		\caption{Result with Cpp}
+	\end{figure}
+\end{minipage}
 \end{frame}
-\subsection{Integrate data assimilation to Feelpp}
+\subsection{Integrate data assimilation to Feel++}
 \begin{frame}[allowframebreaks]{The context}
 \begin{itemize}
     \item Our goal is to make the simulation of an office in the university of Strasbourg in which we have 10 sensors to measure the temperature.\\
@@ -134,7 +140,6 @@ with $x^a$ the analyzed state, $x^b$ the state of the model and $y^0$ the observ
     Which is completed with boundary conditions and initial value.
     \newline
     \newline
-    \newline
 \renewcommand{\arraystretch}{2}
 \begin{tabular}{|R{2cm}|C{2.5cm}|L{2.5cm}|L{2.5cm}|}
 \hline
@@ -145,11 +150,11 @@ $C_p$ & Specific heat & $J/KgK$ & 1004 \\[0.5cm]
 \hline
 $k$ & Conductivity & $W/mK$ & 0.025  \\[0.5cm]
 \hline
-$u$ & Fluid velocity & $m.s^{-1}$ & To find \\[0.5cm]
+$u$ & Fluid velocity & $m.s^{-1}$ & unknown \\[0.5cm]
 \hline
 \end{tabular}
 \newpage
-\item Equation of the air movement (Navier-Stokes).\\
+\item Equation of the air movement (Navier-Stokes).
  $$\left\{\begin{aligned} 
         &\rho (\frac{\partial u}{\partial t}+u.\nabla u)-\nabla.(\mu \nabla u)+\nabla P =-\rho_0 \beta(T-T_{ref})g\\
         &\nabla u=0 \\
@@ -160,14 +165,14 @@ $u$ & Fluid velocity & $m.s^{-1}$ & To find \\[0.5cm]
 $\rho$ & fluid density & $Kg.m^
 {-3}$ & 1.125 \\[0.7cm]
 \hline
-$u$ & fluid velocity & $m.s^{-1}$ &  \\[0.7cm]
+$u$ & fluid velocity & $m.s^{-1}$ & unknown \\[0.7cm]
 \hline
 $\beta$ & coefficient of thermal expansion & $K^
-{-1}$ & $1.81e^{-5}$\\[0.7cm]
+{-1}$ & \\[0.7cm]
 \hline
 $\mu$ & dynamic viscosity & $Pa.s$ & $1.81e^{-5}$\\[0.7cm]
 \hline
-$g$ & gravitational acceleration & $m.s^{-2}$ & $1.81e^{-5}$\\[0.7cm]
+$g$ & gravitational acceleration & $m.s^{-2}$ & $9.8$\\[0.7cm]
 \hline
 \end{tabular}
 \end{itemize}
@@ -216,6 +221,9 @@ $g$ & gravitational acceleration & $m.s^{-2}$ & $1.81e^{-5}$\\[0.7cm]
 
 \end{frame}
     
+\begin{frame}{Continuation of the project}
+	\textbf{Goal :} Try to apply data assimilation to our model using our sensors as observation to correct the simulation.
+\end{frame}
 
 
 

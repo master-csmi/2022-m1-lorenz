@@ -151,7 +151,7 @@
 
 
 
-\subsection{Application with Feel++}
+\subsection{Solving PDEs with Feel++}
 
 \begin{frame}{Heat equation}
 	
@@ -187,7 +187,7 @@
 		-\Delta u &= f \quad&&\Omega \\
 		u&=g \quad&&\Gamma_D \\
 	\end{aligned}\right. \quad \text{with} \quad
-	u=x^2+y^2$$
+	u_{exact}=g=x^2+y^2, \quad f=-\Delta u_{exact}=-4$$
 	\begin{minipage}{0.31\linewidth}
 		\begin{figure}
 			\includegraphics[width=\linewidth]{"images/parareal/circle.jpg"}
@@ -197,7 +197,7 @@
 	\begin{minipage}{0.31\linewidth}
 		\begin{figure}
 			\includegraphics[width=\linewidth]{"images/parareal/circle_mesh.jpg"}
-			\caption{Mesh of the geometry (with Dirichlet condition)}
+			\caption{Mesh of the geometry (with Dirichlet Boundary condition)}
 		\end{figure}
 	\end{minipage} \quad
 	\begin{minipage}{0.31\linewidth}

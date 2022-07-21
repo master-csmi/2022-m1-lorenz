@@ -118,6 +118,12 @@ template&lt;class T &gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a7f5e69757ee5fba2f498759af5cfa75a"><td class="memItemLeft" align="right" valign="top">Vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8hpp.html#a7f5e69757ee5fba2f498759af5cfa75a">oscillator</a> (double t, Vector&lt; double &gt; const &amp;X, double *gamma)</td></tr>
+<tr class="memdesc:a7f5e69757ee5fba2f498759af5cfa75a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the value of the Harmonic oscillator.  <a href="utils_8hpp.html#a7f5e69757ee5fba2f498759af5cfa75a">More...</a><br /></td></tr>
+<tr class="separator:a7f5e69757ee5fba2f498759af5cfa75a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83731cd53f1879fd9a85e8423c2100b0"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8hpp.html#a83731cd53f1879fd9a85e8423c2100b0">oscillator_ex</a> (double t, double *gamma)</td></tr>
+<tr class="memdesc:a83731cd53f1879fd9a85e8423c2100b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the exact solution at the current time of the Harmonic oscillator.  <a href="utils_8hpp.html#a83731cd53f1879fd9a85e8423c2100b0">More...</a><br /></td></tr>
+<tr class="separator:a83731cd53f1879fd9a85e8423c2100b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe3e558c9d3118842985857a5cc85384"><td class="memItemLeft" align="right" valign="top">Vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8hpp.html#afe3e558c9d3118842985857a5cc85384">lorenz</a> (double t, Vector&lt; double &gt; const &amp;X, double *gamma)</td></tr>
 <tr class="memdesc:afe3e558c9d3118842985857a5cc85384"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the value of the Lorenz system.  <a href="utils_8hpp.html#afe3e558c9d3118842985857a5cc85384">More...</a><br /></td></tr>
 <tr class="separator:afe3e558c9d3118842985857a5cc85384"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -250,6 +256,89 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Vector&lt;double&gt; The value of the Lorenz system. </dd></dl>
+
+</div>
+</div>
+<a id="a7f5e69757ee5fba2f498759af5cfa75a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f5e69757ee5fba2f498759af5cfa75a">&#9670;&nbsp;</a></span>oscillator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vector&lt;double&gt; oscillator </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Vector&lt; double &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>X</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>gamma</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Compute the value of the Harmonic oscillator. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>Current time. </td></tr>
+    <tr><td class="paramname">X</td><td>Current point. </td></tr>
+    <tr><td class="paramname">gamma</td><td>Parameters. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector&lt;double&gt; The value of the Harmonic oscillator. </dd></dl>
+
+</div>
+</div>
+<a id="a83731cd53f1879fd9a85e8423c2100b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83731cd53f1879fd9a85e8423c2100b0">&#9670;&nbsp;</a></span>oscillator_ex()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double oscillator_ex </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>gamma</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Compute the exact solution at the current time of the Harmonic oscillator. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>Current time. </td></tr>
+    <tr><td class="paramname">gamma</td><td>Parameters. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>double The exact value the Harmonic oscillator. </dd></dl>
 
 </div>
 </div>

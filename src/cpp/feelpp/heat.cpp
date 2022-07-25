@@ -14,11 +14,19 @@ int main(int argc, char** argv) {
         auto jsonfile = removeComments(readFromFile(Environment::expand(soption("specs"))));
         std::istringstream istr(jsonfile);
         json specs = json::parse(istr);
+        double dt = specs["/Time/dt"_json_pointer].get<double>();
+        //double t0 = specs["/Time/t0"_json_pointer].get<double>();
+        double T = specs["/Time/final_time"_json_pointer].get<double>();
 
         Heat<2,1> heat( specs );
 
-        for (double t = 0.0; t < 1.0; t += 0.1) {
+        // TODO : implement the parareal method
+        for (double t = 0.0; t < T; t += dt) {
+
+            // execute the time step: update the right hand side and solve the system
             heat.run();
+
+            // save solution at current time
             heat.postProcess();
         }
         

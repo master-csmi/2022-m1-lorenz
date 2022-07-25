@@ -12,3 +12,5 @@ target_link_libraries(
     CONAN_PKG::spdlog
     CONAN_PKG::eigen
     Feelpp::feelpp)
+
+feelpp_add_tests(cases PREFIX lorenz)

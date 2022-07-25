@@ -15,7 +15,8 @@
     },
     "Time":{
         "final_time": 1,
-        "dt": 0.1
+        "dt_fine": 0.01,
+        "time_partitions": 10
 
     },
     "Parameters": {

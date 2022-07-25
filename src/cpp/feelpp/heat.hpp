@@ -53,7 +53,7 @@ Heat(nl::json const& specs)
     :
     specs_(specs),
     mesh_(loadMesh(_mesh = new Mesh<Simplex<Dim>>, _filename = specs["/Meshes/heat/Import/filename"_json_pointer].get<std::string>())),
-    Xh_(Pch<2>(mesh_)),
+    Xh_(Pch<Order>(mesh_)),
     v_(Xh_->element()),
     e_( exporter(_mesh = mesh_) ),
     a_( form2(_test = Xh_, _trial = Xh_) ),
@@ -117,7 +117,7 @@ element_t const& solution() const
  * 
  * @return int 
  */
-int run()
+void run()
 {
     vold_=v_;
     // zero out right hand side

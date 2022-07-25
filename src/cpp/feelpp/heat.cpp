@@ -1,8 +1,11 @@
+#include <feel/feelcore/environment.hpp>
+#include <feel/feelcore/utility.hpp>
 #include <feelpp/heat.hpp>
 
-int main(int argc, const char** argv) {
+int main(int argc, char** argv) {
+    using namespace Feel;
     try{
-        using namespace Feel;
+        
         Environment env(_argc = argc, _argv = argv,
                         _desc = makeOptions(),
                         _about = about(_name = "heat",
@@ -13,8 +16,12 @@ int main(int argc, const char** argv) {
         json specs = json::parse(istr);
 
         Heat<2,1> heat( specs );
-        heat.run();
-        heat.postProcess();
+
+        for (double t = 0.0; t < 1.0; t += 0.1) {
+            heat.run();
+            heat.postProcess();
+        }
+        
 
         return 0;
     }

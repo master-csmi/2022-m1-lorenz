@@ -21,10 +21,11 @@ int main(int argc, char** argv) {
         Heat<2,1> heat( specs );
 
         // TODO : implement the parareal method
-        for (double t = 0.0; t < T; t += dt) {
-
+        for (double t = dt; t < T; t += dt) {
+            std::cout << "====================================" << std::endl;
+            std::cout << fmt::format("t = {}", t) << std::endl;
             // execute the time step: update the right hand side and solve the system
-            heat.run();
+            heat.run( t, heat.solution() );
 
             // save solution at current time
             heat.postProcess();

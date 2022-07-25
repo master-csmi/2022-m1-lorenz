@@ -104,6 +104,15 @@ Heat(nl::json const& specs)
     }
 }
 /**
+ * @brief get a new element of Xh
+ * 
+ * @return element_t 
+ */
+element_t newElement() const
+{
+    return Xh_->element();
+}
+/**
  * @brief get the solution at the current time
  * 
  * @return element_t const& the solution
@@ -113,15 +122,16 @@ element_t const& solution() const
     return v_;
 }
 /**
- * @brief run the time step
+ * @brief run the time step [t0, t0+dt_]
  * 
  * @return int 
  */
-void run()
+void run( double t0, element_t const& w )
 {
-    vold_=v_;
+    t_ = t0;
     // zero out right hand side
     lt_.zero();
+    lt_ += l_;
     // update right hande side terms from the time derivative
     for (auto [key, material] : specs_["/Models/heat/materials"_json_pointer].items())
     {
@@ -132,9 +142,9 @@ void run()
         auto rho = specs_[nl::json::json_pointer(mat_rho)].get<std::string>();
         std::string mat_cp = fmt::format("/Materials/{}/Cp", material.get<std::string>());
         auto cp = specs_[nl::json::json_pointer(mat_cp)].get<std::string>();
-        lt_ += integrate(_range = markedelements(mesh_, material.get<std::string>()), _expr = expr(rho) * expr(cp) * idv(v_) * id(v_)/dt_);
+        lt_ += integrate(_range = markedelements(mesh_, material.get<std::string>()), _expr = expr(rho) * expr(cp) * idv(w) * id(v_)/dt_);
     }
-
+    
     // Solve
     a_.solve(_rhs = lt_, _solution = v_);
 }
@@ -153,6 +163,7 @@ void postProcess()
     std::cout << fmt::format("-  max deviation: {}", v_.max() - v_.min()) << std::endl;
     std::cout << fmt::format("-  mean root: {}", m_root) << std::endl;
     // Export
+    e_->step(t_)->setMesh(mesh_);
     e_->step(t_)->addRegions();
     e_->step(t_)->add("T", v_);
     e_->save();

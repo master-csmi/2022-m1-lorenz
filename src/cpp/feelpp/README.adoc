@@ -20,7 +20,7 @@ cmake --build --preset default heat.j -j4
 cd build/default/src/cpp/feelpp
 
 # copy case files to current build directory
-make lorenz_add_testcase_cases
+make feelpp_add_testcase_
 ----
 
 === 2D

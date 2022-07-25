@@ -49,19 +49,19 @@ using a_t = form2_t<space_t,space_t>;
 using l_t = form1_t<space_t>;
 using exporter_ptr_t = std::shared_ptr<Exporter<mesh_t>>;
 
-Heat(nl::json const& specs)
+Heat(std::string const& prefix, nl::json const& specs, WorldComm const& worldComm, double dt, double t0, double T)
     :
     specs_(specs),
-    mesh_(loadMesh(_mesh = new Mesh<Simplex<Dim>>, _filename = specs["/Meshes/heat/Import/filename"_json_pointer].get<std::string>())),
+    mesh_(loadMesh(_mesh = new Mesh<Simplex<Dim>>(worldComm), _filename = specs["/Meshes/heat/Import/filename"_json_pointer].get<std::string>())),
     Xh_(Pch<Order>(mesh_)),
     v_(Xh_->element()),
     e_( exporter(_mesh = mesh_) ),
     a_( form2(_test = Xh_, _trial = Xh_) ),
     l_( form1(_test = Xh_) ),
     lt_( form1(_test = Xh_) ),
-    dt_(specs["/Time/dt"_json_pointer].get<double>()),
-    t_(dt_),
-    T_(specs["/Time/final_time"_json_pointer].get<double>())
+    dt_(dt),
+    t_(t0),
+    T_(T)
     
 {
     // initial condition (TODO use the json specs)

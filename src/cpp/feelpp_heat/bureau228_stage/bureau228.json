@@ -13,7 +13,7 @@
     {
         "sigma_radiation":5.67e-8,
         "eps":0.8,
-        "T0":324
+        "T0":301
         // "Ti":{
         //     "value": 292,
         //     "min": 285,
@@ -50,7 +50,7 @@
         "air":{
             "markers":"Room",
             "rho":"1",
-            "k":"4",
+            "k":"1.125",
             "Cp":"1004"
         }
     },
@@ -108,7 +108,56 @@
             "Exports":
             {
                 "fields":["temperature","pid"]
+            },
+            "Measures": 
+            {
+                "Points":
+                {
+                    "MT10-01": 
+                    {
+                        "coord": "{-12.0,-4.8,7.0 }",
+                        "fields":"temperature"
+                    },
+                    "MT10-02": {
+                        "coord": "{-12.7,-6.8,7.0 }",
+                        "fields":"temperature"
+                    },
+                    "MT10-03": {
+                        "coord": "{-10.0,-3.3,7.0 }",
+                        "fields":"temperature"
+                    },
+                    "MT10-04": {
+                        "coord": "{-12.0,-6.8,6.8 }",
+                        "fields":"temperature"
+                    },
+                    "MT10-05": {
+                        "coord": "{-10.5,-6.8,7.0 }",
+                        "fields":"temperature"
+                    },
+                    "MT10-06": {
+                        "coord": "{-10.0,-5.7,7.0 }",
+                        "fields":"temperature"
+                    },
+                    "MT10-07": {
+                        "coord": "{-13.5,-3.3,7.0 }",
+                        "fields":"temperature"
+                    },
+                    "MT10-08": {
+                        "coord": "{-13.0,-2.0,7.0 }",
+                        "fields":"temperature"
+                    },
+                    "MT10-09": {
+                        "coord": "{-13.5,-5.7,7.0 }",
+                        "fields":"temperature"
+                    },
+                    "MT10-10": {
+                        "coord": "{-11.5,-2.0,7.0 }",
+                        "fields":"temperature"
+                    }
+                }    
             }
+
         }
+        
     }
 }

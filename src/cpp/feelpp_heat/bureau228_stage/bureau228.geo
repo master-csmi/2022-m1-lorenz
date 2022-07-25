@@ -143,32 +143,31 @@ For i In {0:nll*nlw-1}
 EndFor
 Physical Surface("Ceiling") = s[];
 //+
-Hide "*";
+Point(41) = {-12.0,-4.8,7.0, h};
 //+
-Show {
-  Point{10}; Point{12}; Point{14}; Point{16}; Point{18}; Point{20}; Point{22}; Point{24}; Curve{28}; Curve{30}; Curve{32}; Curve{34}; Curve{36}; Curve{38}; Curve{60}; Curve{62}; Curve{64}; Curve{66}; Surface{160}; Surface{164}; Surface{168}; 
+Point(42) = {-12.7,-6.8,7.0, h};
+//+
+Point(43) = {-10.0,-3.3,7.0, h};
+//+
+Point(44) = {-12.0,-6.8,6.8, h};
+//+
+Point(45) = {-10.5,-6.8,7.0, h};
+//+
+Point(46) = {-10.0,-5.7,7.0, h};
+//+
+Point(47) = {-13.5,-3.3,7.0, h};
+//+
+Point(48) = {-13.0,-2.0,7.0, h};
+//+
+Point(49) = {-13.5,-5.7,7.0, h};
+//+
+Point(50) = {-11.5,-2.0,7.0, h};
+
+//+
+Rotate {{0, 0, 1}, {0, 0, 0}, Pi/2} {
+  Point{47}; Point{48}; Point{41}; Point{49}; Point{42}; Point{44}; Point{45}; Point{46}; Point{43}; Point{50}; 
 }
 //+
-Hide "*";
-//+
-Show {
-  Point{10}; Point{12}; Point{14}; Point{16}; Point{18}; Point{20}; Point{22}; Point{24}; Curve{28}; Curve{30}; Curve{32}; Curve{34}; Curve{36}; Curve{38}; Curve{60}; Curve{62}; Curve{64}; Curve{66}; Surface{160}; Surface{164}; Surface{168}; 
-}
-//+
-Hide "*";
-//+
-Show {
-  Point{10}; Point{12}; Point{14}; Point{16}; Point{18}; Point{20}; Point{22}; Point{24}; Curve{28}; Curve{30}; Curve{32}; Curve{34}; Curve{36}; Curve{38}; Curve{60}; Curve{62}; Curve{64}; Curve{66}; Surface{160}; Surface{164}; Surface{168}; 
-}
-//+
-Hide "*";
-//+
-Show {
-  Point{3}; Point{5}; Point{11}; Point{13}; Point{19}; Point{21}; Curve{23}; Curve{29}; Curve{35}; Curve{53}; Curve{55}; Curve{61}; Curve{63}; Surface{150}; Surface{162}; 
-}
-//+
-Hide "*";
-//+
-Show {
-  Point{1}; Point{2}; Point{3}; Point{4}; Point{5}; Point{6}; Point{7}; Point{8}; Curve{1}; Curve{2}; Curve{3}; Curve{4}; Curve{21}; Curve{22}; Curve{23}; Curve{24}; Curve{25}; Curve{26}; Surface{84}; Surface{86}; Surface{88}; 
+Translate {-2, 13.5, -6.3} {
+  Point{43}; Point{46}; Point{45}; Point{41}; Point{50}; Point{48}; Point{47}; Point{44}; Point{42}; Point{49}; 
 }

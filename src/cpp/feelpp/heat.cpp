@@ -56,18 +56,38 @@ int main(int argc, char** argv) {
                     }
 
                     // execute the time step: update the right hand side and solve the system
+                    // compute G(U^k_{j-1}), heatcoarse.solution() == U^k_{j-1}
                     heatcoarse.run(t, heatcoarse.solution());
+                    // now heatcoarse.solution() == G(U^k_{j-1})
 
+                    // non blocking async comm to receive fine integrator communication
+                    // send U^k_j =  G(U^k_{j-1})+(F(U^{k-1}_{j-1})-G(U^{k-1}_{j-1}))
+                    // U^k_j =  G(U^k_{j-1}) + correction[j-1]
                     // save solution at current time
                     heatcoarse.postProcess();
 
-                    // non blocking async comm to receive fine integrator communication
-                    //
+                    
                     
                 }
-                // update work flag to know if we stop or continue
-                //work = ( normL2(_range=elements(mesh),_expr=idv(heatcoarse.solution())-idv(heatcoarse.oldSolution()) > 1e-6 );
-                work = false;
+                // get in sync with the fine integrators for each coarse time step
+                // we have a collection of size P of solution for each coarse time step 
+                bool done = true;
+                for (double t = dt_coarse; t < T_coarse + dt_coarse; t += dt_coarse)
+                {
+                    // we are in coarse iteration j
+
+                    // Receive F(U^{k-1}_{j-1}) from the fine integrator
+                    // ...
+                    //  Compute correction
+                    // correction[j-1] = F(U^{k-1}_{j-1}) - G(U^{k-1}_{j-1})
+
+                    // update work flag to know if we stop or continue
+                    // done = done && ( normL2(_range=elements(mesh),_expr=idv(U^{k}_{j})-idv(U^{k-1}_{j}) < 1e-6 );
+                }
+                
+                work = !done;
+                // broadcast work flag to all processors
+                // mpi::broadcast(wglob->globalComm(), 0, work);
                 ++iteration;
             }
             LOG(INFO) << fmt::format("== coarse integrator is finished ==================================") << std::endl;
@@ -91,6 +111,13 @@ int main(int argc, char** argv) {
             while( work )
             {
                 heatfine.resetExporter(fmt::format("heat-fine-{}-{}", color, iteration));
+
+                 
+                if ( color > 1 )
+                {
+                    // receive initial guess from coarse integrator for time_interval
+                    mpi::irecv( );
+                }
                 for (double t = t0_fine; t < T_fine+dt_fine; t += dt_fine) {
                     if ( w->isMasterRank() )
                     {
@@ -107,11 +134,12 @@ int main(int argc, char** argv) {
                 // send fine solution to coarse integrator
                 // communication from fine to coarse integrators
                 // non-blocking communication
+                // send F(U^{k}_{T_fine}) to coarse integrator
 
                 // update work flag to know whether we have to continue or not
                 // communication from coarse to fine integrators
                 // blocking communication
-                
+                // mpi::broadcast(wglob->globalComm(), 0, work);
                 work = false;
                 ++iteration;
             }

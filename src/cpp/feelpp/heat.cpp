@@ -41,13 +41,13 @@ int main(int argc, char** argv) {
             wglob->barrier();
             // coarse heat mesh: unfortunately we duplicate on the P processor the coarse integrator
             // need to fix that
-            Heat<2, 1> heatcoarse( fmt::format("heat-coarse-{}-{}",w->globalRank(),0), specs, mesh, dt_coarse, t0_coarse, T_coarse );
+            Heat<2, 1> heatcoarse( fmt::format("heat-coarse-{}-{}",color,0), specs, mesh, dt_coarse, t0_coarse, T_coarse );
             
             int iteration = 1;
             bool work = true;
             while ( work )
             {
-                heatcoarse.resetExporter(fmt::format("heat-coarse-{}-{}", w->globalRank(), iteration) );
+                heatcoarse.resetExporter(fmt::format("heat-coarse-{}-{}", color, iteration) );
                 for (double t = dt_coarse; t < T_coarse; t += dt_coarse) {
                     LOG(INFO) << "====================================" << std::endl;
                     LOG(INFO) << fmt::format("t = {}", t) << std::endl;
@@ -69,25 +69,26 @@ int main(int argc, char** argv) {
         }
         else // we are on the other P processors with the fine integrators
         {
+            int fine_time_interval = color-1;
             double dt_fine = specs["/Time/dt_fine"_json_pointer].get<double>();
-            double t0_fine = t0 + (w->globalRank() - 1) * (T - t0) / (time_partitions + 1);
-            double T_fine = t0 + (w->globalRank()) * (T - t0)/(time_partitions+1);
+            double t0_fine = t0 + (color-1) * (T - t0) / (time_partitions + 1);
+            double T_fine = t0 + (color) * (T - t0)/(time_partitions+1);
 
             // barrier to make sure that the mesh is created by global rank 0 process
             wglob->barrier();
             auto mesh = loadMesh(_mesh = new Mesh<Simplex<2>>(), _worldcomm = w,
                                  _filename = specs["/Meshes/heat/Import/filename"_json_pointer].get<std::string>());
             // fin heat for each time subdomain, local to each subdomain
-            Heat<2,1> heatfine(fmt::format("heat-fine-{}-{}",w->globalRank(),0), specs, mesh, dt_fine, t0_fine, T_fine );
+            Heat<2,1> heatfine(fmt::format("heat-fine-{}-{}",color,0), specs, mesh, dt_fine, t0_fine, T_fine );
             
             int iteration = 1;
             bool work = true;
             while( work )
             {
-                heatfine.resetExporter(fmt::format("heat-coarse-{}-{}", w->globalRank(), iteration));
+                heatfine.resetExporter(fmt::format("heat-fine-{}-{}", color, iteration));
                 for (double t = t0_fine; t < T_fine; t += dt_fine) {
                     LOG(INFO) << "====================================" << std::endl;
-                    LOG(INFO) << fmt::format("Time interval {}, t = {}", w->globalRank()-1, t) << std::endl;
+                    LOG(INFO) << fmt::format("Time interval {}, t = {}", fine_time_interval, t) << std::endl;
                     // execute the time step: update the right hand side and solve the system
                     heatfine.run( t, heatfine.solution() );
 

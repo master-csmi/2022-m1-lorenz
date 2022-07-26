@@ -14,7 +14,7 @@ std::vector<std::string> split(const std::string &chaine, char delimiteur)
     split(chaine, delimiteur, elements);
     return elements;
 }
-MyMatrix read_sensor_heat(std::string donnée,std::string date_heure,int nbr_d_obs)
+MyMatrix read_obs(std::string donnée,std::string date_heure,int nbr_d_obs)
 {
     MyMatrix MT=MyMatrix::Zero(nbr_d_obs,10);
     int compteur=0;
@@ -22,7 +22,7 @@ MyMatrix read_sensor_heat(std::string donnée,std::string date_heure,int nbr_d_o
     if (ifile.good())
     {
         std::string str;
-        ifile;
+        getline(ifile, str);
         while(getline(ifile, str)) 
         {
             std::istringstream ss(str);
@@ -31,8 +31,6 @@ MyMatrix read_sensor_heat(std::string donnée,std::string date_heure,int nbr_d_o
             while(ss >> num)
             {
                 std::vector<std::string> x=split(str, ',');
-                
-
                 if(x[0]==date_heure)
                 {
                     while(compteur != nbr_d_obs)
@@ -47,27 +45,48 @@ MyMatrix read_sensor_heat(std::string donnée,std::string date_heure,int nbr_d_o
                         MT(compteur,7)=stod(x[8]);
                         MT(compteur,8)=stod(x[9]);
                         MT(compteur,9)=stod(x[10]);
-                        
-                        //std::cout << "str1\n  "<<str<<std::endl;
-                        //std::cout << "x1\n  "<<x[3]<<std::endl;
-
                         getline(ifile, str);
-                        //std::cout << "str2\n  "<<str<<std::endl;
-                        //std::istringstream ss(str);
                         x=split(str, ',');
-                        //std::cout << "x2\n  "<<x[3]<<std::endl;
                         compteur+=1;
                     }
                     return MT;
                 }
-            
-
             }
-
         }
-        
-    
     }
     return MT;
-
+}
+MyMatrix read_model(std::string donnée,int nbr_model)
+{
+    MyMatrix MT=MyMatrix::Zero(nbr_model,10);
+    int compteur=0;
+    std :: ifstream ifile(donnée  ,std :: ios ::in);
+    if (ifile.good())
+    {
+        std::string str;
+        getline(ifile, str);
+        while(getline(ifile, str)) 
+        {
+            std::istringstream ss(str);
+            int num;
+            std::string a;
+            while(ss >> num)
+            {
+                std::vector<std::string> x=split(str, ',');
+                MT(compteur,0)=stod(x[0])-273.15;
+                MT(compteur,1)=stod(x[1])-273.15;
+                MT(compteur,2)=stod(x[2])-273.15;
+                MT(compteur,3)=stod(x[3])-273.15;
+                MT(compteur,4)=stod(x[4])-273.15;
+                MT(compteur,5)=stod(x[5])-273.15;
+                MT(compteur,6)=stod(x[6])-273.15;
+                MT(compteur,7)=stod(x[7])-273.15;
+                MT(compteur,8)=stod(x[8])-273.15;
+                MT(compteur,9)=stod(x[9])-273.15;
+                
+            }
+            compteur+=1;
+        }
+    }
+    return MT;
 }

@@ -18,6 +18,7 @@
 using namespace Eigen;
 typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> MyMatrix;
 
-MyMatrix read_sensor_heat(std::string donnée,std::string date,std::string heure);
+MyMatrix read_obs(std::string donnée,std::string date,std::string heure);
+MyMatrix read_model(std::string donnée,int nbr_model);
 
 //MyMatrix hx_heat();

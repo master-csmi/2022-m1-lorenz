@@ -116,7 +116,7 @@ int main(int argc, char** argv) {
                 if ( color > 1 )
                 {
                     // receive initial guess from coarse integrator for time_interval
-                    mpi::irecv( );
+                    //mpi::irecv( );
                 }
                 for (double t = t0_fine; t < T_fine+dt_fine; t += dt_fine) {
                     if ( w->isMasterRank() )

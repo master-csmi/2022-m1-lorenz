@@ -16,7 +16,7 @@
     "Time":{
         "final_time": 1,
         "dt_fine": 0.01,
-        "time_partitions": 10
+        "partitions": 2
 
     },
     "Parameters": {
@@ -46,8 +46,8 @@
     "Meshes": {
         "heat": {
             "Import": {
-                "filename": "$cfgdir/../fin.geo",
-                "partition": 0
+                "filename": "$cfgdir/../fin_p2.json"
+                //"partitions": 2
             }
         }
     },

@@ -164,6 +164,7 @@ public:
      */
     void postProcess()
     {
+#if 0
         // compute outputs
         auto m = mean(_range = elements(mesh_), _expr = idv(v_));
         auto m_root = mean(_range = markedfaces(mesh_, "Gamma_root"), _expr = idv(v_));
@@ -172,6 +173,7 @@ public:
         std::cout << fmt::format("-  max value: {}", v_.max()) << std::endl;
         std::cout << fmt::format("-  max deviation: {}", v_.max() - v_.min()) << std::endl;
         std::cout << fmt::format("-  mean root: {}", m_root) << std::endl;
+#endif        
         // Export
         e_->step(t_)->setMesh(mesh_);
         e_->step(t_)->addRegions();

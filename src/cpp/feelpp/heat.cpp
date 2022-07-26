@@ -48,9 +48,12 @@ int main(int argc, char** argv) {
             while ( work )
             {
                 heatcoarse.resetExporter(fmt::format("heat-coarse-{}-{}", color, iteration) );
-                for (double t = dt_coarse; t < T_coarse; t += dt_coarse) {
-                    LOG(INFO) << "====================================" << std::endl;
-                    LOG(INFO) << fmt::format("Coarse integrator t = {}", t) << std::endl;
+                for (double t = dt_coarse; t < T_coarse+dt_coarse; t += dt_coarse) {
+                    if ( w->isMasterRank() )
+                    {
+                        std::cout << "====================================" << std::endl;
+                        std::cout << fmt::format("Coarse integrator t = {}", t) << std::endl;
+                    }
 
                     // execute the time step: update the right hand side and solve the system
                     heatcoarse.run(t, heatcoarse.solution());
@@ -67,6 +70,7 @@ int main(int argc, char** argv) {
                 work = false;
                 ++iteration;
             }
+            LOG(INFO) << fmt::format("== coarse integrator is finished ==================================") << std::endl;
         }
         else // we are on the other P processors with the fine integrators
         {
@@ -87,9 +91,12 @@ int main(int argc, char** argv) {
             while( work )
             {
                 heatfine.resetExporter(fmt::format("heat-fine-{}-{}", color, iteration));
-                for (double t = t0_fine; t < T_fine; t += dt_fine) {
-                    LOG(INFO) << "====================================" << std::endl;
-                    LOG(INFO) << fmt::format("Fine Integrator Time interval {}, t = {}", fine_time_interval, t) << std::endl;
+                for (double t = t0_fine; t < T_fine+dt_fine; t += dt_fine) {
+                    if ( w->isMasterRank() )
+                    {
+                        LOG(INFO) << "====================================" << std::endl;
+                        LOG(INFO) << fmt::format("Fine Integrator Time interval {}, t = {}", fine_time_interval, t) << std::endl;
+                    }
                     // execute the time step: update the right hand side and solve the system
                     heatfine.run( t, heatfine.solution() );
 
@@ -108,6 +115,7 @@ int main(int argc, char** argv) {
                 work = false;
                 ++iteration;
             }
+            LOG(INFO) << fmt::format("== fine integrator {} is finished ==================================",fine_time_interval ) << std::endl;
         }    
 
         return 0;

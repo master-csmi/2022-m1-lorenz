@@ -260,8 +260,17 @@ MathJax.Hub.Config({
 </li>
 <li>
 <p>Step 2 : We start by applying the function \(G\) on all intervals \([t_j,t_{j+1}\)] and we denote by \(U_j^0=G(U_{j-1}^0)\) the values of \(G\) at \(t_j\).</p>
-<div class="paragraph">
-<p>Note that this part of the method must be done sequentially because if we parallelize the task, the process \(j\) should wait until the process \(j-1\) has finished before starting.</p>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+This part of the method must be done sequentially because if we parallelize the task, the process \(j\) should wait until the process \(j-1\) has finished before starting.
+</td>
+</tr>
+</table>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -302,14 +311,14 @@ MathJax.Hub.Config({
 \[U_j^1=G(U_{j-1}^1)+(F(U_{j-1}^0)-G(U_{j-1}^0)).\]
 </div>
 </div>
-<div class="admonitionblock tip">
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-that due to \(U_0^1=U_0^0\), we have \(G(U_0^1)=G(U_0^0)\) and therefore \(U_1^1=F(U_0^0)\).
+due to the fact that \(U_0^1=U_0^0\), we have \(G(U_0^1)=G(U_0^0)\) and therefore \(U_1^1=F(U_0^0)\).
 </td>
 </tr>
 </table>

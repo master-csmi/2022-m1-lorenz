@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
                 heatcoarse.resetExporter(fmt::format("heat-coarse-{}-{}", color, iteration) );
                 for (double t = dt_coarse; t < T_coarse; t += dt_coarse) {
                     LOG(INFO) << "====================================" << std::endl;
-                    LOG(INFO) << fmt::format("t = {}", t) << std::endl;
+                    LOG(INFO) << fmt::format("Coarse integrator t = {}", t) << std::endl;
 
                     // execute the time step: update the right hand side and solve the system
                     heatcoarse.run(t, heatcoarse.solution());
@@ -60,11 +60,12 @@ int main(int argc, char** argv) {
 
                     // non blocking async comm to receive fine integrator communication
                     //
-                    ++iteration;
+                    
                 }
                 // update work flag to know if we stop or continue
                 //work = ( normL2(_range=elements(mesh),_expr=idv(heatcoarse.solution())-idv(heatcoarse.oldSolution()) > 1e-6 );
                 work = false;
+                ++iteration;
             }
         }
         else // we are on the other P processors with the fine integrators
@@ -88,13 +89,13 @@ int main(int argc, char** argv) {
                 heatfine.resetExporter(fmt::format("heat-fine-{}-{}", color, iteration));
                 for (double t = t0_fine; t < T_fine; t += dt_fine) {
                     LOG(INFO) << "====================================" << std::endl;
-                    LOG(INFO) << fmt::format("Time interval {}, t = {}", fine_time_interval, t) << std::endl;
+                    LOG(INFO) << fmt::format("Fine Integrator Time interval {}, t = {}", fine_time_interval, t) << std::endl;
                     // execute the time step: update the right hand side and solve the system
                     heatfine.run( t, heatfine.solution() );
 
                     // save solution at current time
                     heatfine.postProcess();
-                    ++iteration;
+                   
                 }   
                 // send fine solution to coarse integrator
                 // communication from fine to coarse integrators
@@ -105,6 +106,7 @@ int main(int argc, char** argv) {
                 // blocking communication
                 
                 work = false;
+                ++iteration;
             }
         }    
 

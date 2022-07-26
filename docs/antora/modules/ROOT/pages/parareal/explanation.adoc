@@ -15,7 +15,7 @@ image::parareal_1.jpg["Step 1 of the method",width=480,height=360]
 
 * Step 2 : We start by applying the function stem:[G] on all intervals stem:[[t_j,t_{j+1}]] and we denote by stem:[U_j^0=G(U_{j-1}^0)] the values of stem:[G] at stem:[t_j].
 +
-Note that this part of the method must be done sequentially because if we parallelize the task, the process stem:[j] should wait until the process stem:[j-1] has finished before starting.
+CAUTION: This part of the method must be done sequentially because if we parallelize the task, the process stem:[j] should wait until the process stem:[j-1] has finished before starting.
 +
 image::parareal_2.jpg["Step 2 of the method",width=480,height=360]
 
@@ -38,7 +38,7 @@ image::parareal_4.jpg["Step 4 of the method",width=480,height=360]
 U_j^1=G(U_{j-1}^1)+(F(U_{j-1}^0)-G(U_{j-1}^0)).
 ++++	
 +
-TIP: that due to stem:[U_0^1=U_0^0], we have stem:[G(U_0^1)=G(U_0^0)] and therefore stem:[U_1^1=F(U_0^0)].
+NOTE: due to the fact that stem:[U_0^1=U_0^0], we have stem:[G(U_0^1)=G(U_0^0)] and therefore stem:[U_1^1=F(U_0^0)].
 +
 We then compute in the same way the following stem:[G(U_j^1)] and the associated stem:[U_{j+1}^1] points. This step can be done sequentially for the same reason as in step 2.
 +

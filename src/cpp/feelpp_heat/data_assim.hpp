@@ -9,6 +9,7 @@
 #include <fstream>
 #include <sstream>
 #include<time.h>
+#include <vector>
 #include <Eigen/Dense>
 #include <Eigen/Eigenvalues>
 #include <Eigen/Cholesky>
@@ -17,6 +18,6 @@
 using namespace Eigen;
 typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> MyMatrix;
 
-void read_sensor_heat(string donnée,string date,string heure);
+MyMatrix read_sensor_heat(std::string donnée,std::string date,std::string heure);
 
 //MyMatrix hx_heat();

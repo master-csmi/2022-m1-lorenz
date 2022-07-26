@@ -72,8 +72,8 @@ int main(int argc, char** argv) {
         {
             int fine_time_interval = color-1;
             double dt_fine = specs["/Time/dt_fine"_json_pointer].get<double>();
-            double t0_fine = t0 + (color-1) * (T - t0) / (time_partitions + 1);
-            double T_fine = t0 + (color) * (T - t0)/(time_partitions+1);
+            double t0_fine = t0 + (color-1) * (T - t0) / (time_partitions);
+            double T_fine = t0 + (color) * (T - t0)/(time_partitions);
 
             // barrier to make sure that the mesh is created by global rank 0 process
             wglob->barrier();

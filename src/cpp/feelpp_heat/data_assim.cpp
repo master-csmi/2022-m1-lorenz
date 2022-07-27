@@ -90,3 +90,25 @@ MyMatrix read_model(std::string donnée,int nbr_model)
     }
     return MT;
 }
+MyMatrix hx_heat(MyMatrix x)
+{
+    return x;
+}
+
+MyMatrix read_sensor_heat(int index,MyMatrix obs)
+{
+    MyMatrix z;
+    int dim_z=obs.cols();
+    z=MyMatrix::Zero(dim_z,1);
+    z=obs.row(index).transpose();
+    return z;
+} 
+MyMatrix fx_heat(double t,MyMatrix X)
+{
+    int nbr_model=73;
+    MyMatrix model=read_model("heat_model.csv",nbr_model);
+    int dim=model.cols();
+    MyMatrix m=MyMatrix::Zero(dim,1);
+    m=model.row(t*10).transpose();
+    return m;
+}

@@ -181,9 +181,6 @@ void EnsembleKalmanFilter::predict()
     {
         M_sigmas.row(i)=M_fx(M_dt,M_sigmas.row(i).transpose()).transpose();
     }
-        
-
-        
     std::mt19937_64 urng2( time(NULL) );
     auto gen2 = Rand::makeMvNormalGen(M_mean, M_Q);
     MyMatrix e = (gen2.generate(urng2, M_N)).transpose();

@@ -103,12 +103,12 @@ MyMatrix read_sensor_heat(int index,MyMatrix obs)
     z=obs.row(index).transpose();
     return z;
 } 
-MyMatrix fx_heat(double t,MyMatrix X)
+MyMatrix fx_heat(double t,MyMatrix &X)
 {
     int nbr_model=73;
     MyMatrix model=read_model("heat_model.csv",nbr_model);
     int dim=model.cols();
     MyMatrix m=MyMatrix::Zero(dim,1);
-    m=model.row(t*10).transpose();
+    m=model.row(t*12).transpose();
     return m;
 }

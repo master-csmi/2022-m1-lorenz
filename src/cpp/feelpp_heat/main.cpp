@@ -61,6 +61,6 @@ int main()
     {
         model_after_data_ass.row(i*6)=etat.row(i);
     }
-    std::cout << "model after correction\n  "<<model_after_data_ass<<std::endl;
+    //std::cout << "model after correction\n  "<<model_after_data_ass<<std::endl;
     return 0;
 }

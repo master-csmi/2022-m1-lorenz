@@ -4,6 +4,8 @@
 #include <mpi.h>
 #include <ctime>
 #include <cmath>
+#include <iostream>
+
 // #include <feel/feel.hpp> //tic/toc ?
 
 // int main (){

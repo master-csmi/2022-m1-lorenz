@@ -1,96 +1,185 @@
-#include <feel/feel.hpp>
 
-int main(int argc, char**argv)
-{
+#include <feel/feelcore/environment.hpp>
+#include <feel/feelcore/utility.hpp>
+#include <feelpp/heat.hpp>
+#include <boost/mpi/intercommunicator.hpp>
+#include <iostream>
+
+int main(int argc, char** argv) {
     using namespace Feel;
-    using Feel::cout;
-    po::options_description laplacianoptions( "Heat options" );
-    laplacianoptions.add_options()
-        ( "no-solve", po::value<bool>()->default_value( false ), "No solve" )
-        ;
+    try{
+        mpi::communicator world;
 
-    Environment env( _argc=argc, _argv=argv,
-                   _desc=laplacianoptions,
-                   _about=about(_name="heat",
-                                _author="Feel++ Consortium",
-                                _email="feelpp-devel@feelpp.org"));
+        Environment env(_argc = argc, _argv = argv,
+                        _desc = makeOptions(),
+                        _about = about(_name = "heat",
+                                    _author = "Feel++ Consortium",
+                                    _email = "feelpp@cemosis.fr"));
+        auto jsonfile = removeComments(readFromFile(Environment::expand(soption("specs"))));
+        std::istringstream istr(jsonfile);
+        json specs = json::parse(istr);
+        
+        // number of time interval for parareal
+        int time_partitions = specs["/Time/partitions"_json_pointer].get<int>();
+        LOG(INFO) << fmt::format("time partitions: {}, n time communicators: {}", time_partitions, time_partitions+1);
 
-    auto thechecker = checker( _name= "L1/H1 convergence", 
-                            _solution_key="toto"
-                            );
+        // split the main worldcomm into P+1 subworldcomms
+        auto [color, w, wglob] = Environment::worldCommPtr()->split(time_partitions+1);
+        LOG(INFO) << fmt::format("color: {}, wglob rank: {}, w global rank: {}, w local rank: {}", color, wglob->globalRank(), w->globalRank(), w->localRank());
 
-    tic();
-    auto mesh = loadMesh(_mesh=new Mesh<Simplex<FEELPP_DIM,1>>);
-    toc("loadMesh");
+        // coarse time step
+        ///double dt = specs["/Time/dt"_json_pointer].get<double>();
+        //double t0 = specs["/Time/t0"_json_pointer].get<double>();
+        double T = specs["/Time/final_time"_json_pointer].get<double>();
+        double t0 = 0.;
+        
+        int nb_proc = world.size();
+        int nb_grp = time_partitions+1;
+        int nb_dom = nb_proc/nb_grp;
 
-    tic();
-    auto Vh = Pch<1>( mesh ); 
-    auto u = Vh->element("u"); 
-    auto mu = expr(soption(_name="functions.mu")); // diffusion term 
-    auto f = expr( soption(_name="functions.f"), "f" ); 
-    auto r_1 = expr( soption(_name="functions.a"), "a" ); // Robin left hand side expression 
-    auto r_2 = expr( soption(_name="functions.b"), "b" ); // Robin right hand side expression 
-    auto n = expr( soption(_name="functions.c"), "c" ); // Neumann expression 
-    auto solution = expr( thechecker.solution(), "solution" ); 
-    auto g = thechecker.check()?solution:expr( soption(_name="functions.g"), "g" ); 
-    auto v = Vh->element( g, "g" ); 
-    toc("Vh");
+        if(wglob->globalRank()==0){
+            int position;
+            
+            // size = ( world.size()/(time_partitions+1) line ; time_partitions+1 col )
+            std::vector<std::vector<int>> table(nb_dom, std::vector <int>(nb_grp));
 
-    tic();
-    auto l = form1( _test=Vh );
-    l = integrate(_range=elements(mesh),
-                  _expr=f*id(v));
-    l+=integrate(_range=markedfaces(mesh,"Robin"), _expr=r_2*id(v));
-    l+=integrate(_range=markedfaces(mesh,"Neumann"), _expr=n*id(v));
-    toc("l");
+            for(int p=1; p < nb_dom*nb_grp; ++p){
+                world.recv( p, p, position );
+                table[position/nb_grp][position%nb_grp]=p;
+            }
+            
+            std::cout << "TABLE : " << std::endl;
+            for (int i=0;i<nb_dom;++i){
+                for (int j=0;j<nb_grp;++j)
+                    std::cout << table[i][j] << " ";
+                std::cout << std::endl;
+            }
+        }
+        else{
+            world.send( 0, wglob->globalRank(), w->globalRank()*nb_grp + color);
+        }
 
-    tic();
-    auto a = form2( _trial=Vh, _test=Vh);
-    tic();
-    a = integrate(_range=elements(mesh),
-                  _expr=mu*inner(gradt(u),grad(v)) );
-    toc("a");
-    a+=integrate(_range=markedfaces(mesh,"Robin"), _expr=r_1*idt(u)*id(v));
-    a+=on(_range=markedfaces(mesh,"Dirichlet"), _rhs=l, _element=u, _expr=g );
-    //! if no markers Robin Neumann or Dirichlet are present in the mesh then
-    //! impose Dirichlet boundary conditions over the entire boundary
-    if ( !mesh->hasAnyMarker({"Robin", "Neumann","Dirichlet"}) )
-        a+=on(_range=boundaryfaces(mesh), _rhs=l, _element=u, _expr=g );
-    toc("a");
 
-    tic();
-    //! solve the linear system, find u s.t. a(u,v)=l(v) for all v
-    if ( !boption( "no-solve" ) )
-        a.solve(_rhs=l,_solution=u);
-    toc("a.solve");
+        // on global rank 0, we have the coarse integrator
+        // if ( color == 0 )
+        // {
+        //     double t0_coarse = t0;
+        //     double dt_coarse = T / time_partitions;
+        //     double T_coarse = T;
+        //     auto mesh = loadMesh(_mesh = new Mesh<Simplex<2>>(), _worldcomm=w,
+        //                          _filename = specs["/Meshes/heat/Import/filename"_json_pointer].get<std::string>());
+        //     wglob->barrier();
+        //     // coarse heat mesh: unfortunately we duplicate on the P processor the coarse integrator
+        //     // need to fix that
+        //     Heat<2, 1> heatcoarse( fmt::format("heat-coarse-{}-{}",color,0), specs, mesh, dt_coarse, t0_coarse, T_coarse );
+            
+        //     int iteration = 1;
+        //     bool work = true;
+        //     while ( work )
+        //     {
+        //         heatcoarse.resetExporter(fmt::format("heat-coarse-{}-{}", color, iteration) );
+        //         for (double t = dt_coarse; t < T_coarse+dt_coarse; t += dt_coarse) {
+        //             if ( w->isMasterRank() )
+        //             {
+        //                 std::cout << "====================================" << std::endl;
+        //                 std::cout << fmt::format("Coarse integrator t = {}", t) << std::endl;
+        //             }
 
-    tic();
-    auto e = exporter( _mesh=mesh );
-    e->addRegions();
-    e->add( "uh", u );
-    if ( thechecker.check() )
-    {
-        v.on(_range=elements(mesh), _expr=solution );
-        e->add( "solution", v );
+        //             // execute the time step: update the right hand side and solve the system
+        //             // compute G(U^k_{j-1}), heatcoarse.solution() == U^k_{j-1}
+        //             heatcoarse.run(t, heatcoarse.solution());
+        //             // now heatcoarse.solution() == G(U^k_{j-1})
+
+        //             // non blocking async comm to receive fine integrator communication
+        //             // send U^k_j =  G(U^k_{j-1})+(F(U^{k-1}_{j-1})-G(U^{k-1}_{j-1}))
+        //             // U^k_j =  G(U^k_{j-1}) + correction[j-1]
+        //             // save solution at current time
+        //             heatcoarse.postProcess();
+
+                    
+                    
+        //         }
+        //         // get in sync with the fine integrators for each coarse time step
+        //         // we have a collection of size P of solution for each coarse time step 
+        //         bool done = true;
+        //         for (double t = dt_coarse; t < T_coarse + dt_coarse; t += dt_coarse)
+        //         {
+        //             // we are in coarse iteration j
+
+        //             // Receive F(U^{k-1}_{j-1}) from the fine integrator
+        //             // ...
+        //             //  Compute correction
+        //             // correction[j-1] = F(U^{k-1}_{j-1}) - G(U^{k-1}_{j-1})
+
+        //             // update work flag to know if we stop or continue
+        //             // done = done && ( normL2(_range=elements(mesh),_expr=idv(U^{k}_{j})-idv(U^{k-1}_{j}) < 1e-6 );
+        //         }
+                
+        //         work = !done;
+        //         // broadcast work flag to all processors
+        //         // mpi::broadcast(wglob->globalComm(), 0, work);
+        //         ++iteration;
+        //     }
+        //     LOG(INFO) << fmt::format("== coarse integrator is finished ==================================") << std::endl;
+        // }
+        // else // we are on the other P processors with the fine integrators
+        // {
+        //     int fine_time_interval = color-1;
+        //     double dt_fine = specs["/Time/dt_fine"_json_pointer].get<double>();
+        //     double t0_fine = t0 + (color-1) * (T - t0) / (time_partitions);
+        //     double T_fine = t0 + (color) * (T - t0)/(time_partitions);
+
+        //     // barrier to make sure that the mesh is created by global rank 0 process
+        //     wglob->barrier();
+        //     auto mesh = loadMesh(_mesh = new Mesh<Simplex<2>>(), _worldcomm = w,
+        //                          _filename = specs["/Meshes/heat/Import/filename"_json_pointer].get<std::string>());
+        //     // fin heat for each time subdomain, local to each subdomain
+        //     Heat<2,1> heatfine(fmt::format("heat-fine-{}-{}",color,0), specs, mesh, dt_fine, t0_fine, T_fine );
+            
+        //     int iteration = 1;
+        //     bool work = true;
+        //     while( work )
+        //     {
+        //         heatfine.resetExporter(fmt::format("heat-fine-{}-{}", color, iteration));
+
+                 
+        //         if ( color > 1 )
+        //         {
+        //             // receive initial guess from coarse integrator for time_interval
+        //             //mpi::irecv( );
+        //         }
+        //         for (double t = t0_fine; t < T_fine+dt_fine; t += dt_fine) {
+        //             if ( w->isMasterRank() )
+        //             {
+        //                 LOG(INFO) << "====================================" << std::endl;
+        //                 LOG(INFO) << fmt::format("Fine Integrator Time interval {}, t = {}", fine_time_interval, t) << std::endl;
+        //             }
+        //             // execute the time step: update the right hand side and solve the system
+        //             heatfine.run( t, heatfine.solution() );
+
+        //             // save solution at current time
+        //             heatfine.postProcess();
+                   
+        //         }   
+        //         // send fine solution to coarse integrator
+        //         // communication from fine to coarse integrators
+        //         // non-blocking communication
+        //         // send F(U^{k}_{T_fine}) to coarse integrator
+
+        //         // update work flag to know whether we have to continue or not
+        //         // communication from coarse to fine integrators
+        //         // blocking communication
+        //         // mpi::broadcast(wglob->globalComm(), 0, work);
+        //         work = false;
+        //         ++iteration;
+        //     }
+        //     LOG(INFO) << fmt::format("== fine integrator {} is finished ==================================",fine_time_interval ) << std::endl;
+        // }    
+
+        return 0;
     }
-    e->save();
-    toc("Exporter");
-
-    // compute l2 and h1 norm of u-u_h where u=solution
-    auto norms = [=]( std::string const& solution ) ->std::map<std::string,double>
-        {
-            tic();
-            double l2 = normL2(_range=elements(mesh), _expr=idv(u)-expr(solution) );
-            toc("L2 error norm");
-            tic();
-            double h1 = normH1(_range=elements(mesh), _expr=idv(u)-expr(solution), _grad_expr=gradv(u)-grad<2>(expr(solution)) );
-            toc("H1 error norm");
-            return { { "L2", l2 }, {  "H1", h1 } };
-        };
-
-    int status = thechecker.runOnce( norms, rate::hp( mesh->hMax(), Vh->fe()->order() ) );
-
-    // exit status = 0 means no error
-    return !status;
-
+    catch(...)
+    {
+        handleExceptions();
+    }
 }

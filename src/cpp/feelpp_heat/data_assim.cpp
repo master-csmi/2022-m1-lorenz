@@ -18,7 +18,8 @@ MyMatrix read_obs(std::string donnée,std::string date_heure,int nbr_d_obs)
 {
     MyMatrix MT=MyMatrix::Zero(nbr_d_obs,10);
     int compteur=0;
-    std :: ifstream ifile(donnée  ,std :: ios ::in);
+    std::cout << "prob\n  "<<donnée<<std::endl;
+    std :: ifstream ifile(donnée,std :: ios ::in);
     if (ifile.good())
     {
         std::string str;
@@ -61,10 +62,12 @@ MyMatrix read_model(std::string donnée,int nbr_model)
     MyMatrix MT=MyMatrix::Zero(nbr_model,10);
     int compteur=0;
     std :: ifstream ifile(donnée  ,std :: ios ::in);
+    
     if (ifile.good())
     {
         std::string str;
         getline(ifile, str);
+        std::cout << "ss\n  "<<str<<std::endl;
         while(getline(ifile, str)) 
         {
             std::istringstream ss(str);
@@ -73,6 +76,7 @@ MyMatrix read_model(std::string donnée,int nbr_model)
             while(ss >> num)
             {
                 std::vector<std::string> x=split(str, ',');
+                std::cout << "x\n  "<<x[0]<<std::endl;
                 MT(compteur,0)=stod(x[0])-273.15;
                 MT(compteur,1)=stod(x[1])-273.15;
                 MT(compteur,2)=stod(x[2])-273.15;
@@ -103,7 +107,7 @@ MyMatrix read_sensor_heat(int index,MyMatrix obs)
     z=obs.row(index).transpose();
     return z;
 } 
-MyMatrix fx_heat(double t,MyMatrix &X)
+MyMatrix fx_heat(double t,MyMatrix X)
 {
     int nbr_model=73;
     MyMatrix model=read_model("heat_model.csv",nbr_model);

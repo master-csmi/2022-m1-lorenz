@@ -1,9 +1,12 @@
 #include "data_assim.cpp"
-#include "../enkf/enkf.cpp"
-#include "../enkf/enkf_fct.cpp"
+#include "data_assim.hpp"
+#include <enkf/enkf_fct.hpp>
+#include <enkf/enkf.cpp>
+#include <enkf/enkf_fct.cpp>
 
 int main()
 {
+    
     std::string date_heure="2022-01-08 20:00:00";
     int nbr_d_obs=12;
     int nbr_model=73;

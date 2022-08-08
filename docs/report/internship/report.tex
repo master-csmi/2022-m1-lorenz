@@ -99,7 +99,7 @@
  	\noindent And the other person will take care of understanding the basic principles of data assimilation, which means how to combine the observations and the mathematical model, the different operators and describe them. For this, it is necessary to understand the two methods of data assimilation Kalman filter and 3DVar, and also the link between them, but it is better to use the Ensemble Kalman filter method because this one works on non-linear systems.
  	
  	\begin{figure}[H]
- 		\includegraphics[width=\textwidth]{../gantt/gantt.pdf}
+ 		\includegraphics[width=\textwidth]{../../gantt/gantt.pdf}
  		\caption{Gantt chart}
  		\label{gantt}
  	\end{figure}
@@ -374,6 +374,12 @@
 
 	\section{Conclusion}
 	\noindent To conclude all this and to summarize everything, we had as main goal to implement a parallel time resolution method for the Lorenz system, and to realize the data assimilation using the EnKF method. But to achieve these goals we had to understand the Lorenz system and try to implement several numerical resolutions to find a solution. Afterwards, we have implemented the parareal method for the parallel time resolution of ODEs and have verified its convergence in a case where the analytical solution is known (in our case we have chosen the harmonic oscillator). We have then applied this method to the Lorenz system and we have noticed a speed up compared to the sequential execution with the fine time step, which shows that the method is efficient. And finally, for the data assimilation part, we had to understand the principles of methods such as the Kalman filter and 3DVAR. It was also important to understand the link between these two methods in order to understand the method to use in the case where the differential equation system is nonlinear and to implement the method using EnKF with FilterPy. We noticed that during the data assimilation the covariance matrices associated with the error of our states had a very large impact on the analyses. Changing one of these parameters or reversing the covariance matrix associated with the error of the observations with the one associated with the model could seriously change our final analysis. 
+	
+	\newpage
+	
+	\appendix
+	
+	\input{appendix.tex}	
 	
 	\newpage	
 	\bibliographystyle{plain}

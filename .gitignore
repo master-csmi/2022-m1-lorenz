@@ -15,8 +15,11 @@ docs/presentation/internship/presentation*
 docs/gantt/gantt*
 !docs/gantt/gantt.tex
 
-docs/report/report*
-!docs/report/report.tex
+docs/report/project/report*
+!docs/report/project/report.tex
+
+docs/report/internship/report*
+!docs/report/internship/report.tex
 
 docs/meeting/parareal/diapo_1/diapo_1*
 !docs/meeting/parareal/diapo_1/diapo_1.tex

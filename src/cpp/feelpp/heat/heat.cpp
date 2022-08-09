@@ -54,10 +54,33 @@ int main(int argc, char** argv) {
                     std::cout << table[i][j] << " ";
                 std::cout << std::endl;
             }
+
+            int proc;
+            std::vector<int> vec_send(2);
+            for(int c=0; c<nb_grp; c++){
+                for(int d=0; d<nb_dom; d++){
+                    proc = table[d][c];
+                    if(proc != 0){
+                        vec_send = {c, d};
+                        world.send(proc, proc, vec_send);
+                    }
+                }
+            }
         }
         else{
             world.send( 0, wglob->globalRank(), w->globalRank()*nb_grp + color);
+            std::vector<int> vec_recv(2);
+            world.recv( 0, wglob->globalRank(), vec_recv);
+            std::cout << "real : (" << color << "," << w->globalRank() << ") ; recv : (" << vec_recv[0] << "," << vec_recv[1] << ")" << std::endl;
         }
+
+        if(wglob->globalRank()==0){
+            std::cout << "INTERCOMMUNICATOR : " << std::endl;
+        }
+
+        mpi::intercommunicator inter(world,mpi::comm_duplicate);
+
+        std::cout << wglob->globalRank() << " : " << inter.local_rank() << std::endl;
 
 
         // on global rank 0, we have the coarse integrator

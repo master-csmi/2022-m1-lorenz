@@ -1,25 +1,9 @@
-add_library(
-    data_assim_heat SHARED 
-    data_assim.cpp 
-    )
-target_include_directories(data_assim_heat PUBLIC ${PROJECT_SOURCE_DIR}/src/cpp/EigenRand)
-include_directories(${CMAKE_SOURCE_DIR}/src/cpp)
-target_link_libraries(data_assim_heat PUBLIC CONAN_PKG::eigen)
+include_directories(${CMAKE_SOURCE_DIR}/src/cpp $ENV{FEELPP_DIR}/cmake/feelpp-toolboxes.package.cmake)
 
-add_executable(data_assim_heat.e main.cpp)
-target_link_libraries(
-    data_assim_heat.e
-    PRIVATE project_options
-          project_warnings
-          CONAN_PKG::docopt.cpp
-          CONAN_PKG::fmt
-          CONAN_PKG::spdlog
-          CONAN_PKG::eigen
-          Feelpp::feelpp)
+add_executable(data_assim_heat.e main.cpp data_assim.cpp)
+target_link_libraries(data_assim_heat.e 
+    PUBLIC enkf 
+    PRIVATE project_warnings project_options CONAN_PKG::eigen Feelpp::feelpp Feelpp::feelpp_toolbox_heat_lib Feelpp::feelpp_modelcore) 
 
-target_link_libraries(
-    data_assim_heat.e
-    PUBLIC Boost::mpi MPI::MPI_CXX)
-target_include_directories(data_assim_heat.e PUBLIC ${PROJECT_SOURCE_DIR}/src/cpp/EigenRand)
-
-target_compile_definitions(data_assim_heat.e PUBLIC FEELPP_DIM=2)
+#target_include_directories(data_assim_heat.e PUBLIC ${PROJECT_SOURCE_DIR}/src/cpp/EigenRand)
+#feelpp_add_testcase(csv PREFIX )

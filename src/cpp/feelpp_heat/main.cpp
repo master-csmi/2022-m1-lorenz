@@ -1,17 +1,78 @@
-#include "data_assim.cpp"
+//#include "data_assim.cpp"
 #include "data_assim.hpp"
 #include <enkf/enkf_fct.hpp>
-#include <enkf/enkf.cpp>
-#include <enkf/enkf_fct.cpp>
-
-int main()
+#include <enkf/enkf.hpp>
+#include <feel/feelmodels/heat/heat.hpp>
+#include <feel/feeldiscr/functionspace.hpp>
+//#include <enkf/enkf_fct.cpp>
+template <typename ToolboxType>
+int
+runToolboxSimulation( std::shared_ptr<ToolboxType> toolbox )
 {
-    
+    toolbox->init();
+    toolbox->printAndSaveInfo();
+
+
+    for ( toolbox->startTimeStep() ; !toolbox->timeStepBase()->isFinished(); toolbox->updateTimeStep() )
+    {
+        if (toolbox->worldComm().isMasterRank())
+        {
+            std::cout << "============================================================\n";
+            std::cout << "time simulation: " << toolbox->time() << "s \n";
+            std::cout << "============================================================\n";
+        }
+        
+        
+       // auto u=toolbox->functionSpace()->element();
+        //u.load("/data/home/aydogdu/feelppdb/data_assim_heat.e/np_1/heat.ts/temperature","temperature-0.h5");
+        toolbox->solve();
+        toolbox->exportResults();
+    }
+    return !toolbox->checkResults();
+}
+
+
+
+
+template <typename ToolboxType>
+int
+runHeatSimulation()
+{
+    using namespace Feel;
+    auto heat = ToolboxType::New(_prefix="heat");
+    std::cout << "Toolbox initial"<<std::endl;
+    return runToolboxSimulation( heat );
+    //std::cout << "Toolbox initial"<<std::endl;
+    //return ;
+
+}
+
+
+int main(int argc,char **argv)
+{
+    using namespace Feel;
+	po::options_description heatoptions( "heat options" );
+    heatoptions.add( toolboxes_options("heat") );
+
+    Environment env( _argc=argc, _argv=argv,
+                     _desc=heatoptions,
+                     _about=about(_name="toolboxes_heat",
+                                  _author="Feel++ Consortium",
+                                  _email="feelpp-devel@feelpp.org"));
+
+
+    typedef Feel::FeelModels::Heat< Simplex<3,1>,Lagrange<1, Scalar,Continuous,PointSetFekete> > model_type;
+    int status=0;
+    status = runHeatSimulation<model_type>();
+
+
     std::string date_heure="2022-01-08 20:00:00";
     int nbr_d_obs=12;
     int nbr_model=73;
-    MyMatrix obs=read_obs("meraki_results.csv",date_heure,nbr_d_obs);
-    MyMatrix model=read_model("heat_model.csv",nbr_model);
+    std::string path=std::filesystem::current_path();
+    std::cout << "path\n  "<<path<<std::endl;
+    MyMatrix obs=read_obs(path+"/csv/meraki_results.csv",date_heure,nbr_d_obs);
+    MyMatrix model=read_model(path+"/csv/heat_model.csv",nbr_model);
     std::cout << "model\n  "<<model<<std::endl;
     std::cout << "obs\n  "<<obs<<std::endl;
 
@@ -29,9 +90,10 @@ int main()
     
     int N2=int(T/1); //obs
     int dt2=1; //obs
-    
+    double dim_x=10;
+    double dim_z=10;
 
-    EnsembleKalmanFilter E1(10,10,X_0,P,dt2, 20, &hx_heat,&fx_heat);
+    EnsembleKalmanFilter E1(dim_x,dim_z,X_0,P,dt2, 20, &hx_heat,&fx_heat);
     E1.set_Q(Q);
     E1.set_R(R);
     double time=0;

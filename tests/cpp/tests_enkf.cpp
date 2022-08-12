@@ -8,7 +8,7 @@
 #include <enkf/enkf.cpp>
 #include <enkf/enkf_fct.cpp>
 
-MyMatrix fx_harmonique(double dt,MyMatrix X)
+MyMatrix fx_harmonique(double dt,MyMatrix X,int nbr_exhantillon)
 {
     double t=dt;
     MyMatrix p{{2}};

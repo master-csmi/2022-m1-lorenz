@@ -1,6 +1,6 @@
 #include "enkf.hpp"
 
-EnsembleKalmanFilter::EnsembleKalmanFilter(double dim_x,double dim_z,MyMatrix x,MyMatrix P,double dt, int N, MyMatrix ( *hx)(MyMatrix  x),MyMatrix ( *fx)(double dt,MyMatrix  x))
+EnsembleKalmanFilter::EnsembleKalmanFilter(double dim_x,double dim_z,MyMatrix x,MyMatrix P,double dt, int N, MyMatrix ( *hx)(MyMatrix  x),MyMatrix ( *fx)(double dt,MyMatrix  x,int nbr_echan))
 {
     M_dim_x=dim_x;
     M_dim_z=dim_z;
@@ -179,7 +179,7 @@ void EnsembleKalmanFilter::predict()
    
     for (int i=0;i<M_N;i++)
     {
-        M_sigmas.row(i)=M_fx(M_dt,M_sigmas.row(i).transpose()).transpose();
+        M_sigmas.row(i)=M_fx(M_dt,M_sigmas.row(i).transpose(),i).transpose();
     }
     std::mt19937_64 urng2( time(NULL) );
     auto gen2 = Rand::makeMvNormalGen(M_mean, M_Q);
@@ -194,6 +194,8 @@ void EnsembleKalmanFilter::predict()
     M_x_prior=M_x;
     M_P_prior=M_P;
 }
+
+  
 void EnsembleKalmanFilter::creation_csv(MyMatrix lorenz1,double dt_1,MyMatrix lorenz2,double dt_2,MyMatrix etat,double dt_3)
 {
     int dim_col=lorenz1.cols();

@@ -18,13 +18,13 @@ class EnsembleKalmanFilter
         int M_dim_x,M_dim_z,M_N;
         double M_dt;
         MyMatrix (* M_hx)(MyMatrix  x);
-        MyMatrix (* M_fx)(double dt,MyMatrix x);
+        MyMatrix (* M_fx)(double dt,MyMatrix x,int nbr_echan);
         MyMatrix M_x,M_K,M_z;
         MyMatrix M_Q,M_R,M_P,M_mean,M_mean_z;
         MyMatrix M_x_prior,M_P_prior,M_x_post,M_P_post;
         MyMatrix M_sigmas;
     public:
-        EnsembleKalmanFilter(double dim_x,double dim_z,MyMatrix x,MyMatrix P,double dt, int N, MyMatrix ( *hx)(MyMatrix  x),MyMatrix ( *fx)(double dt,MyMatrix  x));
+        EnsembleKalmanFilter(double dim_x,double dim_z,MyMatrix x,MyMatrix P,double dt, int N, MyMatrix ( *hx)(MyMatrix  x),MyMatrix ( *fx)(double dt,MyMatrix  x,int nbr_echan));
     
     
         // accesseurs
@@ -123,6 +123,7 @@ class EnsembleKalmanFilter
          * 
          */
         void predict();
+
 
         /**
          * @brief Create 3 csv files.

@@ -1,0 +1,10 @@
+{
+  "description": "Web server",
+  "scripts": {
+    "sphinx": "node-srv -p 8010 _build/html"
+  },
+  "devDependencies": {
+    "node-cmake": "^2.5.1",
+    "node-srv": "^3.0.3"
+  }
+}

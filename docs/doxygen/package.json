@@ -1,0 +1,10 @@
+{
+  "description": "Web server",
+  "scripts": {
+    "doxygen": "node-srv -p 8010 doxygen/lorenz"
+  },
+  "devDependencies": {
+    "node-cmake": "^2.5.1",
+    "node-srv": "^3.0.3"
+  }
+}

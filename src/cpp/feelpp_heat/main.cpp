@@ -4,15 +4,43 @@
 #include <enkf/enkf.hpp>
 #include <feel/feelmodels/heat/heat.hpp>
 #include <feel/feeldiscr/functionspace.hpp>
+#include <feel/feelvf/mean.hpp>
+
+
+
 //#include <enkf/enkf_fct.cpp>
 template <typename ToolboxType>
 int
 runToolboxSimulation( std::shared_ptr<ToolboxType> toolbox )
 {
+    using namespace Feel;
+    double dt_initial=700;
+    double dt_final=3300;
+
     toolbox->init();
+    toolbox->timeStepBase()->setTimeInitial(dt_initial);
+    toolbox->timeStepBase()->setTimeFinal(dt_final);
     toolbox->printAndSaveInfo();
+    auto u=toolbox->spaceTemperature()->element();
+
+    MyMatrix X;
+    X=MyMatrix::Ones(10,1);
+    X*=10;
 
 
+    MyMatrix coord{{2.8,1.5,0.7},{4.8,0.8,0.7 },{1.3,3.5,0.7 },{4.8,1.5,0.5},{4.8,3.0,0.7},{3.7,3.5,0.7},{1.3,0.0,0.7},{0.0,0.5,0.7},{3.7,0.0,0.7},{0,2.0,0.7}};
+    double rayon=0.20;
+
+    u.load(_path="/data/home/aydogdu/feelppdb/data_assim_heat.e/1/np_1/heat.ts/temperature/temperature-6.h5",_type="hdf5");
+    for (int i=0;i<10;i++)
+    {
+        auto gaussien=exp(-(pow(Px()-cst(coord(i,0)),2)+pow(Py()-cst(coord(i,1)),2)+pow(Pz()-cst(coord(i,2)),2))/(2*pow(cst(rayon),2)));
+        u.on(_range=elements(toolbox->mesh()),_expr=cst(X(i))*gaussien);
+
+
+
+    }
+    toolbox->timeStepBdfTemperature()->unknown(0)=u;
     for ( toolbox->startTimeStep() ; !toolbox->timeStepBase()->isFinished(); toolbox->updateTimeStep() )
     {
         if (toolbox->worldComm().isMasterRank())
@@ -23,11 +51,24 @@ runToolboxSimulation( std::shared_ptr<ToolboxType> toolbox )
         }
         
         
-       // auto u=toolbox->functionSpace()->element();
-        //u.load("/data/home/aydogdu/feelppdb/data_assim_heat.e/np_1/heat.ts/temperature","temperature-0.h5");
+        
         toolbox->solve();
         toolbox->exportResults();
     }
+    MyMatrix X_dt;
+    X_dt=MyMatrix::Zero(10,1);
+    
+    for (int i=0;i<10;i++)
+    {
+        auto mean_exp=(pow(Px()-cst(coord(i,0)),2)+pow(Py()-cst(coord(i,1)),2)+pow(Pz()-cst(coord(i,2)),2)-pow(cst(rayon),2))<=0;
+        auto A=integrate(_range=elements(toolbox->mesh()),_expr=mean_exp).evaluate()(0,0);
+        std::cout <<"A"<< A<<std::endl;
+        X_dt(i)=integrate(_range=elements(toolbox->mesh()),_expr=idv(toolbox->fieldTemperature())*mean_exp/cst(A)).evaluate()(0,0);
+        std::cout << X_dt(i)<<std::endl;
+
+    }
+        
+
     return !toolbox->checkResults();
 }
 
@@ -39,7 +80,9 @@ int
 runHeatSimulation()
 {
     using namespace Feel;
-    auto heat = ToolboxType::New(_prefix="heat");
+    std::string rep="/data/home/aydogdu/feelppdb/data_assim_heat.e";
+    rep+="/1";
+    auto heat = ToolboxType::New(_prefix="heat",_repository=rep);
     std::cout << "Toolbox initial"<<std::endl;
     return runToolboxSimulation( heat );
     //std::cout << "Toolbox initial"<<std::endl;

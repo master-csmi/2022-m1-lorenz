@@ -97,6 +97,56 @@
 \section{Documentation}
 \label{doc}
 
+	To document the project as well as possible, we have used different tools which we will talk about here. As said before, all the files concerning the documentation are in the \textit{docs} directory. \\
+	Before presenting these tools, it is important to note that we have set up a Continuous Integration in order to automatically generate this documentation when a push is made on GitHub (see Section \ref{ci}). \\
+	Here is the link to the documentation : \url{https://master-csmi.github.io/2022-m1-lorenz/}. \\
+	To document the project we used 3 tools:
+	\begin{itemize}[label=-]
+		\item \textbf{Sphinx\cite{sphinx_doc}} : To document the Python code. 
+		\item \textbf{Doxygen\cite{doxygen_doc}} : To document C++ code.
+		\item \textbf{Antora\cite{antora_doc}} : To explain some parts/methods of the project (and to be able to keep it online).
+	\end{itemize}
+	We will now see how to generate the documentation locally using these 3 tools. For that, there are 2 methods: the first one is to generate " manually " the html files and the second one is to use the docs preset of our CMake.
+	\begin{enumerate}[label=\textbullet]
+		\item \textbf{Manual generation :} 
+		\begin{itemize}[label=-]
+			\item \textbf{Antora :} Go to "docs/antora", then execute :
+\begin{lstlisting}
+		npm install
+		npm run dev
+		npm run serve
+\end{lstlisting}
+			Then click on the following link (in the "site-dev.yml" file) : \\ \url{http://127.0.0.1:8080/lorenz/1.0.0/index.html}. \\
+			If we modify the documentation files, we just have to re-run the second line which will regenerate the documentation and then reload our browser window.
+			\item \textbf{Sphinx :} Go to "docs/sphinx", then execute :
+\begin{lstlisting}
+		make html
+		npm run sphinx
+\end{lstlisting}
+			\item \textbf{Doxygen :} Go to "docs/doxygen", then execute :
+\begin{lstlisting}
+		doxygen Doxyfile-dev.in
+		npm run doxygen
+\end{lstlisting}
+		\end{itemize}
+		\newpage
+		\item \textbf{With CMake :} \\
+		\danger This method is only available for Sphinx and Doxygen documentations. Indeed, CMake is configured in order that Antora is generated from the files uploaded online from Github. This configuration is due to CI (see Section \ref{ci}). This means that local modifications will have no effect with this method. \\ \; \\
+		So here is how to use the CMake docs preset to generate the Sphinx and Doxygen documentations (by placing at the root of the project) :
+\begin{lstlisting}
+		cmake --preset docs
+		cmake --build --preset docs
+\end{lstlisting}
+		Then in the same way as before, execute one of the following commands:
+\begin{lstlisting}
+		npm run sphinx
+\end{lstlisting}
+		or
+\begin{lstlisting}
+		npm run doxygen
+\end{lstlisting}
+	\end{enumerate}
+
 \newpage
 
 \section{Github actions}

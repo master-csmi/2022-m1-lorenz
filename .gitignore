@@ -41,6 +41,8 @@ node_modules/
 docs/antora/cache
 docs/antora/public
 
+docs/doxygen/doxygen
+
 results
 
 examples/cpp/feelpp/laplacian/circle/output/

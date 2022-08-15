@@ -106,7 +106,7 @@
 		\item \textbf{Doxygen\cite{doxygen_doc}} : To document C++ code.
 		\item \textbf{Antora\cite{antora_doc}} : To explain some parts/methods of the project (and to be able to keep it online).
 	\end{itemize}
-	We will now see how to generate the documentation locally using these 3 tools. For that, there are 2 methods: the first one is to generate " manually " the html files and the second one is to use the docs preset of our CMake.
+	We will now see how to generate the documentation locally using these 3 tools. For that, there are 2 methods : the first one is to generate "manually" the html files and the second one is to use the \textit{docs} preset of our CMake.
 	\begin{enumerate}[label=\textbullet]
 		\item \textbf{Manual generation :} 
 		\begin{itemize}[label=-]
@@ -131,13 +131,13 @@
 		\end{itemize}
 		\newpage
 		\item \textbf{With CMake :} \\
-		\danger This method is only available for Sphinx and Doxygen documentations. Indeed, CMake is configured in order that Antora is generated from the files uploaded online from Github. This configuration is due to CI (see Section \ref{ci}). This means that local modifications will have no effect with this method. \\ \; \\
-		So here is how to use the CMake docs preset to generate the Sphinx and Doxygen documentations (by placing at the root of the project) :
+		\danger This method is only available for Sphinx and Doxygen documentations. Indeed, CMake is configured in order that Antora documentation is generated from the files uploaded online on Github. This configuration is due to CI (see Section \ref{ci}). This means that local modifications will have no effect with this method. \\ \; \\
+		Here is how to use the CMake \textit{docs} preset to generate the Sphinx and Doxygen documentations (by placing at the root of the project) :
 \begin{lstlisting}
 		cmake --preset docs
 		cmake --build --preset docs
 \end{lstlisting}
-		Then in the same way as before, execute one of the following commands:
+		Then in the same way as before, execute one of the following commands at the root of the project :
 \begin{lstlisting}
 		npm run sphinx
 \end{lstlisting}
@@ -151,3 +151,42 @@
 
 \section{Github actions}
 \label{ci}
+
+	As said before we have set up a CI (Continuous Integration) using GitHub actions.
+	We added a badge at the beginning of the readme of our project to see when the build passed and when the build failed. Here is what it looks like in both cases : \\
+	\begin{minipage}{0.48\linewidth}
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.45\textwidth]{"images/appendix/badge_ok.jpg"}
+			\caption{Build passing}
+			\label{badge_ok}
+		\end{figure}
+	\end{minipage}
+	\begin{minipage}{0.48\linewidth}
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.5\textwidth]{"images/appendix/badge_not_ok.jpg"}
+			\caption{Build failing}
+			\label{badge_not_ok}
+		\end{figure}
+	\end{minipage} \\ \; \\
+	For more details you have to go to the action tab of the repository where are detailed all the tasks of each commit. Here is a preview of the CI for one commit :
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.65\textwidth]{"images/appendix/run_ci.jpg"}
+		\caption{Tab actions in GitHub (for one commit)}
+		\label{run_ci}
+	\end{figure}
+	\noindent Here are the jobs realized as soon as we push in the main branch :
+	\begin{enumerate}[label=\textbullet]
+		\item Compile C++ code using CMake default preset then use ctest to check if the tests pass.
+		\item Test the Python code with pytest.
+		\item Generate the documentation (Sphinx, Doxygen and Antora) using the docs preset of the CMake. Then, deploy the 3 documentations in the \textit{gh-pages} branch (in 3 respective directories: \textit{build\_sphinx}, \textit{build\_doxygen} and \textit{build\_antora)}. An html file has been created manually at the root of this branch in order to group the 3 documentations :
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.25\textwidth]{"images/appendix/html_file.jpg"}
+			\caption{Main page of the documentation}
+			\label{html_file}
+		\end{figure}
+		For more details about the documentation see Section \ref{doc}.
+	\end{enumerate}

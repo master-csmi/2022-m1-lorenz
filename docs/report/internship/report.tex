@@ -1,30 +1,20 @@
+%compile then compile with biber (for the biblio) then recompile
 \documentclass[12pt]{article}
-\usepackage{a4wide}
-\usepackage{amsmath,amssymb}
-\usepackage{bm}
-\usepackage{enumitem}
-\usepackage[colorlinks]{hyperref}
-\usepackage{graphicx}
-\usepackage{listings}
-\usepackage{appendix}
-\usepackage{color}
-\usepackage{caption}
-\newcommand{\vect}[1]{\hat{\boldsymbol{#1}}}
-\usepackage{subcaption}
-\usepackage{float}
-\usepackage{multirow}
-\usepackage[super]{natbib} %exponant biblio
-\usepackage{fourier} %for danger sign
 
+\usepackage{a4wide} % increase the typeset area
+\usepackage{bm}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{float} %to place figure H
+\usepackage{multirow} %multirow for table
+%\usepackage[super]{natbib} %exponant biblio
+\usepackage{fourier} %for danger sign
 \usepackage{chngcntr}
 
-\newcommand{\reporttitle}{Project Report : Data assimilation for the Lorenz system}
-\newcommand{\reportauthorOne}{Melissa Aydogdu}
-\newcommand{\reportauthorTwo}{Frédérique Lecourtier}
-\newcommand{\reportsupervisorOne}{Christophe Prudhomme}
-\newcommand{\reportsupervisorTwo}{Luca Berti}
-\newcommand{\reporttype}{Coursework}
-
+%hyperref
+\usepackage[colorlinks]{hyperref}
 \hypersetup{
 	colorlinks=true,
 	linkcolor=blue,
@@ -34,8 +24,10 @@
 }
 
 % captions
+\usepackage{caption}
+\newcommand{\vect}[1]{\hat{\boldsymbol{#1}}}
+\usepackage{subcaption}
 \counterwithin{figure}{section}
-
 \makeatletter
 \usepackage[labelformat=simple]{subcaption}
 \newcommand\captionsubfigure{%
@@ -44,14 +36,13 @@
 }
 \makeatother
 
-%bash code style
-\definecolor{backcolor}{RGB}{240, 240, 240}
+%to make the appendix
+\usepackage{appendix}
 
+%code
+\usepackage{listings}
+\definecolor{backcolor}{RGB}{240, 240, 240}
 \lstdefinestyle{bash}{
-	%language=bash,
-	%morekeywords={pytest,cmake,ctest},
-	%keywordstyle=\color{blue},
-	%stringstyle=\color{red},
 	commentstyle=\color{green},
 	morecomment=[l][\color{magenta}]{\#},
 	backgroundcolor=\color{backcolor},  
@@ -66,6 +57,19 @@
 %for footnote
 \usepackage[symbol]{footmisc}
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+%bibliography (with section)
+\usepackage[backend=biber,style=numeric,sorting=ynt]{biblatex}
+\addbibresource{biblio.bib}
+
+
+% Titlepage
+\newcommand{\reporttitle}{Internship Report : Parareal method and data assimilation for PDEs with Feel++}
+\newcommand{\reportauthorOne}{Melissa Aydogdu}
+\newcommand{\reportauthorTwo}{Frédérique Lecourtier}
+\newcommand{\reportsupervisorOne}{Christophe Prudhomme}
+\newcommand{\reportsupervisorTwo}{Luca Berti}
+\newcommand{\reporttype}{Coursework}
 
 \begin{document}
 	\nocite{*}
@@ -405,7 +409,8 @@
 	\input{appendix.tex}	
 	
 	\newpage	
-	\bibliographystyle{plain}
-	\bibliography{biblio}
-	
+	%\bibliographystyle{plain}
+	%\bibliography{biblio}
+	%\printbibliography[keyword=ref,title={References}]
+	\printbibliography[title={References}]
 \end{document}

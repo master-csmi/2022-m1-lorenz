@@ -12,6 +12,7 @@
 %\usepackage[super]{natbib} %exponant biblio
 \usepackage{fourier} %for danger sign
 \usepackage{chngcntr}
+\usepackage{pifont} %for more symbol in enumerate
 
 %hyperref
 \usepackage[colorlinks]{hyperref}
@@ -59,8 +60,9 @@
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
 
 %bibliography (with section)
-\usepackage[backend=biber,style=numeric,sorting=ynt]{biblatex}
-\addbibresource{biblio.bib}
+\usepackage[backend=biber,style=numeric,sorting=nyt]{biblatex}
+\addbibresource{biblio_ref.bib}
+\addbibresource{biblio_doc.bib}
 
 
 % Titlepage
@@ -409,8 +411,10 @@
 	\input{appendix.tex}	
 	
 	\newpage	
-	%\bibliographystyle{plain}
-	%\bibliography{biblio}
-	%\printbibliography[keyword=ref,title={References}]
-	\printbibliography[title={References}]
+	
+	\printbibliography[keyword=ref,title={References}]
+	
+	\newpage
+	
+	\printbibliography[keyword=doc,title={Documentation}]
 \end{document}

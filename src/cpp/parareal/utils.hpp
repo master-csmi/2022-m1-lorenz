@@ -39,6 +39,16 @@ double oscillator_ex(double t, double* gamma);
 Vector<double> lorenz(double t, Vector<double> const& X, double* gamma);
 
 /**
+ * @brief Compute the value of the Lorenz system with 100*3 equations.
+ * 
+ * @param t Current time.
+ * @param X Current point.
+ * @param gamma System parameters.
+ * @return Vector<double> The value of the Lorenz system.
+ */
+Vector<double> big_lorenz(double t, Vector<double> const& X, double* gamma);
+
+/**
  * @brief Runge Kutta order 4 method.
  * 
  * @param X0 Initial point of the system.

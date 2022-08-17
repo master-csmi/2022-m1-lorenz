@@ -96,6 +96,7 @@
         "hash_set": "cpp",
         "slist": "cpp",
         "future": "cpp",
-        "shared_mutex": "cpp"
+        "shared_mutex": "cpp",
+        "image": "cpp"
     }
 }

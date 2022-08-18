@@ -178,6 +178,7 @@
 	\noindent During the project we had already used the Lorenz system and the harmonic oscillator, for the internship we also used these two differential equations but we worked with two other equations: the heat equation and the Laplacian.
 	
 	\subsection{ODE: Harmonic oscillator}
+	\label{oscillator_ode}
 	\noindent A harmonic oscillator is an ideal oscillator whose evolution over time is described by a sinusoidal function, whose frequency depends only on the characteristics of the system and whose amplitude is constant.This mathematical model describes the evolution of any physical system in the vicinity of a stable equilibrium position, which makes it a transversal tool used in many fields: mechanics, electricity and electronics, optics.
 	\begin{figure}[H]       
 	\begin{minipage}[t]{0.46\linewidth}
@@ -236,7 +237,7 @@
     
     $$x(t) = \frac{-1}{5}\cos(5t+\frac{\pi}{2}).$$
     \subsection{ODE: Lorenz system}
-
+	\label{lorenz_ode}
 	\noindent The Lorenz system is a simplified three-variable model to investigate atmospheric convection. This model has had important repercussions in showing the possible limits on the ability to predict long-term climate and weather evolution. One of the important characteristics of the Lorenz system is 
 	that it is a chaotic system, which means that this type of system is roughly defined by sensitivity to initial conditions: infinitesimal differences in initial conditions of the system result in large differences in behavior.
 	\begin{figure}[H]   
@@ -297,6 +298,7 @@
 	\noindent We deduce that the fixed points of the Lorenz system are: $(0,0,0)$ for all values of the parameters. And for $r>1$, there is also a pair of fixed points $(\sqrt{b(r-1)},\sqrt{b(r-1)},r-1)$ and $(-\sqrt{b(r-1)},-\sqrt{b(r-1)},r-1)$.
 	
 	\subsection{PDE: Laplacian equation}
+	\label{laplacian_pde}
     \noindent The Laplace equation is a second-order partial differential equation . This equation is a basic PDE that arises in the heat and diffusion equations. It is a useful method for determining electric potentials in space or the free region.
     It is often written as :
     $$\Delta f=0 \qquad \text{or} \qquad \nabla^2 f=0$$
@@ -312,6 +314,7 @@
 	\end{aligned}\right.$$
 	\noindent Where $\Omega$ corresponds to our domain, $\Gamma_D$  corresponds to the Dirichlet boundary condition, $\Gamma_N$ to the Neumann boundary condition and $\Gamma_R$ to the Robin boundary condition.
 	\subsection{PDE: Heat equation}
+	\label{heat_pde}
 	\noindent Heat transfer is the process of energy transfer resulting from a temperature difference. 
 	\newline
     \noindent Thermal analysis is undertaken to predict temperatures and heat transfer in and around bodies. This information can then be used to model temperature-dependent phenomena, such as heat-induced stresses or the effect on fluid flow in the case of a solidifying metal.  Heat flow has been classified into three different modes: conduction, convection and radiation.
@@ -355,6 +358,7 @@
 	\newpage
 
     \subsection{Runge-Kutta}
+    \label{rk4}
     \noindent During our project and internship we used the Runge-Kutta method of order 4 to solve ordinary differential equations. Runge-Kutta techniques are one-step numerical schemes for solving ordinary differential equations. They are among the most popular methods because of their ease of implementation and accuracy.
     
     \noindent We consider $f : [0; T] \times \mathbb{R}^n \rightarrow \mathbb{R}^n$ a continuous function. For $X_0\in \mathbb{R}^n$, the problem is to find  $X\in C^1([0,T],\mathbb{R}^n)$ solution for the differential equation:

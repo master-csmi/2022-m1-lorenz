@@ -73,33 +73,33 @@ $$U_j^k=G(U_{j-1}^k)+(F(U_{j-1}^{k-1})-G(U_{j-1}^{k-1}))$$
 		\centering \qquad
 		\begin{minipage}[c]{\linewidth}
 			\begin{subfigure}[t]{.30\linewidth}       
-				\includegraphics[width=\linewidth]{"images/parareal/parareal_1.jpg"}
+				\includegraphics[width=\linewidth]{"images/parareal/explanation/parareal_1.jpg"}
 				\captionof{figure}{ : Step 1}
 				\label{parareal:1}
 			\end{subfigure} 
 			\begin{subfigure}[t]{.30\linewidth}       
-				\includegraphics[width=\linewidth]{"images/parareal/parareal_2.jpg"}
+				\includegraphics[width=\linewidth]{"images/parareal/explanation/parareal_2.jpg"}
 				\captionof{figure}{ : Step 2}
 				\label{parareal:2}
 			\end{subfigure} 
 			\begin{subfigure}[t]{.30\linewidth}       
-				\includegraphics[width=\linewidth]{"images/parareal/parareal_3.jpg"}
+				\includegraphics[width=\linewidth]{"images/parareal/explanation/parareal_3.jpg"}
 				\captionof{figure}{ : Step 3}
 				\label{parareal:3}
 			\end{subfigure} 
 			
 			\begin{subfigure}[t]{.30\linewidth}       
-				\includegraphics[width=\linewidth]{"images/parareal/parareal_4.jpg"}
+				\includegraphics[width=\linewidth]{"images/parareal/explanation/parareal_4.jpg"}
 				\captionof{figure}{ : Step 4}
 				\label{parareal:4}
 			\end{subfigure} 
 			\begin{subfigure}[t]{.30\linewidth}  
-				\includegraphics[width=\linewidth]{"images/parareal/parareal_5.jpg"}
+				\includegraphics[width=\linewidth]{"images/parareal/explanation/parareal_5.jpg"}
 				\captionof{figure}{ : Step 5}
 				\label{parareal:5}
 			\end{subfigure} 
 			\begin{subfigure}[t]{.30\linewidth}      
-				\includegraphics[width=\linewidth]{"images/parareal/parareal_6.jpg"}
+				\includegraphics[width=\linewidth]{"images/parareal/explanation/parareal_6.jpg"}
 				\captionof{figure}{ : Step 6}
 				\label{parareal:6}
 			\end{subfigure}
@@ -116,6 +116,10 @@ $$U_j^k=G(U_{j-1}^k)+(F(U_{j-1}^{k-1})-G(U_{j-1}^{k-1}))$$
 	\item We can also notice that the calculations which are done on the last interval $[t_{P-1},t_P]$ are not used because the points $U_P^k$ are not useful for the method. On this interval, one could then compute the fine solution only if there is convergence.
 \end{itemize}
 
+\subsubsection{Algorithm}
+
+\fbox{TO COMPLETE !!!!!}
+
 \subsubsection{Order of parareal method}
 
 We say that the previous method is of order k (see \cite{partie2_ref2}) if there is a constant $c_k$ such that :
@@ -126,62 +130,161 @@ where $U_j^k$ is the initial point at $t_j$ and iteration $k$, $U_{ex}(t_j)$ is 
 
 \noindent In the following, we will note : $$\mathcal{E}(j,k)=|U_j^k-U_{ex}(t_j)|+\max_{t\in[t_j,t_{j+1}]}|U_k(t)-U_{ex}(t)|$$
 
-\subsection{Application in C++}
 
 
+\newpage
 
-\subsubsection{Application to the harmonic oscillator}
+\subsection{Application in Python and C++}
 
-\noindent Before moving on to the Lorenz system, we will consider a mass-spring system of the following form :
+During the project, we have already implemented the parareal method in Python and obtained some results that will be presented in this section. One of the objectives of the internship was to implement it in C++ using MPI. In this section, as for the project, we will only focus on the following ODEs : Harmonic oscillator (see Section \ref{oscillator_ode}) and Lorenz system (see Section \ref{lorenz_ode}).
 
-\begin{equation}
-	\frac{\partial^2 x}{\partial t^2}+\omega_0^2 x = 0 \quad \iff \quad \frac{\partial^2 x}{\partial t^2}=-\omega_0^2 x \quad \text{with} \quad \omega_0=\sqrt{\frac{k}{m}}.
-	\label{osc}
-\end{equation}
+\subsubsection{Results}
 
-\noindent $k$ and $m$ are the spring stiffness and the suspended mass respectively. We are interested in this equation because its exact solution is known and is of the form :
-$$x(t) = x_0 \cos(\omega_{0}t+\phi_0).$$
+After implementing the parareal method in C++ and Python we saved the results at each iteration in csv files to see the results. For the results of the parareal method implemented in Python as for the one implemented in C++, the reading of the csv files and the display of the results is done with Python. \\
+For the two integrators of the Parareal method, we will take Runge Kutta order 4 method (see Section \ref{rk4}) with a small time step for $F$ and a larger one for $G$. 
 
-\noindent First of all, the numerical methods we have seen in Section \ref{sec4} (such as Runge Kutta order 4 in section \ref{sec4.4}), allow us to solve first order differential equations. But the harmonic oscillator equation (\ref{osc}) is a second order equation. We will therefore start by making a simple change of variable which will allow us to replace this second order differential equation by a system of two first order equations. We pose :
- 
-$$\qquad \frac{\partial x}{\partial t}=v \quad \Rightarrow \quad \frac{\partial^2 x}{\partial t^2}=\frac{\partial v}{\partial t}.$$
+\begin{enumerate}[label=\textbullet]
+	\item \textbf{Harmonic oscillator :} \\
+	We want to apply the parareal method on the harmonic oscillator. With the previous example of the Section \ref{oscillator_ode}, we have the following parameters with 3 process :
+	$$x(0)=0,\quad v(0)=1, \quad\omega_0=5, \quad x_0=\frac{-1}{5}, \quad \phi_0=\frac{\pi}{2}$$
+	We then obtain the following result with the parareal method in Python according to the iterations of the method :
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{"images/parareal/cpp/osci_1.jpg"}
+		\caption{Exact solution vs Approximate solution for given parameters (in \textbf{Python})}
+	\end{figure}
+	\noindent We see that the system seems to converge in 5 iterations, i.e. between the iterations $k=4$ and $k=5$ the points $U_n^k$ are equal to almost one $\epsilon$. 
+	
+	\item \textbf{Lorenz system :} \\
+	
+	We choose the following parameters :
+	$$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5)$$
+	$$t_0=0, \quad T=20, \quad P=4,\quad \Delta t_G=0.1, \quad \Delta t_F=0.01$$
+	For this choice of parameters, we have a butterfly wing pattern (see Figure \ref{lorenz:exact3D}) and we have the three following curves (see Figure \ref{lorenz:exact}) for the representation of the 3 variables x, y and z as functions of time.
+	\begin{figure}[H]       
+		\begin{minipage}[t]{0.48\linewidth}
+			\centering
+			\includegraphics[width=0.9\linewidth]{"images/parareal/cpp/lorenz_exact_3D.jpg"}
+		\end{minipage} \hfill
+		\begin{minipage}[t]{0.48\linewidth}
+			\centering
+			\includegraphics[width=0.9\linewidth]{"images/parareal/cpp/lorenz_exact_3D_T200.jpg"}
+		\end{minipage}
+		\captionof{figure}{Solution 3D of the Lorenz system with given parameters ($T=20$ and $T=200$)}
+		\label{lorenz:exact3D}
+	\end{figure}
+	\begin{figure}[H]  
+		\centering     
+		\includegraphics[width=0.9\linewidth]{"images/parareal/cpp/lorenz_exact.jpg"}
+		\captionof{figure}{Solution of the Lorenz system with given parameters}
+		\label{lorenz:exact}
+	\end{figure}
 
-\noindent As a result the equation becomes :
+	We will now apply the parareal method in \textbf{C++} with the previous parameters for different numbers of processes (from 1 to 4 processes : see Figures \ref{lorenz:1}, \ref{lorenz:2}, \ref{lorenz:3} and \ref{lorenz:4}). We are going to be interested here only in the variable x.
 
-$$\left\{\;\begin{aligned}
-	\frac{\partial x}{\partial t}&=v \\
-	\frac{\partial v}{\partial t}&=-\omega_0^2 x
-\end{aligned}\right.
-$$
+	\begin{enumerate}[label=-]
+	
+		\item With 1 process we see (as explained in the "Remarks" of the section \ref{section parareal method}) that there are only two iterations and that they are similar (because they start from the same initial point and there is no other initial point).
+		\begin{figure}[H]       
+			\qquad \qquad \qquad \includegraphics[width=0.55\linewidth]{"images/parareal/cpp/lorenz_1p.jpg"}
+			\captionof{figure}{Parareal method on the Lorenz system with 1 process}
+			\label{lorenz:1}
+		\end{figure}
+		\item With two processes we see that the solution converges in 2 iterations.
+		\begin{figure}[H]      
+			\qquad \qquad \qquad 
+			\includegraphics[width=0.8\linewidth]{"images/parareal/cpp/lorenz_2p.jpg"}
+			\captionof{figure}{Parareal method on the Lorenz system with 2 processes}
+			\label{lorenz:2}
+		\end{figure}
+		\item With three processes we see that the solution converges in 3 iterations.
+		\begin{figure}[H] 
+			\qquad \qquad \qquad       
+			\includegraphics[width=0.45\linewidth]{"images/parareal/cpp/lorenz_3p.jpg"}
+			\captionof{figure}{Parareal method on the Lorenz system with 3 processes}
+			\label{lorenz:3}
+		\end{figure}
+		\newpage
+		\item With four processes we see that the solution converges in 4 iterations.
+		\begin{figure}[H]      
+			\qquad \qquad
+			\includegraphics[width=0.8\linewidth]{"images/parareal/cpp/lorenz_4p.jpg"}
+			\captionof{figure}{Parareal method on the Lorenz system with 4 processes}
+			\label{lorenz:4}
+		\end{figure}
+	
+	\end{enumerate}
 
-\noindent Let's take an example to understand how we can determine the exact solution from the initial conditions that we will take. For example if we take $\omega_0=5$ and $(x(0),v(0))=(0,1)$, we have :
+\end{enumerate}
 
-$$\left\{\;\begin{aligned}
-	x(0)&=0 \\
-	v(0)&=1
-\end{aligned}\right. \quad \Rightarrow 
-\left\{\;\begin{aligned}
-	x_0 \cos(\phi_0)&=0 \\
-	-x_0 \omega_{0} \sin(\phi_0)&=1
-\end{aligned}\right.  \quad \Rightarrow  
-\left\{\;\begin{aligned}
-	x_0&=\frac{-1}{5} \\
-	\phi_0&=\frac{\pi}{2}
-\end{aligned}\right.
-$$
+\subsubsection{Speed-up}
 
-\noindent And thus the solutions of the equation are of the form :
+The main objective of parallel methods is to reduce execution time by simultaneously performing tasks that can be done at the same time. In this section, we will study the speed-up achieved by the parareal method when the number of processes is increased.
 
-$$x(t) = \frac{-1}{5}\cos(5t+\frac{\pi}{2})$$
+\begin{enumerate}[label=\textbullet]
+	\item \textbf{Method implemented in Python :} \\
+	The table below (Table \ref{time}) contains the execution time first of the iterative method with RK4 (the sequential method) and the execution time for different numbers of processes (parareal method) and this for various fine and coarse time steps by taking the following parameters :
+	$$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5), \quad t_0=0, \quad T=200$$
+	\renewcommand{\arraystretch}{1.2}
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{| c || c | c | c | c | c |}
+			\hline
+			\multirow{2}{1.5 cm}{$\Delta t$} & \multirow{2}{1.5 cm}{Seq} & \multirow{2}{1.5 cm}{1 proc} & \multirow{2}{1.5 cm}{2 proc} & \multirow{2}{1.5 cm}{3 proc} &\multirow{2}{1.5 cm}{4 proc} \\
+			& & & & & \\
+			\hline 
+			F : 0.0025 & \multirow{2}{1.5 cm}{20s} & \multirow{2}{1.5 cm}{24s} & \multirow{2}{1.5 cm}{11s} & \multirow{2}{1.5 cm}{12s} & \multirow{2}{1.5 cm}{15s} \\
+			G : 0.025 & & & & & \\
+			\hline 
+			F : 0.00125 & \multirow{2}{1.5 cm}{1m26} & \multirow{2}{1.5 cm}{1m40} & \multirow{2}{1.5 cm}{1m13} & \multirow{2}{1.5 cm}{47s} & \multirow{2}{1.5 cm}{52s} \\
+			G : 0.0125 & & & & & \\
+			\hline 
+			F : 0.001 & \multirow{2}{1.5 cm}{1m44} & \multirow{2}{1.5 cm}{2m55} & \multirow{2}{1.5 cm}{1m26} & \multirow{2}{1.5 cm}{1m9} & \multirow{2}{1.5 cm}{1m24} \\
+			G : 0.01 & & & & & \\	 
+			\hline
+		\end{tabular}
+		\caption{Execution time for various time steps.}
+		\label{time}
+	\end{table}
+	\newpage
+	\noindent \underline{\textit{Observations :}} 
+	
+	\begin{itemize}[label=-]
+		\item It seems that the time in sequential and with the parareal method with 1 process is not the same. Moreover for the different steps calculated, we have that the execution time with 1 process is greater than for the sequential method. This can be explained by 2 main things. First of all, we have seen previously that there are necessarily 2 iterations which are done on $[t_0,T]$ contrary to the sequential method where there is only one. This problem is easily solved if we compute only the fine and coarse solutions at the first iteration (because the point $U_0^k$ is identical for all k). Thereafter, the parareal method also computes the coarse solution which is not needed at all.
+		\item It seems that the time for the parareal method with $P$ processes is not the time of the sequential method divided by $P$. It seems obvious that (with intervals of the same length for each process), the time for the parareal method is only divided by P if there is only one iteration, which is never the case.
+		\item It seems that if we increase the number of processes, the time does not necessarily decrease (as between $P=3$ and $P=4$ for $\Delta t_F=0.001$ and $\Delta t_G=0.01$), so we have to find the right balance between the parameters $\Delta t_F$, $\Delta t_G$, $[t_0,T]$ and $P$.
+	\end{itemize}
+	\item \textbf{Method implemented in C++ :} \\
+	First of all an interesting observation about the implementation of the parareal method in C++ is that it is much faster than Python (see Table \ref{cpp_faster}). \\
+	For example let's take the following parameters :
+	$$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5)$$
+	$$t_0=0, \quad T=200, \quad P=4,\quad \Delta t_G=0.01, \quad \Delta t_F=0.001$$
+	Here are the execution times obtained in Python and C++ :
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{| c | c |}
+			\hline
+			Python : $T=200$ & C++ : $T=200000$ \\
+			\hline 
+			1m24s & 1m15s \\
+			\hline
+		\end{tabular}
+		\caption{Difference of the execution times between Python and C++}
+		\label{cpp_faster}
+	\end{table}
+	It can be seen that these times are of the same order as the problem in C++ is 1000 times larger than that in Python. This implies that to see a speed-up we must focus on much larger problems. For this we will take into account three parameters
+	\begin{enumerate}[label=\textbullet]
+		\item the size of the interval: $T$ (we will always take $t_0=0$)
+		\item the precision of the fine time step : $\Delta t_F$
+		\item the size of the problem to solve with the parareal method (in our case the Lorenz system)
+	\end{enumerate}
+	As the problem here is a rather small one we will increase its number of lines tenfold to be able to see a speed-up without having to take $T$ too large. In other words, instead of having 3 lines and thus 3 unknowns during the solution we will have 3*d lines where d is a chosen integer.
+\end{enumerate}
 
-\noindent We want now to apply the parareal method on the harmonic oscillator. For the two integrators we will take Runge Kutta order 4 method with a small time step for $F$ and a larger one for $G$. With the previous example, we have the following parameters with 3 process :
-$$x(0)=0,\quad v(0)=1, \quad\omega_0=5, \quad x_0=\frac{-1}{5}, \quad \phi_0=\frac{\pi}{2}$$
-We then obtain the following results according to the iterations of the method :
-\begin{figure}[H]
-	\fbox{\includegraphics[width=\linewidth]{"images/parareal/osci_1.jpg"}}
-	\caption{Plot of the exact solution and the approximate solution (for given parameters).}
-\end{figure}
-\noindent We see that the system seems to converge in 5 iterations, i.e. between the iterations $k=4$ and $k=5$ the points $U_n^k$ are equal to almost one $\epsilon$. \\
+
+\subsubsection{Efficiency}
+
+\subsubsection{Order of the method}
 
 \noindent Let us now check the order of convergence of the method on this same example. In the following graph, the blue curve represents the maximum on $j$ of $\mathcal{E}(j,k)$ according to the iterations $k$ and the orange curve represents the $(\Delta t_G)^k$.
 \begin{figure}[H]
@@ -191,118 +294,7 @@ We then obtain the following results according to the iterations of the method :
 \end{figure}
 \noindent We can see that the blue curve is below the orange curve for all the k iterations and so for the parameters fixed previously on the oscillator, the method is of order k.
 
-\subsubsection{Application to the Lorenz system}
-
-We want now to apply the parareal method on the Lorenz system. In the previous explanation, we have also :
-
-$$X'=\begin{pmatrix}
-    x' \\
-    y' \\
-    z'
-\end{pmatrix}, \quad X=\begin{pmatrix}
-    x \\
-    y \\
-    z
-\end{pmatrix} \quad and \quad f(t,X)=\begin{pmatrix}
-    \sigma(y-x) \\
-    x(r-z)-y \\
-    xy-bz
-\end{pmatrix}.$$
-
-\noindent For the two integrators we will take Runge Kutta order 4 method with a small time step for $F$ and a larger one for $G$. \\
-
-\noindent We choose the following parameters :
-$$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5), \quad t_0=0.$$
-
-\noindent For this choice of parameters, we have a butterfly wing pattern (see Figure \ref{lorenz:exact3D}) and we have the three following curves (see Figure \ref{lorenz:exact}) for the representation of the 3 variables x, y and z as functions of time.
-
-\begin{figure}[H]       
-	\begin{minipage}[t]{0.48\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{"images/parareal/lorenz_exact_3D.jpg"}
-	\end{minipage} \hfill
-	\begin{minipage}[t]{0.48\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{"images/parareal/lorenz_exact_3D_T200.jpg"}
-	\end{minipage}
-	\captionof{figure}{Solution 3D of the Lorenz system with given parameters ($T=20$ and $T=200$)}
-	\label{lorenz:exact3D}
-\end{figure}
-
-\begin{figure}[H]  
-	\centering     
-	\includegraphics[width=\linewidth]{"images/parareal/lorenz_exact.jpg"}
-	\captionof{figure}{Solution of the Lorenz system with given parameters}
-	\label{lorenz:exact}
-\end{figure}
-
-\noindent We will now apply the parareal method (from $t_0=0$ to $T=20$) with the previous parameters for different numbers of processes (from 1 to 4 processes : see Figures \ref{lorenz:1}, \ref{lorenz:2}, \ref{lorenz:3} and \ref{lorenz:4}). We are going to be interested here only in the variable x.
-
-\begin{enumerate}[label=\textbullet]
-
-	\item With 1 process we see (as explained in the "Remarks" of the section \ref{section parareal method}) that there are only two iterations and that they are similar (because they start from the same initial point and there is no other initial point).
-	\begin{figure}[H]
-		\centering       
-		\includegraphics[width=0.9\linewidth]{"images/parareal/lorenz_1p.jpg"}
-		\captionof{figure}{Parareal method on the Lorenz system with 1 process}
-		\label{lorenz:1}
-	\end{figure}
-\newpage
-	\item With two processes we see that the solution converges in 3 iterations.
-	\begin{figure}[H]       
-		\centering
-		\includegraphics[width=0.9\linewidth]{"images/parareal/lorenz_2p.jpg"}
-		\captionof{figure}{Parareal method on the Lorenz system with 2 processes}
-		\label{lorenz:2}
-	\end{figure}
-	\item With three processes we see that the solution converges in 5 iterations.
-	\begin{figure}[H]       
-		\centering
-		\includegraphics[width=0.9\linewidth]{"images/parareal/lorenz_3p.jpg"}
-		\captionof{figure}{Parareal method on the Lorenz system with 3 processes}
-		\label{lorenz:3}
-	\end{figure}
-\newpage
-	\item With four processes we see that the solution converges in 7 iterations.
-	\begin{figure}[H]       
-		\centering
-		\includegraphics[width=0.9\linewidth]{"images/parareal/lorenz_4p.jpg"}
-		\captionof{figure}{Parareal method on the Lorenz system with 4 processes}
-		\label{lorenz:4}
-	\end{figure}
-
-\end{enumerate}
-
-\noindent According to the results, it seems that that as we increase the number of processes, the number of iterations increases. We can therefore wonder why the parareal method is efficient. The table below (Table \ref{time})  contains the execution time first of the iterative method with RK4 (the sequential method) and the execution time for different numbers of processes (parareal method) and this for various fine and coarse time steps.
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{| c || c | c | c | c | c |}
-		\hline
-		\multirow{2}{1.5 cm}{$\Delta t$} & \multirow{2}{1.5 cm}{Seq} & \multirow{2}{1.5 cm}{1 proc} & \multirow{2}{1.5 cm}{2 proc} & \multirow{2}{1.5 cm}{3 proc} &\multirow{2}{1.5 cm}{4 proc} \\
-		& & & & & \\
-		\hline 
-		F : 0.0025 & \multirow{2}{1.5 cm}{20s} & \multirow{2}{1.5 cm}{24s} & \multirow{2}{1.5 cm}{11s} & \multirow{2}{1.5 cm}{12s} & \multirow{2}{1.5 cm}{15s} \\
-		G : 0.025 & & & & & \\
-		\hline 
-		F : 0.00125 & \multirow{2}{1.5 cm}{1m26} & \multirow{2}{1.5 cm}{1m40} & \multirow{2}{1.5 cm}{1m13} & \multirow{2}{1.5 cm}{47s} & \multirow{2}{1.5 cm}{52s} \\
-		G : 0.0125 & & & & & \\
-		\hline 
-		F : 0.001 & \multirow{2}{1.5 cm}{1m44} & \multirow{2}{1.5 cm}{2m55} & \multirow{2}{1.5 cm}{1m26} & \multirow{2}{1.5 cm}{1m9} & \multirow{2}{1.5 cm}{1m24} \\
-		G : 0.01 & & & & & \\	 
-		\hline
-	\end{tabular}
-	\caption{Execution time for various time steps.}
-	\label{time}
-\end{table}
-
-\noindent \underline{\textit{Observations :}} 
-
-\begin{itemize}[label=-]
-	\item It seems that the time in sequential and with the parareal method with 1 process is not the same. Moreover for the different steps calculated, we have that the execution time with 1 process is greater than for the sequential method. This can be explained by 2 main things. First of all, we have seen previously that there are necessarily 2 iterations which are done on $[t_0,T]$ contrary to the sequential method where there is only one. This problem is easily solved if we compute only the fine and coarse solutions at the first iteration (because the point $U_0^k$ is identical for all k). Thereafter, the parareal method also computes the coarse solution which is not needed at all and is not computed sequentially.
-	\item It seems that the time for the parareal method with $P$ processes is not the time of the sequential method divided by $P$. It seems obvious that (with intervals of the same length for each process), the time for the parareal method is only divided by P if there is only one iteration, which is never the case.
-	\item It seems that if we increase the number of processes, the time does not necessarily decrease (as between $P=3$ and $P=4$ for $\Delta t_F=0.001$ and $\Delta t_G=0.01$), so we have to find the right balance between the parameters $\Delta t_F$, $\Delta t_G$, $[t_0,T]$ and $P$.
-\end{itemize}
+\subsubsection{Improvement/Future}
 
 \noindent \underline{\textit{Remarks :}} Improvement of the parareal method implementation 
 

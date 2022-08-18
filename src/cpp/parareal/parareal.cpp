@@ -26,6 +26,7 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
     #endif
 
     time_t start_time, final_time, time_passed;
+    time_t total_time;
 
     // number of variables (dimension of X0_t0)
     int dim = static_cast<int>(X0_t0.cols());
@@ -57,6 +58,7 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
         time(&final_time);
         time_passed = final_time - start_time;
         std::cout << "0 : " << time_passed << std::endl;
+        total_time+=time_passed;
     }
     #endif
     
@@ -72,6 +74,7 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
         time(&final_time);
         time_passed = final_time - start_time;
         std::cout << "1 : " << time_passed << std::endl;
+        total_time+=time_passed;
     }
     #endif
 
@@ -106,6 +109,7 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
         time(&final_time);
         time_passed = final_time - start_time;
         std::cout << "2 : " << time_passed << std::endl;
+        total_time+=time_passed;
     }
     #endif
 
@@ -145,6 +149,7 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
             time(&final_time);
             time_passed = final_time - start_time;
             std::cout << "3-j_" << j << " : " << time_passed << std::endl;
+            total_time+=time_passed;
             #endif
 
             X0_k.row(j) = coarse_k_j;
@@ -163,6 +168,7 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
         time(&final_time);
         time_passed = final_time - start_time;
         std::cout << "4-rank_" << world_rank << " : " << time_passed << std::endl;
+        total_time+=time_passed;
         #endif
     }
 
@@ -189,6 +195,7 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
         time(&final_time);
         time_passed = final_time - start_time;
         std::cout << "5 : " << time_passed << std::endl;
+        total_time+=time_passed;
     }
     #endif
     
@@ -228,6 +235,7 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
         time(&final_time);
         time_passed = final_time - start_time;
         std::cout << "6 : " << time_passed << std::endl;
+        total_time+=time_passed;
     }
     #endif
 
@@ -254,6 +262,7 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
         time(&final_time);
         time_passed = final_time - start_time;
         std::cout << "7 : " << time_passed << std::endl;
+        total_time+=time_passed;
     }    
     #endif
 
@@ -290,6 +299,7 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
                     time(&final_time);
                     time_passed = final_time - start_time;
                     std::cout << "k=" << k << " ; 8-j_" << j << " : " << time_passed << std::endl;
+                    total_time+=time_passed;
                 }
                 #endif
 
@@ -306,6 +316,7 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
             time(&final_time);
             time_passed = final_time - start_time;
             std::cout << "k=" << k << " ; 9-rank_" << world_rank << " : " << time_passed << std::endl;
+            total_time+=time_passed;
             #endif
         }
 
@@ -331,6 +342,7 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
             time(&final_time);
             time_passed = final_time - start_time;
             std::cout << "k=" << k << " ; 10 : " << time_passed << std::endl;
+            total_time+=time_passed;
         }
         #endif
 
@@ -347,6 +359,7 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
             time(&final_time);
             time_passed = final_time - start_time;
             std::cout << "k=" << k << " ; 11 : " << time_passed << std::endl;
+            total_time+=time_passed;
         }
         #endif
         
@@ -361,6 +374,7 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
             time(&final_time);
             time_passed = final_time - start_time;
             std::cout << "k=" << k << " ; 12 : " << time_passed << std::endl;
+            total_time+=time_passed;
         }
         #endif
         
@@ -382,6 +396,7 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
             time(&final_time);
             time_passed = final_time - start_time;
             std::cout << "k=" << k << " ; 14 : " << time_passed << std::endl;
+            total_time+=time_passed;
         }
         #endif
 
@@ -397,6 +412,9 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
 
     if(world_rank==0){
         std::cout << k << " iterations" << std::endl;
+        #if TIME
+        std::cout << "Time passed into comm : " << total_time << std::endl;
+        #endif
     }
 
     #if 0

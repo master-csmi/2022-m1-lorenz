@@ -54,8 +54,9 @@ t_rk4,sol_rk4 = read_sol_ex("data/solution_ex.csv")
 
 fig=plt.figure()
 
-plt.plot(t,sol_k[:,0],label="x")
-plt.plot(t_rk4,sol_rk4[:,0],label="x exact")
+
+plt.plot(t_rk4,sol_rk4[:,0],linewidth=2,label="x exact")
+plt.plot(t,sol_k[:,0],linewidth=0.8,label="x",alpha=0.9)
 plt.plot(times,x0[:,0],".k",label="x0")
 
 plt.title("k="+str(k))

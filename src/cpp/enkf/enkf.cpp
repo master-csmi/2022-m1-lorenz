@@ -1,10 +1,11 @@
 #include "enkf.hpp"
 
-EnsembleKalmanFilter::EnsembleKalmanFilter(double dim_x,double dim_z,MyMatrix x,MyMatrix P,double dt, int N, MyMatrix ( *hx)(MyMatrix  x),MyMatrix ( *fx)(double dt,MyMatrix  x,int nbr_echan))
+EnsembleKalmanFilter::EnsembleKalmanFilter(double dim_x,double dim_z,MyMatrix x,MyMatrix P,double dt, int N, MyMatrix ( *hx)(MyMatrix  x),MyMatrix ( *fx)(double dt,MyMatrix  x,int nbr_echan,double dt_2))
 {
     M_dim_x=dim_x;
     M_dim_z=dim_z;
     M_dt=dt;
+    M_time=0;
     M_N=N;
 
     M_x=MyMatrix::Zero(M_dim_x,1);
@@ -132,8 +133,10 @@ void EnsembleKalmanFilter::update(MyMatrix z)
     for(int i=0;i<M_N;i++)
     {
         sigmas_h.row(i)=M_hx(M_sigmas.row(i).transpose()).transpose();
+        std::cout<<"sigmas_h"<<sigmas_h.row(i)<<std::endl;
 
     }
+
     MyMatrix z_mean=MyMatrix::Zero(M_dim_z,1);
     z_mean=mean(sigmas_h,0);
 
@@ -179,7 +182,7 @@ void EnsembleKalmanFilter::predict()
    
     for (int i=0;i<M_N;i++)
     {
-        M_sigmas.row(i)=M_fx(M_dt,M_sigmas.row(i).transpose(),i).transpose();
+        M_sigmas.row(i)=M_fx(M_dt,M_sigmas.row(i).transpose(),i,M_dt).transpose();
     }
     std::mt19937_64 urng2( time(NULL) );
     auto gen2 = Rand::makeMvNormalGen(M_mean, M_Q);
@@ -190,6 +193,27 @@ void EnsembleKalmanFilter::predict()
     {
         P_+=(M_sigmas.row(i).transpose()-M_x)*(M_sigmas.row(i).transpose()-M_x).transpose();
     }
+    M_P=(P_/(M_N-1));
+    M_x_prior=M_x;
+    M_P_prior=M_P;
+}
+void EnsembleKalmanFilter::predict_2()
+{
+   
+    for (int i=0;i<M_N;i++)
+    {
+        M_sigmas.row(i)=M_fx(M_time,M_sigmas.row(i).transpose(),i,M_dt).transpose();
+    }
+    std::mt19937_64 urng2( time(NULL) );
+    auto gen2 = Rand::makeMvNormalGen(M_mean, M_Q);
+    MyMatrix e = (gen2.generate(urng2, M_N)).transpose();
+    M_sigmas+=e;
+    MyMatrix P_=MyMatrix::Zero(M_dim_x,M_dim_x);
+    for(int i=0;i<M_N;i++)
+    {
+        P_+=(M_sigmas.row(i).transpose()-M_x)*(M_sigmas.row(i).transpose()-M_x).transpose();
+    }
+    M_time+=M_dt;
     M_P=(P_/(M_N-1));
     M_x_prior=M_x;
     M_P_prior=M_P;

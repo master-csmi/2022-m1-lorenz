@@ -83,7 +83,7 @@ MyMatrix fx(MyMatrix X,double t,double dt,MyMatrix p)
     X_p=X+(dt/6.* (K1+(2.*K2)+(2.*K3)+K4));
     return X_p;
 }
-MyMatrix fx_2(double dt,MyMatrix X,int nbr_echantillon)
+MyMatrix fx_2(double dt,MyMatrix X,int nbr_echantillon,double dt_2)
 {
     double t=dt;
     MyMatrix p{{12.},{6.},{12.}};

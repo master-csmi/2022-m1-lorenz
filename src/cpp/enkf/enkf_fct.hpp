@@ -81,7 +81,7 @@ MyMatrix fx(MyMatrix X,double t,double dt,MyMatrix p);
  * @param X An eigen matrix with the position.
  * @return Return an eigen matrix with the next position.
  */
-MyMatrix fx_2(double dt,MyMatrix X,int nbr_echantillon);
+MyMatrix fx_2(double dt,MyMatrix X,int nbr_echantillon,double dt_2);
 
 /**
  * @brief This fonction return resolution with RK4 for the lorenz system.

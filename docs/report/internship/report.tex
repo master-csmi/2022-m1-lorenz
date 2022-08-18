@@ -95,6 +95,7 @@
 	
 	\newpage
 	\section{Introduction}
+	
 	\noindent This internship is the continuation of a project realised in th platform Cemosis . During the project the main goals were to implement a parallel-in-time resolution method for the Lorenz system, to realize the data assimilation using the EnKF method using a function already implemented in the library Filterpy. For this we also had to implement several methods to solve numerically the Lorenz system (like RK4). During the project, all these methods were implemented or used in Python.
 	
 	\subsection{Presentation of Cemosis}
@@ -131,7 +132,7 @@
 	
 	\noindent \textbf{Objectives for the common part}:
     	\begin{enumerate}
-        \item To read the following article about the Heat equation (Chapter 11) : \\ \url{https://link.springer.com/content/pdf/10.1007/978-3-540-85268-1.pdf};
+        \item To read the following article about the Heat equation (Chapter 11) : \cite{quarteroni_numerical}
 			\item To set up a project on Github :
 			\begin{itemize}
 				\item Organisation of the repository (Python library, cmake in C++ ...)
@@ -167,11 +168,15 @@
     \item Write the mathematical problem to be solved if we want to simulate an office then realize the simulation using Feel++ toolboxes.
     \item Introduce data assimilation using the sensor and correct the simulation.
     \end{enumerate}
+
+	\newpage
+
 	\section{Differential Equations}
 	\noindent In Mathematics, ordinary differential equations (ODE) are equations that involve derivatives of one-variable functions, and partial differential equations (PDE) are equations that imposes relations between the various partial derivatives of a multivariable function.
 	The difference between ODEs and PDEs is that for ODEs the unknown functions depend only on one variable, whereas for PDEs the unknown functions may depend on several independent variables.
 	\noindent Differential equations are an important object of study in both pure and applied mathematics. They are used to build mathematical models of physical and biological evolution processes, for example for the study of radioactivity, celestial mechanics, weather or population dynamics... 
 	\noindent During the project we had already used the Lorenz system and the harmonic oscillator, for the internship we also used these two differential equations but we worked with two other equations: the heat equation and the Laplacian.
+	
 	\subsection{ODE: Harmonic oscillator}
 	\noindent A harmonic oscillator is an ideal oscillator whose evolution over time is described by a sinusoidal function, whose frequency depends only on the characteristics of the system and whose amplitude is constant.This mathematical model describes the evolution of any physical system in the vicinity of a stable equilibrium position, which makes it a transversal tool used in many fields: mechanics, electricity and electronics, optics.
 	\begin{figure}[H]       
@@ -187,8 +192,8 @@
 	\end{minipage}
     \end{figure}
 	
-
-
+	\newpage
+	
 	\noindent Let's consider a mass-spring system of the following form :
 
     \begin{equation}
@@ -290,7 +295,6 @@
 	\end{enumerate}
 	
 	\noindent We deduce that the fixed points of the Lorenz system are: $(0,0,0)$ for all values of the parameters. And for $r>1$, there is also a pair of fixed points $(\sqrt{b(r-1)},\sqrt{b(r-1)},r-1)$ and $(-\sqrt{b(r-1)},-\sqrt{b(r-1)},r-1)$.
-	\newpage
 	
 	\subsection{PDE: Laplacian equation}
     \noindent The Laplace equation is a second-order partial differential equation . This equation is a basic PDE that arises in the heat and diffusion equations. It is a useful method for determining electric potentials in space or the free region.
@@ -348,6 +352,8 @@
     \hline
 \end{tabular}
 
+	\newpage
+
     \subsection{Runge-Kutta}
     \noindent During our project and internship we used the Runge-Kutta method of order 4 to solve ordinary differential equations. Runge-Kutta techniques are one-step numerical schemes for solving ordinary differential equations. They are among the most popular methods because of their ease of implementation and accuracy.
     
@@ -387,19 +393,22 @@
 	\newpage
 
 	\section{Conclusion}
+	
 	\noindent To conclude all this and to summarize everything, we had as main goal to implement a parallel time resolution method for the Lorenz system, and to realize the data assimilation using the EnKF method. But to achieve these goals we had to understand the Lorenz system and try to implement several numerical resolutions to find a solution. Afterwards, we have implemented the parareal method for the parallel time resolution of ODEs and have verified its convergence in a case where the analytical solution is known (in our case we have chosen the harmonic oscillator). We have then applied this method to the Lorenz system and we have noticed a speed up compared to the sequential execution with the fine time step, which shows that the method is efficient. And finally, for the data assimilation part, we had to understand the principles of methods such as the Kalman filter and 3DVAR. It was also important to understand the link between these two methods in order to understand the method to use in the case where the differential equation system is nonlinear and to implement the method using EnKF with FilterPy. We noticed that during the data assimilation the covariance matrices associated with the error of our states had a very large impact on the analyses. Changing one of these parameters or reversing the covariance matrix associated with the error of the observations with the one associated with the model could seriously change our final analysis. 
 	
 	\newpage
+	
+	\section*{Bibliography}
+	\addcontentsline{toc}{section}{Bibliography}
+	
+	\printbibliography[heading=subbibintoc,keyword=ref,title={References}]
+	
+	\newpage
+	
+	\printbibliography[heading=subbibintoc,keyword=doc,title={Documentation}]
 	
 	\appendix
 	
 	\input{appendix.tex}	
 	
-	\newpage	
-	
-	\printbibliography[keyword=ref,title={References}]
-	
-	\newpage
-	
-	\printbibliography[keyword=doc,title={Documentation}]
 \end{document}

@@ -8,8 +8,8 @@ int main()
     MyMatrix lorenz_1,lorenz_2;
     double T,dt;
     int N,N2;
-    MyMatrix p2{{12.},{6.},{12.}};
-    MyMatrix p1{{10.},{6.},{10.}};
+    MyMatrix p1{{12.},{6.},{12.}};
+    MyMatrix p2{{10.},{6.},{10.}};
     MyMatrix X_0{{-10.},{10.},{25.}}; 
     MyMatrix P{{0.1,0,0},{0,0.1,0},{0,0,0.1}};
     MyMatrix Q{{0.1,0,0},{0,0.1,0},{0,0,0.1}};

@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['parareal_25',['parareal',['../parareal_8hpp.html#af839091299de91366b1ab890b9e1657c',1,'parareal.cpp']]],
-  ['parareal_2ehpp_26',['parareal.hpp',['../parareal_8hpp.html',1,'']]],
-  ['predict_27',['predict',['../class_ensemble_kalman_filter.html#a66bae7094d0b7c3931cbdb14e3c57fb3',1,'EnsembleKalmanFilter']]]
+  ['oscillator_24',['oscillator',['../utils_8hpp.html#a7f5e69757ee5fba2f498759af5cfa75a',1,'utils.cpp']]],
+  ['oscillator_5fex_25',['oscillator_ex',['../utils_8hpp.html#a83731cd53f1879fd9a85e8423c2100b0',1,'utils.cpp']]]
 ];

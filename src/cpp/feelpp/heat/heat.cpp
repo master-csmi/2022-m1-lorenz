@@ -1,8 +1,9 @@
-
+#include <boost/mpi/group.hpp>
 #include <feel/feelcore/environment.hpp>
+#include <feel/feelcore/range.hpp>
 #include <feel/feelcore/utility.hpp>
 #include <feelpp/heat.hpp>
-#include <boost/mpi/intercommunicator.hpp>
+#include <boost/mpi/group.hpp>
 #include <iostream>
 
 int main(int argc, char** argv) {
@@ -18,9 +19,10 @@ int main(int argc, char** argv) {
         auto jsonfile = removeComments(readFromFile(Environment::expand(soption("specs"))));
         std::istringstream istr(jsonfile);
         json specs = json::parse(istr);
-        
+        mpi::communicator world;
         // number of time interval for parareal
         int time_partitions = specs["/Time/partitions"_json_pointer].get<int>();
+        size_type space_partitions = static_cast<size_type>(world.size()/(time_partitions+1));
         LOG(INFO) << fmt::format("time partitions: {}, n time communicators: {}", time_partitions, time_partitions+1);
 
         // split the main worldcomm into P+1 subworldcomms
@@ -28,12 +30,46 @@ int main(int argc, char** argv) {
         LOG(INFO) << fmt::format("color: {}, wglob rank: {}, w global rank: {}, w local rank: {}", color, wglob->globalRank(), w->globalRank(), w->localRank());
 
         // coarse time step
-        ///double dt = specs["/Time/dt"_json_pointer].get<double>();
+        //double dt = specs["/Time/dt"_json_pointer].get<double>();
         //double t0 = specs["/Time/t0"_json_pointer].get<double>();
-        // double T = specs["/Time/final_time"_json_pointer].get<double>();
-        // double t0 = 0.;
-        
-        #if 1
+        double T = specs["/Time/final_time"_json_pointer].get<double>();
+        double t0 = 0.;
+        LOG(INFO) << fmt::format("create  {} groups", space_partitions);
+
+        // now we want to create K communicators between the coarse group and fine groups of processes
+        // for each coarse process i we associate the fine process i in each fine group
+        std::vector<int> pids;
+        mpi::group world_group = world.group();        
+        for ( int rank = 0; rank < world.size(); rank++ )
+        {
+            if ( rank / (time_partitions+1) == w->localRank() )
+            {
+                pids.push_back(rank);
+            }
+        }
+
+        LOG(INFO) << fmt::format("-- global rank {} rank {} pids: {}\n", wglob->globalRank(), w->localRank(), pids);
+        mpi::group coarsefine = world_group.include(pids.begin(), pids.end());
+        LOG(INFO) << fmt::format("-- group {} created\n", w->localRank());
+        mpi::communicator c(world, coarsefine );
+        LOG(INFO) << fmt::format("communicator {} created\n", w->localRank());
+        if ( c )
+        {
+            CHECK(c.size()==time_partitions+1) << fmt::format("wrong communicator size {} vs {}", c.size(), time_partitions+1);
+            int sum = 1;
+            sum = mpi::all_reduce(c, sum, std::plus<int>());
+            LOG(INFO) << fmt::format("sum over communicator: {}\n", sum);
+            CHECK(sum == time_partitions + 1) << fmt::format("on group {} the sum {} is not the number of time partitions + 1 {}", w->localRank(), sum, time_partitions + 1);
+        }
+        else
+        {
+            CHECK(false) << fmt::format("communicator not active rank {}, global rank {} pids {} - THIS SHOULD NOT HAPPEN \n", w->localRank(), wglob->globalRank(), pids);
+        }
+        LOG(INFO) << fmt::format("done with spatial group/communicator size:{}, rank:{}\n",c.size(),c.rank()) << std::endl;
+        // create the worldcomm from new communicator
+        // we can now send/receive data from spatial groups
+        WorldComm wc(c);
+#if 0
         int nb_proc = wglob->globalComm().size();
         int nb_grp = time_partitions+1;
         int nb_dom = nb_proc/nb_grp;
@@ -74,7 +110,7 @@ int main(int argc, char** argv) {
             wglob->globalComm().recv( 0, wglob->globalRank(), vec_recv);
             std::cout << "real : (" << color << "," << w->globalRank() << ") ; recv : (" << vec_recv[0] << "," << vec_recv[1] << ")" << std::endl;
         }
-        #endif
+
 
         if(wglob->globalRank()==0){
             std::cout << "INTERCOMMUNICATOR : " << std::endl;
@@ -91,9 +127,9 @@ int main(int argc, char** argv) {
 
             // std::cout << wglob->globalRank() << " : " << myFirstComm.local_rank() << std::endl;
         }
+#endif
 
-
-        #if 0
+#if 1
         // on global rank 0, we have the coarse integrator
         if ( color == 0 )
         {
@@ -112,49 +148,81 @@ int main(int argc, char** argv) {
             while ( work )
             {
                 heatcoarse.resetExporter(fmt::format("heat-coarse-{}-{}", color, iteration) );
-                for (double t = dt_coarse; t < T_coarse+dt_coarse; t += dt_coarse) {
+                int k = 1;
+                std::vector<mpi::request> reqs;
+                for (double t = dt_coarse; t < T_coarse+dt_coarse; t += dt_coarse, ++k) 
+                {
                     if ( w->isMasterRank() )
                     {
                         std::cout << "====================================" << std::endl;
                         std::cout << fmt::format("Coarse integrator t = {}", t) << std::endl;
                     }
+                    LOG(INFO) << "====================================" << std::endl;
+                    LOG(INFO) << fmt::format("Coarse Integrator Time interval t = {}, rank: {}", t, w->localRank()) << std::endl;
 
                     // execute the time step: update the right hand side and solve the system
                     // compute G(U^k_{j-1}), heatcoarse.solution() == U^k_{j-1}
                     heatcoarse.run(t, heatcoarse.solution());
+                    if ( iteration > 1 )
+                    {
+                        heatcoarse.correction() = heatcoarse.load(t, iteration - 1, "correction");
+                        heatcoarse.solution() += heatcoarse.correction();
+                    }
                     // now heatcoarse.solution() == G(U^k_{j-1})
+                    // save to disk to be able to reload afterward when we receive the correction from the fine integrators
+                    heatcoarse.save(heatcoarse.solution(), t,iteration, "solution");
+
+                    if ( std::abs(t-T_coarse) > 1e-10 )
+                    {
+                        LOG(INFO) << fmt::format("Coarse Integrator non blocking send initiated to {} tag {} size: {} \n", k+1, k, heatcoarse.solution().size()) << std::endl;
+                        // receive initial guess from coarse integrator for time_interval
+                        reqs.push_back( c.isend(k+1, k, heatcoarse.solution()) );
+                    }
 
                     // non blocking async comm to receive fine integrator communication
                     // send U^k_j =  G(U^k_{j-1})+(F(U^{k-1}_{j-1})-G(U^{k-1}_{j-1}))
                     // U^k_j =  G(U^k_{j-1}) + correction[j-1]
                     // save solution at current time
                     heatcoarse.postProcess();
-
-                    
-                    
                 }
+                LOG(INFO) << fmt::format("Coarse Integrator non blocking send wait_all\n", reqs.size()) << std::endl;
+                // this is blocking until we receive the initial guess
+                mpi::wait_all(reqs.begin(), reqs.end());
+                reqs.clear();
+
                 // get in sync with the fine integrators for each coarse time step
                 // we have a collection of size P of solution for each coarse time step 
                 bool done = true;
-                for (double t = dt_coarse; t < T_coarse + dt_coarse; t += dt_coarse)
+                k = 1;
+                for (double t = dt_coarse; t < T_coarse + dt_coarse; t += dt_coarse, ++k )
                 {
                     // we are in coarse iteration j
-
+                    auto sol = heatcoarse.load(t, iteration, "solution");
                     // Receive F(U^{k-1}_{j-1}) from the fine integrator
-                    // ...
-                    //  Compute correction
-                    // correction[j-1] = F(U^{k-1}_{j-1}) - G(U^{k-1}_{j-1})
-
-                    // update work flag to know if we stop or continue
-                    // done = done && ( normL2(_range=elements(mesh),_expr=idv(U^{k}_{j})-idv(U^{k-1}_{j}) < 1e-6 );
+                    c.recv(k+1, k, heatcoarse.correction());
+                    heatcoarse.correction() -= sol;
+                    sync(heatcoarse.correction());
+                    heatcoarse.save(heatcoarse.correction(),t,iteration,"correction");
+                    
+                    double err = 0;
+                    if ( iteration > 1 )
+                    {
+                        auto sol_prev = heatcoarse.load(t, iteration-1, "solution");
+                        // update work flag to know if we stop or continue
+                        err = normL2(_range=elements(mesh),_expr=idv(sol_prev)-idv(sol));
+                        LOG(INFO) << fmt::format("Coarse Integrator error: {}\n", err ) << std::endl;
+                        done = done && ( err < 1e-10 );
+                    }
+                    done = true;
                 }
-                
                 work = !done;
                 // broadcast work flag to all processors
-                // mpi::broadcast(wglob->globalComm(), 0, work);
-                ++iteration;
+                mpi::broadcast(wglob->globalComm(), work, 0);
+                LOG(INFO) << fmt::format("work: {}", work) << std::endl;
+                if ( work )
+                    ++iteration;
             }
-            LOG(INFO) << fmt::format("== coarse integrator is finished ==================================") << std::endl;
+            LOG(INFO) << fmt::format("== coarse integrator is finished in {} iterations ==================================",iteration) << std::endl;
         }
         else // we are on the other P processors with the fine integrators
         {
@@ -179,37 +247,46 @@ int main(int argc, char** argv) {
                  
                 if ( color > 1 )
                 {
+                    LOG(INFO) << fmt::format("Fine Integrator waiting for coarse integrator initial guess from time interval {}, size {}", color - 1, heatfine.solution().size()) << std::endl;
+                    mpi::request reqs[1];
                     // receive initial guess from coarse integrator for time_interval
-                    //mpi::irecv( );
+                    reqs[0] = c.irecv( 0, fine_time_interval, heatfine.solution() );
+                    LOG(INFO) << fmt::format("Fine Integrator non blocking receive initiated tag {} rank : {}\n",fine_time_interval,w->localRank()) << std::endl;
+                    // this is blocking until we receive the initial guess
+                    mpi::wait_all(reqs, reqs + 1);
+                    LOG(INFO) << fmt::format("Fine Integrator non blocking receive completed\n") << std::endl;
                 }
-                for (double t = t0_fine; t < T_fine+dt_fine; t += dt_fine) {
-                    if ( w->isMasterRank() )
-                    {
-                        LOG(INFO) << "====================================" << std::endl;
-                        LOG(INFO) << fmt::format("Fine Integrator Time interval {}, t = {}", fine_time_interval, t) << std::endl;
-                    }
+                sync(heatfine.solution());
+                for (double t = t0_fine; t < T_fine+dt_fine; t += dt_fine) 
+                {
+                    LOG(INFO) << "====================================" << std::endl;
+                    LOG(INFO) << fmt::format("Fine Integrator Time interval {}, t = {}, rank: {}", fine_time_interval, t, w->localRank()) << std::endl;
+                
                     // execute the time step: update the right hand side and solve the system
                     heatfine.run( t, heatfine.solution() );
 
                     // save solution at current time
                     heatfine.postProcess();
                    
-                }   
+                }  
                 // send fine solution to coarse integrator
                 // communication from fine to coarse integrators
                 // non-blocking communication
                 // send F(U^{k}_{T_fine}) to coarse integrator
-
+                mpi::request reqs[1];
+                c.isend(0, fine_time_interval, heatfine.solution());
+                mpi::wait_all(reqs, reqs + 1);
                 // update work flag to know whether we have to continue or not
                 // communication from coarse to fine integrators
                 // blocking communication
-                // mpi::broadcast(wglob->globalComm(), 0, work);
-                work = false;
-                ++iteration;
+                mpi::broadcast(wglob->globalComm(), work, 0);
+                LOG(INFO) << fmt::format("work: {}", work ) << std::endl;
+                if ( work )
+                    ++iteration;
             }
-            LOG(INFO) << fmt::format("== fine integrator {} is finished ==================================",fine_time_interval ) << std::endl;
-        } 
-        #endif
+            LOG(INFO) << fmt::format("== fine integrator {} is finished in {} iterations ==================================",fine_time_interval, iteration ) << std::endl;
+        }
+#endif
 
         return 0;
     }

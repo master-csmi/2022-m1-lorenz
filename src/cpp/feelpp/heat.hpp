@@ -49,21 +49,21 @@ public:
     using l_t = form1_t<space_t>;
     using exporter_ptr_t = std::shared_ptr<Exporter<mesh_t>>;
 
-    Heat(std::string const& prefix, nl::json const& specs, mesh_ptr_t mesh, double dt, double t0, double T)
-        :
-        prefix_(prefix),
-        specs_(specs),
-        mesh_(mesh),
-        Xh_(Pch<Order>(mesh_)),
-        v_(Xh_->element()),
-        e_( nullptr ),
-        a_( form2(_test = Xh_, _trial = Xh_) ),
-        l_( form1(_test = Xh_) ),
-        lt_( form1(_test = Xh_) ),
-        dt_(dt),
-        t_(t0),
-        T_(T)
-        
+    Heat(std::string const &prefix, nl::json const &specs, mesh_ptr_t mesh, double dt, double t0, double T)
+        : prefix_(prefix),
+          specs_(specs),
+          mesh_(mesh),
+          Xh_(Pch<Order>(mesh_)),
+          v_(Xh_->element()),
+          c_(Xh_->element()),
+          e_(nullptr),
+          a_(form2(_test = Xh_, _trial = Xh_)),
+          l_(form1(_test = Xh_)),
+          lt_(form1(_test = Xh_)),
+          dt_(dt),
+          t_(t0),
+          T_(T)
+
     {
         // initial condition (TODO use the json specs)
         v_.on( _range = elements(mesh_), _expr = cst(0.) );
@@ -122,6 +122,35 @@ public:
     {
         return v_;
     }
+
+    /**
+     * @brief get the solution at the current time (read-write)
+     *
+     * @return element_t const& the solution
+     */
+    element_t & solution() 
+    {
+        return v_;
+    }
+    /**
+     * @brief get the correction at the current time
+     *
+     * @return element_t const& the correction
+     */
+    element_t const &correction() const
+    {
+        return c_;
+    }
+
+    /**
+     * @brief get the correction at the current time (read-write)
+     *
+     * @return element_t const& the correction
+     */
+    element_t &correction()
+    {
+        return c_;
+    }
     /**
      * @brief run the time step [t0, t0+dt_]
      * 
@@ -148,6 +177,32 @@ public:
         
         // Solve
         a_.solve(_rhs = lt_, _solution = v_);
+    }
+    /**
+     * @brief save solution at time @p t and @p iteration 
+     * 
+     * @param e the element to save
+     * @param t time index
+     * @param iteration iteration number
+     * @paaram type type of solution to save (solution, correction, ...)
+     */
+    void save( element_t const& e, double t, int iteration, std::string type="solution" )
+    {
+        e.save(_path=fs::current_path().string(),_name=fmt::format("{}-{}-{:.2f}-{}",prefix_,type,t,iteration));
+    }
+    /**
+     * @brief save solution at time @p t and @p iteration
+     *
+     * @param e the element to load
+     * @param t time index
+     * @param iteration iteration number
+     * @paaram type type of solution to load (solution, correction, ...)
+     */
+    element_t load( double t, int iteration, std::string type = "solution" )
+    {
+        element_t v = Xh_->element();
+        v.load(_path = fs::current_path().string(), _name = fmt::format("{}-{}-{:.2f}-{}", prefix_, type,t, iteration));
+        return v;
     }
     /**
      * @brief get the exporter
@@ -186,7 +241,7 @@ private:
     nl::json specs_;
     mesh_ptr_t mesh_;
     space_ptr_t Xh_;
-    element_t v_,vold_;
+    element_t v_,vold_,c_;
     exporter_ptr_t e_;
     a_t a_;
     l_t l_, lt_;

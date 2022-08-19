@@ -183,7 +183,7 @@ int main(int argc, char** argv) {
                     // send U^k_j =  G(U^k_{j-1})+(F(U^{k-1}_{j-1})-G(U^{k-1}_{j-1}))
                     // U^k_j =  G(U^k_{j-1}) + correction[j-1]
                     // save solution at current time
-                    heatcoarse.postProcess();
+                    
                 }
                 LOG(INFO) << fmt::format("Coarse Integrator non blocking send wait_all\n", reqs.size()) << std::endl;
                 // this is blocking until we receive the initial guess
@@ -199,11 +199,13 @@ int main(int argc, char** argv) {
                     // we are in coarse iteration j
                     auto sol = heatcoarse.load(t, iteration, "solution");
                     // Receive F(U^{k-1}_{j-1}) from the fine integrator
-                    c.recv(k+1, k, heatcoarse.correction());
+                    c.recv(k, k-1, heatcoarse.correction());
                     heatcoarse.correction() -= sol;
                     sync(heatcoarse.correction());
                     heatcoarse.save(heatcoarse.correction(),t,iteration,"correction");
-                    
+
+                    heatcoarse.postProcess();
+
                     double err = 0;
                     if ( iteration > 1 )
                     {
@@ -213,7 +215,7 @@ int main(int argc, char** argv) {
                         LOG(INFO) << fmt::format("Coarse Integrator error: {}\n", err ) << std::endl;
                         done = done && ( err < 1e-10 );
                     }
-                    done = true;
+                    //done = true;
                 }
                 work = !done;
                 // broadcast work flag to all processors
@@ -243,12 +245,12 @@ int main(int argc, char** argv) {
             while( work )
             {
                 heatfine.resetExporter(fmt::format("heat-fine-{}-{}", color, iteration));
+                mpi::request reqs[1];
 
-                 
                 if ( color > 1 )
                 {
                     LOG(INFO) << fmt::format("Fine Integrator waiting for coarse integrator initial guess from time interval {}, size {}", color - 1, heatfine.solution().size()) << std::endl;
-                    mpi::request reqs[1];
+                    
                     // receive initial guess from coarse integrator for time_interval
                     reqs[0] = c.irecv( 0, fine_time_interval, heatfine.solution() );
                     LOG(INFO) << fmt::format("Fine Integrator non blocking receive initiated tag {} rank : {}\n",fine_time_interval,w->localRank()) << std::endl;
@@ -265,20 +267,27 @@ int main(int argc, char** argv) {
                     // execute the time step: update the right hand side and solve the system
                     heatfine.run( t, heatfine.solution() );
 
+                    // send the final time to the coarse process
+                    if ( std::abs(t-T_fine) < 1e-10 )
+                    {
+                        LOG(INFO) << fmt::format("Fine Integrator non blocking send initiated tag {} rank : {}\n", fine_time_interval, w->localRank()) << std::endl;
+                        reqs[0] = c.isend(0, fine_time_interval, heatfine.solution());
+                    }
                     // save solution at current time
                     heatfine.postProcess();
-                   
                 }  
+                LOG(INFO) << fmt::format("done with time stepping\n");
                 // send fine solution to coarse integrator
                 // communication from fine to coarse integrators
                 // non-blocking communication
                 // send F(U^{k}_{T_fine}) to coarse integrator
-                mpi::request reqs[1];
-                c.isend(0, fine_time_interval, heatfine.solution());
                 mpi::wait_all(reqs, reqs + 1);
+                LOG(INFO) << fmt::format("Fine Integrator non blocking send completed\n") << std::endl;
+
                 // update work flag to know whether we have to continue or not
                 // communication from coarse to fine integrators
                 // blocking communication
+                LOG(INFO) << fmt::format("check if there is still work to do\n") << std::endl;
                 mpi::broadcast(wglob->globalComm(), work, 0);
                 LOG(INFO) << fmt::format("work: {}", work ) << std::endl;
                 if ( work )

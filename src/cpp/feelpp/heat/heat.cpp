@@ -183,11 +183,6 @@ int main(int argc, char** argv) {
                         // receive initial guess from coarse integrator for time_interval
                         reqs.push_back( c.isend(k+1, k, heatcoarse.solution()) );
                     }
-
-                    // non blocking async comm to receive fine integrator communication
-                    // send U^k_j =  G(U^k_{j-1})+(F(U^{k-1}_{j-1})-G(U^{k-1}_{j-1}))
-                    // U^k_j =  G(U^k_{j-1}) + correction[j-1]
-                    // save solution at current time
                     
                 }
                 LOG(INFO) << fmt::format("Coarse Integrator non blocking send wait_all\n", reqs.size()) << std::endl;
@@ -205,8 +200,10 @@ int main(int argc, char** argv) {
                     auto sol = heatcoarse.load(t, iteration, "solution");
                     // Receive F(U^{k-1}_{j-1}) from the fine integrator
                     c.recv(k, k-1, heatcoarse.correction());
-                    heatcoarse.correction() -= sol;
                     sync(heatcoarse.correction());
+                    LOG(INFO) << fmt::format("Coarse Integrator fine term: min : {} max: {}\n",heatcoarse.correction().min(), heatcoarse.correction().max() ) << std::endl;
+                    heatcoarse.correction() -= sol;
+                    LOG(INFO) << fmt::format("Coarse Integrator correction term: min : {} max: {}\n",heatcoarse.correction().min(), heatcoarse.correction().max() ) << std::endl;
                     heatcoarse.save(heatcoarse.correction(),t,iteration,"correction");
 
                     heatcoarse.postProcess();
@@ -217,8 +214,8 @@ int main(int argc, char** argv) {
                         auto sol_prev = heatcoarse.load(t, iteration-1, "solution");
                         // update work flag to know if we stop or continue
                         // the issue feelpp/feelpp#1489 kicks in, need to solve asap
-                        err = 1e-5/std::pow(10,iteration); // normL2(_range=elements(mesh),_expr=idv(sol_prev)-idv(sol));
-                        LOG(INFO) << fmt::format("Coarse Integrator error: {}\n", err ) << std::endl;
+                        err = normL2(_range=elements(mesh),_expr=idv(sol_prev)-idv(sol),_parallel=false);
+                        LOG(INFO) << fmt::format("Coarse Integrator error: {}\n", err ) << std::endl; google::FlushLogFiles(google::GLOG_INFO);
                         done = done && ( err < 1e-10 );
                     }
                     else

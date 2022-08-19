@@ -151,7 +151,7 @@ int main(int argc, char** argv) {
                 LOG(INFO) << fmt::format("########## Parareal Iteration = {}, rank: {}", iteration, w->localRank()) << std::endl;
 
                 // initial condition is 0 : need to change that for different initial condition
-                heatcoarse.solution().zero();
+                heatcoarse.initTimeStep();
                 heatcoarse.resetExporter(fmt::format("heat-coarse-{}-{}", color, iteration) );
                 int k = 1;
                 std::vector<mpi::request> reqs;
@@ -261,7 +261,7 @@ int main(int argc, char** argv) {
 
                 if ( color > 1 )
                 {
-                    LOG(INFO) << fmt::format("Fine Integrator waiting for coarse integrator initial guess from time interval {}, size {}", color - 1, heatfine.solution().size()) << std::endl;
+                    LOG(INFO) << fmt::format("Fine Integrator waiting for coarse integrator initial condition from time interval {}, size {}", color - 1, heatfine.solution().size()) << std::endl;
                     
                     // receive initial guess from coarse integrator for time_interval
                     reqs[0] = c.irecv( 0, fine_time_interval, heatfine.solution() );
@@ -274,7 +274,7 @@ int main(int argc, char** argv) {
                 else
                 {
                     // initial condition is 0 at t=0: need to change that for different initial condition
-                    heatcoarse.solution().zero();
+                    heatfine.initTimeStep();
                 }
                 
                 for (double t = t0_fine; t < T_fine+dt_fine; t += dt_fine) 

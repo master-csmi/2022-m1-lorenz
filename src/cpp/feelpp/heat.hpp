@@ -151,6 +151,18 @@ public:
     {
         return c_;
     }
+
+    /**
+     * @brief set the initial condition
+     * 
+     */
+    void initTimeStep()
+    {
+        // initial condition: TODO change according to json specs
+        v_.zero();
+        vold_.zero();
+    }
+
     /**
      * @brief run the time step [t0, t0+dt_]
      * 

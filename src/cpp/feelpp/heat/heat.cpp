@@ -147,6 +147,11 @@ int main(int argc, char** argv) {
             bool work = true;
             while ( work )
             {
+                LOG(INFO) << "############################################" << std::endl;
+                LOG(INFO) << fmt::format("########## Parareal Iteration = {}, rank: {}", iteration, w->localRank()) << std::endl;
+
+                // initial condition is 0 : need to change that for different initial condition
+                heatcoarse.solution().zero();
                 heatcoarse.resetExporter(fmt::format("heat-coarse-{}-{}", color, iteration) );
                 int k = 1;
                 std::vector<mpi::request> reqs;
@@ -247,6 +252,10 @@ int main(int argc, char** argv) {
             bool work = true;
             while( work )
             {
+                LOG(INFO) << "############################################" << std::endl;
+                LOG(INFO) << fmt::format("########## Parareal Iteration = {}, rank: {}", iteration, w->localRank()) << std::endl;
+
+
                 heatfine.resetExporter(fmt::format("heat-fine-{}-{}", color, iteration));
                 mpi::request reqs[1];
 
@@ -260,8 +269,14 @@ int main(int argc, char** argv) {
                     // this is blocking until we receive the initial guess
                     mpi::wait_all(reqs, reqs + 1);
                     LOG(INFO) << fmt::format("Fine Integrator non blocking receive completed\n") << std::endl;
+                    sync(heatfine.solution());
                 }
-                sync(heatfine.solution());
+                else
+                {
+                    // initial condition is 0 at t=0: need to change that for different initial condition
+                    heatcoarse.solution().zero();
+                }
+                
                 for (double t = t0_fine; t < T_fine+dt_fine; t += dt_fine) 
                 {
                     LOG(INFO) << "====================================" << std::endl;

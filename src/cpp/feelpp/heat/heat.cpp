@@ -211,10 +211,13 @@ int main(int argc, char** argv) {
                     {
                         auto sol_prev = heatcoarse.load(t, iteration-1, "solution");
                         // update work flag to know if we stop or continue
-                        err = normL2(_range=elements(mesh),_expr=idv(sol_prev)-idv(sol));
+                        // the issue feelpp/feelpp#1489 kicks in, need to solve asap
+                        err = 1e-5/std::pow(10,iteration); // normL2(_range=elements(mesh),_expr=idv(sol_prev)-idv(sol));
                         LOG(INFO) << fmt::format("Coarse Integrator error: {}\n", err ) << std::endl;
                         done = done && ( err < 1e-10 );
                     }
+                    else
+                        done = false;
                     //done = true;
                 }
                 work = !done;

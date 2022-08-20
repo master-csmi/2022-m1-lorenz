@@ -66,70 +66,7 @@ int main(int argc, char** argv) {
             CHECK(false) << fmt::format("communicator not active rank {}, global rank {} pids {} - THIS SHOULD NOT HAPPEN \n", w->localRank(), wglob->globalRank(), pids);
         }
         LOG(INFO) << fmt::format("done with spatial group/communicator size:{}, rank:{}\n",c.size(),c.rank()) << std::endl;
-        // create the worldcomm from new communicator
-        // we can now send/receive data from spatial groups
-        WorldComm wc(c);
-#if 0
-        int nb_proc = wglob->globalComm().size();
-        int nb_grp = time_partitions+1;
-        int nb_dom = nb_proc/nb_grp;
 
-        if(wglob->globalRank()==0){
-            int position;
-            
-            // size = ( wglob->globalComm().size()/(time_partitions+1) line ; time_partitions+1 col )
-            std::vector<std::vector<int>> table(nb_dom, std::vector <int>(nb_grp));
-
-            for(int p=1; p < nb_dom*nb_grp; ++p){
-                wglob->globalComm().recv( p, p, position );
-                table[position/nb_grp][position%nb_grp]=p;
-            }
-            
-            std::cout << "TABLE : " << std::endl;
-            for (int i=0;i<nb_dom;++i){
-                for (int j=0;j<nb_grp;++j)
-                    std::cout << table[i][j] << " ";
-                std::cout << std::endl;
-            }
-
-            int proc;
-            std::vector<int> vec_send(2);
-            for(int c=0; c<nb_grp; c++){
-                for(int d=0; d<nb_dom; d++){
-                    proc = table[d][c];
-                    if(proc != 0){
-                        vec_send = {c, d};
-                        wglob->globalComm().send(proc, proc, vec_send);
-                    }
-                }
-            }
-        }
-        else{
-            wglob->globalComm().send( 0, wglob->globalRank(), w->globalRank()*nb_grp + color);
-            std::vector<int> vec_recv(2);
-            wglob->globalComm().recv( 0, wglob->globalRank(), vec_recv);
-            std::cout << "real : (" << color << "," << w->globalRank() << ") ; recv : (" << vec_recv[0] << "," << vec_recv[1] << ")" << std::endl;
-        }
-
-
-        if(wglob->globalRank()==0){
-            std::cout << "INTERCOMMUNICATOR : " << std::endl;
-        }
-
-        mpi::communicator world = wglob->globalComm();
-        mpi::communicator myComm = w->localComm();
-
-        if(color==0){
-            // std::cout << world.size() << std::endl;
-            mpi::intercommunicator myFirstComm(myComm,0,world,1);
-            std::cout << myFirstComm.local_size() << std::endl;
-            mpi::intercommunicator mySecondComm(myComm,0,world,2);
-
-            // std::cout << wglob->globalRank() << " : " << myFirstComm.local_rank() << std::endl;
-        }
-#endif
-
-#if 1
         // on global rank 0, we have the coarse integrator
         if ( color == 0 )
         {
@@ -147,8 +84,12 @@ int main(int argc, char** argv) {
             bool work = true;
             while ( work )
             {
+                if (w->isMasterRank())
+                {
+                    std::cout << fmt::format("== Parareal iteration = {}", iteration) << std::endl;
+                }
                 LOG(INFO) << "############################################" << std::endl;
-                LOG(INFO) << fmt::format("########## Parareal Iteration = {}, rank: {}", iteration, w->localRank()) << std::endl;
+                LOG(INFO) << fmt::format("== Parareal Iteration = {}, rank: {}", iteration, w->localRank()) << std::endl;
 
                 // initial condition is 0 : need to change that for different initial condition
                 heatcoarse.initTimeStep();
@@ -159,8 +100,7 @@ int main(int argc, char** argv) {
                 {
                     if ( w->isMasterRank() )
                     {
-                        std::cout << "====================================" << std::endl;
-                        std::cout << fmt::format("Coarse integrator t = {}", t) << std::endl;
+                        std::cout << fmt::format("=== Coarse integrator t = {}", t) << std::endl;
                     }
                     LOG(INFO) << "====================================" << std::endl;
                     LOG(INFO) << fmt::format("Coarse Integrator Time interval t = {}, rank: {}", t, w->localRank()) << std::endl;
@@ -168,14 +108,16 @@ int main(int argc, char** argv) {
                     // execute the time step: update the right hand side and solve the system
                     // compute G(U^k_{j-1}), heatcoarse.solution() == U^k_{j-1}
                     heatcoarse.run(t, heatcoarse.solution());
+                    // now heatcoarse.solution() == G(U^k_{j-1})
+                    // save to disk to be able to reload afterward when we receive the correction from the fine integrators
+                    heatcoarse.save(heatcoarse.solution(), t, iteration, "prediction");
+
                     if ( iteration > 1 )
                     {
                         heatcoarse.correction() = heatcoarse.load(t, iteration - 1, "correction");
                         heatcoarse.solution() += heatcoarse.correction();
                     }
-                    // now heatcoarse.solution() == G(U^k_{j-1})
-                    // save to disk to be able to reload afterward when we receive the correction from the fine integrators
-                    heatcoarse.save(heatcoarse.solution(), t,iteration, "solution");
+                    heatcoarse.save(heatcoarse.solution(), t, iteration, "solution");
 
                     if ( std::abs(t-T_coarse) > 1e-10 )
                     {
@@ -183,7 +125,6 @@ int main(int argc, char** argv) {
                         // receive initial guess from coarse integrator for time_interval
                         reqs.push_back( c.isend(k+1, k, heatcoarse.solution()) );
                     }
-                    
                 }
                 LOG(INFO) << fmt::format("Coarse Integrator non blocking send wait_all\n", reqs.size()) << std::endl;
                 // this is blocking until we receive the initial guess
@@ -197,12 +138,12 @@ int main(int argc, char** argv) {
                 for (double t = dt_coarse; t < T_coarse + dt_coarse; t += dt_coarse, ++k )
                 {
                     // we are in coarse iteration j
-                    auto sol = heatcoarse.load(t, iteration, "solution");
+                    auto pred = heatcoarse.load(t, iteration, "prediction");
                     // Receive F(U^{k-1}_{j-1}) from the fine integrator
                     c.recv(k, k-1, heatcoarse.correction());
                     sync(heatcoarse.correction());
                     LOG(INFO) << fmt::format("Coarse Integrator fine term: min : {} max: {}\n",heatcoarse.correction().min(), heatcoarse.correction().max() ) << std::endl;
-                    heatcoarse.correction() -= sol;
+                    heatcoarse.correction() -= pred;
                     LOG(INFO) << fmt::format("Coarse Integrator correction term: min : {} max: {}\n",heatcoarse.correction().min(), heatcoarse.correction().max() ) << std::endl;
                     heatcoarse.save(heatcoarse.correction(),t,iteration,"correction");
 
@@ -211,10 +152,12 @@ int main(int argc, char** argv) {
                     double err = 0;
                     if ( iteration > 1 )
                     {
+                        auto sol = heatcoarse.load(t, iteration, "solution");
                         auto sol_prev = heatcoarse.load(t, iteration-1, "solution");
                         // update work flag to know if we stop or continue
                         // the issue feelpp/feelpp#1489 kicks in, need to solve asap
                         err = normL2(_range=elements(mesh),_expr=idv(sol_prev)-idv(sol),_parallel=false);
+                        err = std::sqrt(mpi::all_reduce(w->localComm(), err*err, std::sum<double>()));
                         LOG(INFO) << fmt::format("Coarse Integrator error: {}\n", err ) << std::endl; google::FlushLogFiles(google::GLOG_INFO);
                         done = done && ( err < 1e-10 );
                     }
@@ -274,7 +217,7 @@ int main(int argc, char** argv) {
                     heatfine.initTimeStep();
                 }
                 
-                for (double t = t0_fine; t < T_fine+dt_fine; t += dt_fine) 
+                for (double t = t0_fine+dt_fine; t < T_fine+dt_fine; t += dt_fine) 
                 {
                     LOG(INFO) << "====================================" << std::endl;
                     LOG(INFO) << fmt::format("Fine Integrator Time interval {}, t = {}, rank: {}", fine_time_interval, t, w->localRank()) << std::endl;
@@ -310,8 +253,6 @@ int main(int argc, char** argv) {
             }
             LOG(INFO) << fmt::format("== fine integrator {} is finished in {} iterations ==================================",fine_time_interval, iteration ) << std::endl;
         }
-#endif
-
         return 0;
     }
     catch(...)

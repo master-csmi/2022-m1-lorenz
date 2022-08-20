@@ -208,7 +208,7 @@ For the two integrators of the Parareal method, we will take Runge Kutta order 4
 		\item With four processes we see that the solution converges in 4 iterations.
 		\begin{figure}[H]      
 			\qquad \qquad
-			\includegraphics[width=0.8\linewidth]{"images/parareal/cpp/lorenz_4p.jpg"}
+			\includegraphics[width=0.7\linewidth]{"images/parareal/cpp/lorenz_4p.jpg"}
 			\captionof{figure}{Parareal method on the Lorenz system with 4 processes}
 			\label{lorenz:4}
 		\end{figure}
@@ -219,11 +219,11 @@ For the two integrators of the Parareal method, we will take Runge Kutta order 4
 
 \subsubsection{Speed-up}
 
-The main objective of parallel methods is to reduce execution time by simultaneously performing tasks that can be done at the same time. In this section, we will study the speed-up achieved by the parareal method when the number of processes is increased.
+The main objective of parallel methods is to reduce execution time by simultaneously performing tasks that can be done at the same time. In this section, we will study the speed-up achieved by the parareal method when the number of processes is increased. We will look at the speed-up with the Python implementation (done during the project) and the C++ implementation.
 
 \begin{enumerate}[label=\textbullet]
 	\item \textbf{Method implemented in Python :} \\
-	The table below (Table \ref{time}) contains the execution time first of the iterative method with RK4 (the sequential method) and the execution time for different numbers of processes (parareal method) and this for various fine and coarse time steps by taking the following parameters :
+	The table below (Table \ref{time}) contains the execution time first of the iterative method with RK4 (the sequential method) and the execution time for different numbers of processes (parareal method) and this for various fine and coarse time steps by taking the following parameters for the Lorenz system :
 	$$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5), \quad t_0=0, \quad T=200$$
 	\renewcommand{\arraystretch}{1.2}
 	\begin{table}[H]
@@ -243,12 +243,11 @@ The main objective of parallel methods is to reduce execution time by simultaneo
 			G : 0.01 & & & & & \\	 
 			\hline
 		\end{tabular}
-		\caption{Execution time for various time steps.}
+		\caption{Execution time with \textbf{Lorenz system} for various time steps in \textbf{Python}.}
 		\label{time}
 	\end{table}
 	\newpage
 	\noindent \underline{\textit{Observations :}} 
-	
 	\begin{itemize}[label=-]
 		\item It seems that the time in sequential and with the parareal method with 1 process is not the same. Moreover for the different steps calculated, we have that the execution time with 1 process is greater than for the sequential method. This can be explained by 2 main things. First of all, we have seen previously that there are necessarily 2 iterations which are done on $[t_0,T]$ contrary to the sequential method where there is only one. This problem is easily solved if we compute only the fine and coarse solutions at the first iteration (because the point $U_0^k$ is identical for all k). Thereafter, the parareal method also computes the coarse solution which is not needed at all.
 		\item It seems that the time for the parareal method with $P$ processes is not the time of the sequential method divided by $P$. It seems obvious that (with intervals of the same length for each process), the time for the parareal method is only divided by P if there is only one iteration, which is never the case.
@@ -256,9 +255,9 @@ The main objective of parallel methods is to reduce execution time by simultaneo
 	\end{itemize}
 	\item \textbf{Method implemented in C++ :} \\
 	First of all an interesting observation about the implementation of the parareal method in C++ is that it is much faster than Python (see Table \ref{cpp_faster}). \\
-	For example let's take the following parameters :
+	For example let's take the following parameters for the Lorenz system :
 	$$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5)$$
-	$$t_0=0, \quad T=200, \quad P=4,\quad \Delta t_G=0.01, \quad \Delta t_F=0.001$$
+	$$t_0=0, \quad P=4,\quad \Delta t_G=0.01, \quad \Delta t_F=0.001$$
 	Here are the execution times obtained in Python and C++ :
 	\begin{table}[H]
 		\centering
@@ -278,11 +277,171 @@ The main objective of parallel methods is to reduce execution time by simultaneo
 		\item the precision of the fine time step : $\Delta t_F$
 		\item the size of the problem to solve with the parareal method (in our case the Lorenz system)
 	\end{enumerate}
-	As the problem here is a rather small one we will increase its number of lines tenfold to be able to see a speed-up without having to take $T$ too large. In other words, instead of having 3 lines and thus 3 unknowns during the solution we will have 3*d lines where d is a chosen integer.
+	We will consider below two different problems :
+	\begin{itemize}[label=-]
+		\item \textbf{First problem : Harmonic oscillator.} (see Section ~\ref{oscillator_ode}) \\
+		We will consider the harmonic oscillator with the following parameters :
+		$$x(0) = 0, \quad v(0) = 1, \quad \omega_0 = 5, \quad x_0 = \frac{-1}{5}, \quad \phi_0 = \frac{\pi}{2}$$
+		As the problem here is a rather small one we will increase its number of lines tenfold to be able to see a speed-up without having to take $T$ too large. In other words, instead of having 2 lines and thus 2 unknowns during the resolution we will have $2*d$ lines where $d$ is a chosen integer. \\
+		For the parareal method, we will take the following parameters (where $T$ and $d$ will change):
+		$$t_0=0, \quad T=\cdot, \quad \Delta t_G=0.01, \quad \Delta t_F=0.001, \quad d=\cdot$$
+		\textbf{Example 1 :} We start by taking $T=10000$ and $d=100$, this is the execution times obtained :
+		\renewcommand{\arraystretch}{1.2}
+		\begin{table}[H]
+			\centering
+			\begin{tabular}{| c || c | c | c | c | c |}
+				\hline
+				\multirow{2}{1.5 cm}{$\cdot$} & \multirow{2}{1.5 cm}{Seq} & \multirow{2}{1.5 cm}{1 proc} & \multirow{2}{1.5 cm}{2 proc} & \multirow{2}{1.5 cm}{3 proc} &\multirow{2}{1.5 cm}{4 proc} \\
+				& & & & & \\
+				\hline 
+				T : 10000 & \multirow{2}{1.5 cm}{17s} & \multirow{2}{1.5 cm}{36s} & \multirow{2}{1.5 cm}{30s} & \multirow{2}{1.5 cm}{29s} & \multirow{2}{1.5 cm}{24s} \\
+				d : 100 & & & & & \\
+				\hline 
+			\end{tabular}
+			\caption{Example 1 for the \textbf{harmonic oscillator}.}
+			\label{time_osc_1}
+		\end{table}
+		It seems that when we apply the parareal method with only 1 process it is slower than with 2, 3 or 4 processes. However the time taken by the parareal method with 1 process is almost 2 times slower than with RK4 in sequential. However, the correct solution is obtained in all 5 cases:
+		$$x(T)=-0.199968=\frac{-1}{5}\cos\left(5T+\frac{\pi}{2}\right)$$
+		\textbf{Example 2 :} We will now double the number of equations ($d=200$) while keeping the same final time ($T=10000$) :
+		\begin{table}[H]
+			\centering
+			\begin{tabular}{| c || c | c | c | c | c |}
+				\hline
+				\multirow{2}{1.5 cm}{$\cdot$} & \multirow{2}{1.5 cm}{Seq} & \multirow{2}{1.5 cm}{1 proc} & \multirow{2}{1.5 cm}{2 proc} & \multirow{2}{1.5 cm}{3 proc} &\multirow{2}{1.5 cm}{4 proc} \\
+				& & & & & \\
+				\hline 
+				T : 10000 & \multirow{2}{1.5 cm}{28s} & \multirow{2}{1.5 cm}{59s} & \multirow{2}{1.5 cm}{49s} & \multirow{2}{1.5 cm}{48s} & \multirow{2}{1.5 cm}{41s} \\
+				d : 200 & & & & & \\
+				\hline 
+			\end{tabular}
+			\caption{Example 2 for the \textbf{harmonic oscillator}.}
+			\label{time}
+		\end{table}
+		We make the same observation as before concerning the speed-up. However, we can see that by doubling the work to be provided by our methods, the execution times are not doubled. However, as in the previous example, we get the right solution in all 5 cases:
+		$$x(T)=-0.199968=\frac{-1}{5}\cos\left(5T+\frac{\pi}{2}\right)$$
+		\textbf{Example 3 :} Using the first example and doubling the final time ($T=20000$), we obtain :
+		\begin{table}[H]
+			\centering
+			\begin{tabular}{| c || c | c | c | c | c |}
+				\hline
+				\multirow{2}{1.5 cm}{$\cdot$} & \multirow{2}{1.5 cm}{Seq} & \multirow{2}{1.5 cm}{1 proc} & \multirow{2}{1.5 cm}{2 proc} & \multirow{2}{1.5 cm}{3 proc} &\multirow{2}{1.5 cm}{4 proc} \\
+				& & & & & \\
+				\hline 
+				T : 20000 & \multirow{2}{1.5 cm}{34s} & \multirow{2}{1.5 cm}{1m10s} & \multirow{2}{1.5 cm}{58s} & \multirow{2}{1.5 cm}{58s} & \multirow{2}{1.5 cm}{1m} \\
+				d : 100 & & & & & \\
+				\hline 
+			\end{tabular}
+			\caption{Example 3 for the \textbf{harmonic oscillator}.}
+			\label{time_osc_3}
+		\end{table}
+		We can make the same observations as before and the solution obtained is correct:
+		$$x(T)=0.00714986=\frac{-1}{5}\cos\left(5T+\frac{\pi}{2}\right)$$
+		\underline{\textbf{Explanation :}} \\
+		As explained in the examples it seems that the parareal method in C++ is not faster than the sequential version (with RK4) but on the contrary slower. This could be explained by the initialization which is in fact an additional iteration :
+				\begin{figure}[H]      
+			\qquad \qquad \qquad
+			\includegraphics[width=0.7\linewidth]{"images/parareal/cpp/seq_vs_1proc.jpg"}
+			\captionof{figure}{Explanation : Sequential vs Parareal with 1 process}
+			\label{seq_vs_1proc}
+		\end{figure}
+		However, we can see that the parareal method with 2, 3 or 4 processes is faster than with a single process but still does not seem to be faster than the sequential method. Moreover as presented before there is a speed-up of the method with Python. \\
+		For that we can make several hypothesis which will be presented in the Section \ref{improve}.
+		\newpage
+		\item \textbf{Second problem : Lorenz system.} (see Section ~\ref{lorenz_ode})
+		We will now consider the Lorenz system with the following parameters :
+		$$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5)$$
+		As for the harmonic oscillator, the problem here is rather small, so we will increase the number of lines tenfold to be able to see an acceleration without having to take $T$ too large. In other words, instead of having 3 lines and thus 3 unknowns during the resolution, we will have $3*d$ lines where $d$ is a chosen integer. \\
+		For the parareal method, we will take the following parameters (where $T$ and $d$ will change):
+		$$t_0=0, \quad T=\cdot, \quad \Delta t_G=0.01, \quad \Delta t_F=0.001, \quad d=\cdot$$
+		\textbf{Example 1 :} We start by taking $T=200$ and $d=10000$, this is the execution times obtained :
+		\renewcommand{\arraystretch}{1.2}
+		\begin{table}[H]
+			\centering
+			\begin{tabular}{| c || c | c | c | c | c |}
+				\hline
+				\multirow{2}{1.5 cm}{$\cdot$} & \multirow{2}{1.5 cm}{Seq} & \multirow{2}{1.5 cm}{1 proc} & \multirow{2}{1.5 cm}{2 proc} & \multirow{2}{1.5 cm}{3 proc} &\multirow{2}{1.5 cm}{4 proc} \\
+				& & & & & \\
+				\hline 
+				T : 200 & \multirow{2}{1.5 cm}{53s} & \multirow{2}{1.5 cm}{1m46s} & \multirow{2}{1.5 cm}{1m29s} & \multirow{2}{1.5 cm}{1m25s} & \multirow{2}{1.5 cm}{1m27s} \\
+				d : 10000 & & & & & \\
+				\hline 
+			\end{tabular}
+			\caption{Example 1 for the \textbf{Lorenz system}.}
+			\label{time_lorenz_1}
+		\end{table}
+		It seems as for the harmonic oscillator that when we apply the parareal method with only 1 process, it is slower than with 2, 3 or 4 processes. However the time taken by the parareal method with 1 process is almost 2 times slower than with RK4 in sequential. The results also seem to be correct in all cases since they are similar to those obtained by RK4 in sequential:
+		$$(x(T),y(T),z(T))=(-5.65157, -1.7475, 28.839)$$
+		\textbf{Example 2 :} We now divide by 2 the size of the problem ($d=5000$) while keeping the same $T=200$ :
+		\begin{table}[H]
+			\centering
+			\begin{tabular}{| c || c | c | c | c | c |}
+				\hline
+				\multirow{2}{1.5 cm}{$\cdot$} & \multirow{2}{1.5 cm}{Seq} & \multirow{2}{1.5 cm}{1 proc} & \multirow{2}{1.5 cm}{2 proc} & \multirow{2}{1.5 cm}{3 proc} &\multirow{2}{1.5 cm}{4 proc} \\
+				& & & & & \\
+				\hline  
+				T : 200 & \multirow{2}{1.5 cm}{25s} & \multirow{2}{1.5 cm}{53s} & \multirow{2}{1.5 cm}{44s} & \multirow{2}{1.5 cm}{42s} & \multirow{2}{1.5 cm}{44s} \\
+				d : 5000 & & & & & \\
+				\hline 
+			\end{tabular}
+			\caption{Example 2 for the \textbf{Lorenz system}.}
+			\label{time_lorenz_2}
+		\end{table}
+		We can make the same observations as before but we notice this time that the size of the problem being divided by 2 the execution times are also divided by 2 in the 5 cases. We also obtain the same results:
+		$$(x(T),y(T),z(T))=(-5.65157, -1.7475, 28.839)$$
+		\textbf{Example 3 :} We will now look at a completely different case where we take a larger final time $T=500$ and fewer equations $d=1000$. Here are the execution times obtained:
+		\begin{table}[H]
+			\centering
+			\begin{tabular}{| c || c | c | c | c | c |}
+				\hline
+				\multirow{2}{1.5 cm}{$\cdot$} & \multirow{2}{1.5 cm}{Seq} & \multirow{2}{1.5 cm}{1 proc} & \multirow{2}{1.5 cm}{2 proc} & \multirow{2}{1.5 cm}{3 proc} &\multirow{2}{1.5 cm}{4 proc} \\
+				& & & & & \\
+				\hline 
+				T : 500 & \multirow{2}{1.5 cm}{13s} & \multirow{2}{1.5 cm}{27s} & \multirow{2}{1.5 cm}{22s} & \multirow{2}{1.5 cm}{23s} & \multirow{2}{1.5 cm}{22s} \\
+				d : 1000 & & & & & \\
+				\hline 
+			\end{tabular}
+			\caption{Example 3 for the \textbf{Lorenz system}.}
+			\label{time_lorenz_3}
+		\end{table}
+		As far as execution times are concerned, there are not really any new observations to make. However, the results are different this time. Indeed, in the first 3 cases (sequential and  parareal with 1 and 2 processes) we obtain the same results:
+		$$(x(T),y(T),z(T))=(-3.33169, -4.35437, 18.3289)$$
+		But when we apply the parareal method with 3 or 4 processes we get completely different results. Below is what we get for 3 and 4 processes respectively:
+		$$\text{3 proc : } (x(T),y(T),z(T))=(-0.935968, 0.240612,21.186)$$
+		$$\text{4 proc : } (x(T),y(T),z(T))=(8.18609,1.32531,33.8032)$$
+		Moreover we can observe that by keeping the same parameters as before but by refining the fine and coarse time steps the results change when using RK4 sequentially. We will take $\Delta t_F=0.0001$, this is what we obtain :
+		$$(x(T),y(T),z(T))=(-0.46317,-2.72402,22.8864)$$
+		\underline{\textbf{Explanation :}} \\
+		To try to understand why we can obtain very different results by changing the number of parameters or the precision of the time steps, we have to look at the following new example: \\
+		\textbf{Example 4 :} We will consider the Lorenz system with the following parameters :
+		$$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5)$$
+		$$t_0=0, \quad T=500, \quad \Delta t_G=0.1, \quad \Delta t_F=0.01, \quad d=1$$
+		Here we are only interested in the use of parareal with 1 and 2 processes.
+		\begin{enumerate}[label=\ding{213}]
+			\item Applying the parareal method with 1 process, we obtain the results :
+			$$(x(T),y(T),z(T))=(-9.63764,-14.9937,19.9616)$$
+			These are the same results as with RK4 in sequential. \\
+			By taking 2 processes for the parareal method, we obtain very different results:
+			$$(x(T),y(T),z(T))=(-14.3485,-15.7886,33.3809)$$
+			\item Using the \textit{diff} command of linux to compare 2 files, we realized that the difference that totally changes the final results of the method with 2 processes is a rounding to time $t=274,04s$. Indeed at this time, we have the following results with 1 and 2 processes :
+			$$\text{1 proc : } (x,y,z)=( -13.0404,-9.45555,36.4169)$$
+			$$\text{2 proc : } (x,y,z)=(-13.0405,-9.45558,36.4169)$$
+			\item It is a very small difference but 10 seconds later, at time $t=284,04s$, the results are already starting to be less and less close:
+			$$\text{1 proc : } (x,y,z)=( -0.102688,0.234586,16.7023)$$
+			$$\text{2 proc : } (x,y,z)=(-0.043548,0.325784,16.7179)$$
+			\item This small difference makes that 100 seconds later at $t=374,04s$, the results are not at all the same :
+			$$\text{1 proc : } (x,y,z)=(13.0111,11.062,34.8919)$$
+			$$\text{2 proc : } (x,y,z)=(-12.7836,-15.694,29.2703)$$
+			\item This is how at time $T$, we obtain totally false results with 2 processes which is probably due to a rounding made at the initial time $t_1$ of this sub-interval. That is to say that $(x,y,z)(t_1)$ with 1 process is the right value but that $(x,y,z)(t_1)=U_1^1$ is wrongly computed, possibly because of the coarse integrator whose time step is not precise enough.
+		\end{enumerate}
+		Thus it seems that the more values to be calculated in the interval, the more errors can accumulate and therefore propagate to give false results. This is why the parareal method is perhaps not adapted to the Lorenz system due to the case theory (see section Ref) which makes that small errors can make the results diverge totally from the real solution.
+	\end{itemize}
 \end{enumerate}
 
 
 \subsubsection{Efficiency}
+
+The efficiency of a program in parallel allows to test the robustness of the code. By taking a problem of size $T$ and $P$ processes we obtain a certain execution time $t_e$. We will say that the problem is efficient if by taking a problem of size $2*T$ and $2*P$ processes the new execution time is in the range $[0.9t_e,1.1t_e]$.
 
 \subsubsection{Order of the method}
 
@@ -295,6 +454,7 @@ The main objective of parallel methods is to reduce execution time by simultaneo
 \noindent We can see that the blue curve is below the orange curve for all the k iterations and so for the parameters fixed previously on the oscillator, the method is of order k.
 
 \subsubsection{Improvement/Future}
+\label{improve}
 
 \noindent \underline{\textit{Remarks :}} Improvement of the parareal method implementation 
 

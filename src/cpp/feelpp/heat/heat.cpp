@@ -103,7 +103,7 @@ int main(int argc, char** argv) {
                         std::cout << fmt::format("=== Coarse integrator t = {}", t) << std::endl;
                     }
                     LOG(INFO) << "====================================" << std::endl;
-                    LOG(INFO) << fmt::format("Coarse Integrator Time interval t = {}, rank: {}", t, w->localRank()) << std::endl;
+                    LOG(INFO) << fmt::format("Coarse Integrator Time interval t = {}, rank: {}", t, w->localRank()) << std::endl;google::FlushLogFiles(google::GLOG_INFO);
 
                     // execute the time step: update the right hand side and solve the system
                     // compute G(U^k_{j-1}), heatcoarse.solution() == U^k_{j-1}
@@ -121,12 +121,12 @@ int main(int argc, char** argv) {
 
                     if ( std::abs(t-T_coarse) > 1e-10 )
                     {
-                        LOG(INFO) << fmt::format("Coarse Integrator non blocking send initiated to {} tag {} size: {} \n", k+1, k, heatcoarse.solution().size()) << std::endl;
+                        LOG(INFO) << fmt::format("Coarse Integrator non blocking send initiated to {} tag {} size: {} \n", k+1, k, heatcoarse.solution().size()) << std::endl;google::FlushLogFiles(google::GLOG_INFO);
                         // receive initial guess from coarse integrator for time_interval
                         reqs.push_back( c.isend(k+1, k, heatcoarse.solution()) );
                     }
                 }
-                LOG(INFO) << fmt::format("Coarse Integrator non blocking send wait_all\n", reqs.size()) << std::endl;
+                LOG(INFO) << fmt::format("Coarse Integrator non blocking send wait_all, size requests: {}\n", reqs.size()) << std::endl;google::FlushLogFiles(google::GLOG_INFO);
                 // this is blocking until we receive the initial guess
                 mpi::wait_all(reqs.begin(), reqs.end());
                 reqs.clear();
@@ -142,9 +142,9 @@ int main(int argc, char** argv) {
                     // Receive F(U^{k-1}_{j-1}) from the fine integrator
                     c.recv(k, k-1, heatcoarse.correction());
                     sync(heatcoarse.correction());
-                    LOG(INFO) << fmt::format("Coarse Integrator fine term: min : {} max: {}\n",heatcoarse.correction().min(), heatcoarse.correction().max() ) << std::endl;
+                    LOG(INFO) << fmt::format("Coarse Integrator fine term: min : {} max: {}\n",heatcoarse.correction().min(), heatcoarse.correction().max() ) << std::endl;google::FlushLogFiles(google::GLOG_INFO);
                     heatcoarse.correction() -= pred;
-                    LOG(INFO) << fmt::format("Coarse Integrator correction term: min : {} max: {}\n",heatcoarse.correction().min(), heatcoarse.correction().max() ) << std::endl;
+                    LOG(INFO) << fmt::format("Coarse Integrator correction term: min : {} max: {}\n",heatcoarse.correction().min(), heatcoarse.correction().max() ) << std::endl;google::FlushLogFiles(google::GLOG_INFO);
                     heatcoarse.save(heatcoarse.correction(),t,iteration,"correction");
 
                     heatcoarse.postProcess();
@@ -157,7 +157,7 @@ int main(int argc, char** argv) {
                         // update work flag to know if we stop or continue
                         // the issue feelpp/feelpp#1489 kicks in, need to solve asap
                         err = normL2(_range=elements(mesh),_expr=idv(sol_prev)-idv(sol),_parallel=false);
-                        err = std::sqrt(mpi::all_reduce(w->localComm(), err*err, std::sum<double>()));
+                        err = std::sqrt(mpi::all_reduce(w->localComm(), err*err, std::plus<double>()));
                         LOG(INFO) << fmt::format("Coarse Integrator error: {}\n", err ) << std::endl; google::FlushLogFiles(google::GLOG_INFO);
                         done = done && ( err < 1e-10 );
                     }
@@ -168,7 +168,7 @@ int main(int argc, char** argv) {
                 work = !done;
                 // broadcast work flag to all processors
                 mpi::broadcast(wglob->globalComm(), work, 0);
-                LOG(INFO) << fmt::format("work: {}", work) << std::endl;
+                LOG(INFO) << fmt::format("work: {}", work) << std::endl;google::FlushLogFiles(google::GLOG_INFO);
                 if ( work )
                     ++iteration;
             }
@@ -201,14 +201,14 @@ int main(int argc, char** argv) {
 
                 if ( color > 1 )
                 {
-                    LOG(INFO) << fmt::format("Fine Integrator waiting for coarse integrator initial condition from time interval {}, size {}", color - 1, heatfine.solution().size()) << std::endl;
+                    LOG(INFO) << fmt::format("Fine Integrator waiting for coarse integrator initial condition from time interval {}, size {}", color - 1, heatfine.solution().size()) << std::endl;google::FlushLogFiles(google::GLOG_INFO);
                     
                     // receive initial guess from coarse integrator for time_interval
                     reqs[0] = c.irecv( 0, fine_time_interval, heatfine.solution() );
-                    LOG(INFO) << fmt::format("Fine Integrator non blocking receive initiated tag {} rank : {}\n",fine_time_interval,w->localRank()) << std::endl;
+                    LOG(INFO) << fmt::format("Fine Integrator non blocking receive initiated tag {} rank : {}\n",fine_time_interval,w->localRank()) << std::endl;google::FlushLogFiles(google::GLOG_INFO);
                     // this is blocking until we receive the initial guess
                     mpi::wait_all(reqs, reqs + 1);
-                    LOG(INFO) << fmt::format("Fine Integrator non blocking receive completed\n") << std::endl;
+                    LOG(INFO) << fmt::format("Fine Integrator non blocking receive completed\n") << std::endl;google::FlushLogFiles(google::GLOG_INFO);
                     sync(heatfine.solution());
                 }
                 else
@@ -220,7 +220,7 @@ int main(int argc, char** argv) {
                 for (double t = t0_fine+dt_fine; t < T_fine+dt_fine; t += dt_fine) 
                 {
                     LOG(INFO) << "====================================" << std::endl;
-                    LOG(INFO) << fmt::format("Fine Integrator Time interval {}, t = {}, rank: {}", fine_time_interval, t, w->localRank()) << std::endl;
+                    LOG(INFO) << fmt::format("Fine Integrator Time interval {}, t = {}, rank: {}", fine_time_interval, t, w->localRank()) << std::endl;google::FlushLogFiles(google::GLOG_INFO);
                 
                     // execute the time step: update the right hand side and solve the system
                     heatfine.run( t, heatfine.solution() );
@@ -228,26 +228,26 @@ int main(int argc, char** argv) {
                     // send the final time to the coarse process
                     if ( std::abs(t-T_fine) < 1e-10 )
                     {
-                        LOG(INFO) << fmt::format("Fine Integrator non blocking send initiated tag {} rank : {}\n", fine_time_interval, w->localRank()) << std::endl;
+                        LOG(INFO) << fmt::format("Fine Integrator non blocking send initiated tag {} rank : {}\n", fine_time_interval, w->localRank()) << std::endl;google::FlushLogFiles(google::GLOG_INFO);
                         reqs[0] = c.isend(0, fine_time_interval, heatfine.solution());
                     }
                     // save solution at current time
                     heatfine.postProcess();
                 }  
-                LOG(INFO) << fmt::format("done with time stepping\n");
+                LOG(INFO) << fmt::format("done with time stepping\n");google::FlushLogFiles(google::GLOG_INFO);
                 // send fine solution to coarse integrator
                 // communication from fine to coarse integrators
                 // non-blocking communication
                 // send F(U^{k}_{T_fine}) to coarse integrator
                 mpi::wait_all(reqs, reqs + 1);
-                LOG(INFO) << fmt::format("Fine Integrator non blocking send completed\n") << std::endl;
+                LOG(INFO) << fmt::format("Fine Integrator non blocking send completed\n") << std::endl;google::FlushLogFiles(google::GLOG_INFO);
 
                 // update work flag to know whether we have to continue or not
                 // communication from coarse to fine integrators
                 // blocking communication
-                LOG(INFO) << fmt::format("check if there is still work to do\n") << std::endl;
+                LOG(INFO) << fmt::format("check if there is still work to do\n") << std::endl;google::FlushLogFiles(google::GLOG_INFO);
                 mpi::broadcast(wglob->globalComm(), work, 0);
-                LOG(INFO) << fmt::format("work: {}", work ) << std::endl;
+                LOG(INFO) << fmt::format("work: {}", work ) << std::endl;google::FlushLogFiles(google::GLOG_INFO);
                 if ( work )
                     ++iteration;
             }

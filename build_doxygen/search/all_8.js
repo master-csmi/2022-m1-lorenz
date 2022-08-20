@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['oscillator_23',['oscillator',['../utils_8hpp.html#a7f5e69757ee5fba2f498759af5cfa75a',1,'utils.cpp']]],
-  ['oscillator_5fex_24',['oscillator_ex',['../utils_8hpp.html#a83731cd53f1879fd9a85e8423c2100b0',1,'utils.cpp']]]
+  ['mean_23',['mean',['../enkf__fct_8hpp.html#a32d4f9c8a65e170d3be70332d6897ff8',1,'enkf_fct.cpp']]]
 ];

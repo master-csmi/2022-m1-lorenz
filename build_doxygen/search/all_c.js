@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['sol_5fconverge_31',['sol_converge',['../utils_8hpp.html#af04c3cb2d0e2146d96198db8039e5bef',1,'utils.cpp']]]
+  ['update_31',['update',['../class_ensemble_kalman_filter.html#aa1416bec4ed039d8a9f7c178747603b6',1,'EnsembleKalmanFilter']]],
+  ['utils_2ehpp_32',['utils.hpp',['../utils_8hpp.html',1,'']]]
 ];

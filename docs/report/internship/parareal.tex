@@ -121,6 +121,7 @@ $$U_j^k=G(U_{j-1}^k)+(F(U_{j-1}^{k-1})-G(U_{j-1}^{k-1}))$$
 \fbox{TO COMPLETE !!!!!}
 
 \subsubsection{Order of parareal method}
+\label{order}
 
 We say that the previous method is of order k (see \cite{partie2_ref2}) if there is a constant $c_k$ such that :
 \begin{equation}
@@ -218,6 +219,7 @@ For the two integrators of the Parareal method, we will take Runge Kutta order 4
 \end{enumerate}
 
 \subsubsection{Speed-up}
+\label{speed_up}
 
 The main objective of parallel methods is to reduce execution time by simultaneously performing tasks that can be done at the same time. In this section, we will study the speed-up achieved by the parareal method when the number of processes is increased. We will look at the speed-up with the Python implementation (done during the project) and the C++ implementation.
 
@@ -339,7 +341,7 @@ The main objective of parallel methods is to reduce execution time by simultaneo
 		$$x(T)=0.00714986=\frac{-1}{5}\cos\left(5T+\frac{\pi}{2}\right)$$
 		\underline{\textbf{Explanation :}} \\
 		As explained in the examples it seems that the parareal method in C++ is not faster than the sequential version (with RK4) but on the contrary slower. This could be explained by the initialization which is in fact an additional iteration :
-				\begin{figure}[H]      
+		\begin{figure}[H]      
 			\qquad \qquad \qquad
 			\includegraphics[width=0.7\linewidth]{"images/parareal/cpp/seq_vs_1proc.jpg"}
 			\captionof{figure}{Explanation : Sequential vs Parareal with 1 process}
@@ -441,42 +443,78 @@ The main objective of parallel methods is to reduce execution time by simultaneo
 
 \subsubsection{Efficiency}
 
-The efficiency of a program in parallel allows to test the robustness of the code. By taking a problem of size $T$ and $P$ processes we obtain a certain execution time $t_e$. We will say that the problem is efficient if by taking a problem of size $2*T$ and $2*P$ processes the new execution time is in the range $[0.9t_e,1.1t_e]$.
+The efficiency of a program in parallel allows to test the robustness of the code. By taking a problem of size $T$ and $P$ processes we obtain a certain execution time $t_e$. We will say that the problem is efficient if by taking a problem of size $2*T$ and $2*P$ processes the new execution time is in the range $[0.9t_e,1.1t_e]$. Here we will try to determine if the method implemented in C++ is efficient. Let's go back to Examples 1 and 3 of the harmonic oscillator in the Section \ref{speed_up}. So the parameters are as follows in the 2 examples:
+$$x(0) = 0, \quad v(0) = 1, \quad \omega_0 = 5, \quad x_0 = \frac{-1}{5}, \quad \phi_0 = \frac{\pi}{2}$$
+$$t_0=0, \quad T=\cdot, \quad \Delta t_G=0.01, \quad \Delta t_F=0.001, \quad d=100$$
+In Example 1 we have $T=10000$ and in Example 3 we double the final time so $T=20000$, we then get the following execution times:
+\renewcommand{\arraystretch}{1.2}
+\begin{table}[H]
+	\centering
+	\begin{tabular}{| c || c | c |}
+		\hline
+		 & First case & Second case \\
+		\hline
+		Example 1 & Seq : 17s & \multirow{2}{2 cm}{2 proc : 30s}  \\
+		$T=10000$ & 1 proc : 36s &  \\
+		\hline 
+		Example 2 & \multirow{2}{2 cm}{2 proc : 58s} & \multirow{2}{2 cm}{4 proc : 1m}  \\
+		$T=20000$ & &  \\
+		\hline 
+	\end{tabular}
+	\caption{Two tests of the efficiency of the parareal method in C++.}
+	\label{efficiency}
+\end{table}
+\noindent It would seem that the method is not efficient and that doubling its size and the number of processes increases the execution time significantly. \\
+
+\noindent \textbf{Explanation/Hypothesis :} \\
+We will now try to understand why the method seems not to be efficient :
+\begin{enumerate}[label=\textbullet]
+	\item In the following, we will consider $t_0=0$. \\
+	\textbf{First case :} We will try to understand why the method is not effective in the first case, here is a scheme: 
+	\begin{figure}[H]      
+		\centering
+		\includegraphics[width=0.5\linewidth]{"images/parareal/cpp/efficient_1_vs_2.jpg"}
+		\captionof{figure}{Explanation : Sequential vs Parareal with 1 process}
+		\label{efficient_1_vs_2}
+	\end{figure}
+	We see in the diagram above that RK4 in sequential solves the problem with the fine integrator between 0 and T, i.e. over $T$ seconds. \\
+	The parareal method with 1 process performs the initialization ($k=0$) where it solves the problem with the fine integrator over $T$ seconds and performs a first iteration ($k=1$) where it solves the same problem once again : it therefore solves the problem over $2*T$ seconds and should therefore take twice as much time to execute as the sequential version. \\
+	To check if the method is efficient, we want to solve the problem between 0 and $2T$ with 2 processes.  It solves three times the problem on $2*T$ with 2 processes (because 2 iterations and the initialization) thus $3*2*T$ seconds and each process solves the problem on $3*T$ seconds and thus it should take $1.5$ times more time than the parareal method with 1 process and $3$ times more time than in sequential.
+	\textbf{Second case :} We will try now to understand why the method is not effective in the second case, here is a scheme: 
+	\begin{figure}[H]      
+		\qquad \qquad \qquad
+		\includegraphics[width=0.7\linewidth]{"images/parareal/cpp/efficient_2p_vs_4p.jpg"}
+		\captionof{figure}{Explanation : Sequential vs Parareal with 1 process}
+		\label{efficient_2p_vs_4p}
+	\end{figure}
+	This time we want to solve the problem with the parareal method on 2 processes between 0 and $T$ or $T$ seconds. Each process solves the problem on $3*T/2$ seconds because of the 2 iterations and the initialization. \\
+	To check if the method is efficient, we want to solve the problem on $2*T$ seconds with 4 processes. Each process then solves the problem on $T/2$ seconds 5 times because of the 4 iterations and the initialization thus $5*T/2$ seconds. So the parareal method with 4 processes should take $5/3$ times more time than the method with 2 processes.
+	
+	\item Then, it is also necessary to take into account that the method also uses the coarse integrator which must be used sequentially. These sequential parts also slow down the program and therefore the efficiency. Indeed if the fine integrator is used between 0 and $T$ and we double the size of the problem it will have to be computed between 0 and $2*T$ seconds, which will take 2 times more time. 
+	
+	\item One last point to take into account, even if it is smaller than the others, is that increasing the size of the problem also increases the number of operations and communications to do.
+\end{enumerate}
+
 
 \subsubsection{Order of the method}
 
-\noindent Let us now check the order of convergence of the method on this same example. In the following graph, the blue curve represents the maximum on $j$ of $\mathcal{E}(j,k)$ according to the iterations $k$ and the orange curve represents the $(\Delta t_G)^k$.
+\noindent Let us now check the order of convergenc (see Section \ref{order}) of the method on the harmonic oscillator with the following parameters :
+$$x(0) = 0, \quad v(0) = 1, \quad \omega_0 = 5, \quad x_0 = \frac{-1}{5}, \quad \phi_0 = \frac{\pi}{2}$$
+$$t_0=0, \quad T=200, \quad \Delta t_G=0.01, \quad \Delta t_F=0.001, \quad d=1$$
+In the following graph, the blue curve represents the maximum on $j$ of $\mathcal{E}(j,k)$ according to the iterations $k$ and the orange curve represents the $(\Delta t_G)^k$.
 \begin{figure}[H]
 	\centering
-	\fbox{\includegraphics[width=0.4\linewidth]{"images/parareal/osci_cvg_1.jpg"}}
-	\caption{Plot of $\mathcal{E}(j,k)$ and $(\Delta t_G)^k$.}
+	\fbox{\includegraphics[width=0.3\linewidth]{"images/parareal/osci_cvg_1.jpg"}}
+	\caption{Plot of $\mathcal{E}(j,k)$ and $(\Delta t_G)^k$ in \textbf{Python}.}
 \end{figure}
 \noindent We can see that the blue curve is below the orange curve for all the k iterations and so for the parameters fixed previously on the oscillator, the method is of order k.
 
-\subsubsection{Improvement/Future}
+\subsubsection{Conclusion for parareal method}
 \label{improve}
-
-\noindent \underline{\textit{Remarks :}} Improvement of the parareal method implementation 
 
 \begin{itemize}[label=-]
 	\item A first improvement for the implementation of the method could be to make a separate case for $P=1$. For this case, we would only compute the fine solution once on $[t_0,T]$.
 	\item As said before, one possibility to improve the permorfances would be to compute only the fine and coarse solutions between $t_0$ and $t_1$ at the first iteration because they are the only ones that never change during the iterations. 
 	\item In the same way, we could never compute the coarse solution between $t_{P-1}$ and $t_P$ because we never use it and we can compute the fine solution on this interval only at the last iteration (i.e. when the solution converges) because we need this information only to obtain the final solution of the system.
+	\item We could see what happens if we take a lot more intervals that are spread over the different processes. Because here we are limited as the number of processes is equal to the number of intervals. Would we have an improvement for the speed of the method or on the contrary, would we have many more iterations because the initial points would be much less precise?
 \end{itemize}
-
-\noindent \underline{\textit{Future of the project :}}
-
-\begin{itemize}[label=-]
-	\item The first thing that could be done in the future of this project would be to implement the remarks (Improvement of the parareal method implementation) made earlier.
-	\item Then, we could try to understand why there seems to be a "stagnation" in the execution times and try to find a way to choose a number of processes $P$ which is optimal (the fastest) according to the parameters we have.
-	\item We could also see what happens if we take a lot more intervals that are spread over the different processes. Because here we are limited as the number of processes is equal to the number of intervals. Would we have an improvement for the speed of the method or on the contrary, would we have many more iterations because the initial points would be much less precise?
-\end{itemize}
-
-
-
-\subsection{Solving PDEs with Feel++}
-
-\subsubsection{Laplace equation}
-
-\subsubsection{Heat equation}
-\label{heat}

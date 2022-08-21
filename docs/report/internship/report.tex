@@ -12,6 +12,20 @@
 %\usepackage[super]{natbib} %exponant biblio
 \usepackage{fourier} %for danger sign
 \usepackage{chngcntr}
+\usepackage{pifont} %for more symbol in enumerate
+
+% Useful packages for table
+
+\usepackage{array,multirow,makecell}
+\usepackage[linesnumbered]{algorithm2e}
+\usepackage[table]{xcolor}
+\setcellgapes{1pt}
+\makegapedcells
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash }b{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash }b{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash }b{#1}}
+
+
 
 %hyperref
 \usepackage[colorlinks]{hyperref}
@@ -59,8 +73,9 @@
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
 
 %bibliography (with section)
-\usepackage[backend=biber,style=numeric,sorting=ynt]{biblatex}
-\addbibresource{biblio.bib}
+\usepackage[backend=biber,style=numeric,sorting=nyt]{biblatex}
+\addbibresource{biblio_ref.bib}
+\addbibresource{biblio_doc.bib}
 
 
 % Titlepage
@@ -81,9 +96,13 @@
 	\newpage
 	\section{Introduction}
 	
-	\subsection{Presentation of Cemosis}
+	\noindent This internship is the continuation of a project realised in th platform Cemosis . During the project the main goals were to implement a parallel-in-time resolution method for the Lorenz system, to realize the data assimilation using the EnKF method using a function already implemented in the library Filterpy. For this we also had to implement several methods to solve numerically the Lorenz system (like RK4). During the project, all these methods were implemented or used in Python.
 	
-	This project is managed by Cemosis which is the "Centre de Modélisation et de Simulation de Strasbourg" (Strasbourg Modeling and Simulation Center). Cemosis is hosted by the Institute of Advanced Mathematical Research (IRMA) and was created in January 2013. Cemosis relies currently on the team Modeling and Control of the IRMA. Their work is focused on the numarical simulation and mathematical modelling of different phenomena. They use and develop tools in the fields of:
+	\subsection{Presentation of Cemosis}
+	\label{cemosis}
+	
+	This project is managed by Cemosis which is the "Centre de Modélisation et de Simulation de Strasbourg" (Strasbourg Modeling and Simulation Center). Cemosis is hosted by the Institute of Advanced Mathematical Research (IRMA) and was created in January 2013. 
+	Cemosis work is focused on the numarical simulation and mathematical modeling of different phenomena. They use and develop tools in the fields of:
 	
 	\begin{enumerate}[label=\textbullet]
 		\item \textbf{MSO} - Modeling Simulation and Optimization
@@ -94,50 +113,142 @@
 	\noindent They work with researchers and engineers of other research centers and companies.
 	
 	\noindent For more informations, refer to the \href{http://www.cemosis.fr/}{cemosis website}. 
+	\subsection{Context}
+	\noindent Cemosis relies currently on the team Modeling and Control of the IRMA and is developing competences and projects in the energy sector of buildings. Nowadays it is important to reduce the energy consumption of buildings in order to move to a more ecologic and economic lifestyle. For this we need to know how to simulate and model buildings using fast simulation methods such as parallel calculation and data integration because our models used to simulate buildings are never perfect, and even less in the case of existing buildings where we have little information. In fact, in order to perform simulations over long periods, such as a year, we would also have to take into consideration phenomena such as radiative exchanges and convective effects, which therefore require a PDE model if we want a spatial discretization.
+	\begin{figure}[H]       
+	\begin{minipage}[t]{0.48\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{"images/cemosis_simulation_1.png"}
+	\end{minipage} \hfill
+	\begin{minipage}[t]{0.48\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{"images/cemosis_simulation_2.png"}
+	\end{minipage}
+	\captionof{figure}{Example of a building simulation with Feel++}
+    \end{figure}
 	
-	\subsection{Goals of the project}
+	\subsection{Goals of the Intership}
+	\noindent The main objective of the intership is to implement the Parareal method and data assimilation for PDEs with Feel++. 
+	\newline
 	
-	 The main objective of the project is the Data assimilation for the Lorenz system. For this reason, the following secondary objectives will be necessary :
- 
- 	\begin{enumerate}[label=\textbullet]
- 		\item \textbf{to read the following references :}
- 		\begin{itemize}
- 			\item Common part-introduction to the Lorenz system : \cite{partie1_ref1},  \cite{partie1_ref2},  \cite{partie1_ref3}
- 			\item Para-real method : \cite{partie2_ref1}, \cite{partie2_ref2},  \cite{partie2_ref3}
- 			\item Data assimilation : \cite{partie3_ref2}
- 		\end{itemize}
- 		\item \textbf{to implement methods:} 
- 		\begin{itemize}
- 			\item For the common part (introduction to the Lorenz system), we had to implement ODE resolution methods with Python.
- 			\item The second part concerns the fast solution of a mathematical/computational model using parallel computing techniques. In particular we will focus on the implementation of the para-real method (with \textit{mpi4py} : \url{https://mpi4py.readthedocs.io/en/stable}), a parallel algorithm that can be used jointly with other parallelisation  techniques (like mesh partitioning-based techniques in PDEs) or alone for ODEs.
- 			\item The third part concerns data assimilation techniques for non-linear systems. In particular we will focus on the usage of filtering techniques (like Ensemble Kalman Filter using \textit{FilterPy}.) to assimilate synthetic data and correct a computational, inaccurate model.
- 		\end{itemize}
- 	\end{enumerate}
- 
- 	\section{Roadmap}
- 	
- 	\noindent For the organization we have chosen to make a Gantt diagram (see Figure \ref{gantt}) with the different parts and the deadlines we have set (which can change during the time). The first part consists in understanding the Lorenz system and to make the implementation of its numerical resolution. Since this part is essential for the rest, we worked together during this.
- 	We studied the Lorenz system as it is a simple climate system model and to implemented it with different numerical methods, in order to choose one of them for the other two parts. 
- 	
- 	
- 	\noindent For these two other parts we decided to work each one on one part. One person will take care of the para-real part in order to make a parallel simulation in time and to have a much more efficient and fast implementation.
- 	
- 	
- 	\noindent And the other person will take care of understanding the basic principles of data assimilation, which means how to combine the observations and the mathematical model, the different operators and describe them. For this, it is necessary to understand the two methods of data assimilation Kalman filter and 3DVar, and also the link between them, but it is better to use the Ensemble Kalman filter method because this one works on non-linear systems.
- 	
- 	\begin{figure}[H]
- 		\includegraphics[width=\textwidth]{../../gantt/gantt.pdf}
- 		\caption{Gantt chart}
- 		\label{gantt}
- 	\end{figure}
+	\noindent \textbf{Objectives for the common part}:
+    	\begin{enumerate}
+        \item To read the following article about the Heat equation (Chapter 11) : \cite{quarteroni_numerical}
+			\item To set up a project on Github :
+			\begin{itemize}
+				\item Organisation of the repository (Python library, cmake in C++ ...)
+				\item Create issues to see the progress of the project
+				\item Set up the CI : build, test, documentation 
+			    \end{itemize}\; \\
+		Github repository : \url{https://github.com/master-csmi/2022-m1-lorenz}
+	\end{enumerate}
+	
+	\noindent \textbf{Objectives for parareal method:}
+	\begin{enumerate}
+		\item Implement the parareal method in C++ and :
+		\begin{itemize}
+			\item Test the method (with oscillator)
+			\item Check convergence and stability results
+			\item Check speed-up and efficiency 
+		\end{itemize}
+		\item Implement the resolution of the heat equation in C++ with Feel++ \\
+		$\Rightarrow \quad $ Implement the resolution of the Laplace equation in C++ with Feel++
+		\item Use the previous implementation of the heat equation with the parareal method
+		\item Check the convergences/accuracies of the method
+	\end{enumerate}
+	\newpage
+	\noindent \textbf{Objectives for the Data assimilation:}
+	\begin{enumerate}
+        \item Write a class for the EnKF in C++, inspired by the EnKF written in Python (FilterPy); Test the algorithm.
+        \item To read the following article :
+        \begin{itemize}
+            \item Fundamentals Of Building Performance Simulation By Beausoleil-Morrison
+        \end{itemize}
+        
+    \item Understand the heat equation and what are the phenomena involved in the modification of the temperature of a building (conduction, convection, radiation).
+    \item Write the mathematical problem to be solved if we want to simulate an office then realize the simulation using Feel++ toolboxes.
+    \item Introduce data assimilation using the sensor and correct the simulation.
+    \end{enumerate}
+
+	\newpage
+
+	\section{Differential Equations}
+	\noindent In Mathematics, ordinary differential equations (ODE) are equations that involve derivatives of one-variable functions, and partial differential equations (PDE) are equations that imposes relations between the various partial derivatives of a multivariable function.
+	The difference between ODEs and PDEs is that for ODEs the unknown functions depend only on one variable, whereas for PDEs the unknown functions may depend on several independent variables.
+	\noindent Differential equations are an important object of study in both pure and applied mathematics. They are used to build mathematical models of physical and biological evolution processes, for example for the study of radioactivity, celestial mechanics, weather or population dynamics... 
+	\noindent During the project we had already used the Lorenz system and the harmonic oscillator, for the internship we also used these two differential equations but we worked with two other equations: the heat equation and the Laplacian.
+	
+	\subsection{ODE: Harmonic oscillator}
+	\label{oscillator_ode}
+	\noindent A harmonic oscillator is an ideal oscillator whose evolution over time is described by a sinusoidal function, whose frequency depends only on the characteristics of the system and whose amplitude is constant.This mathematical model describes the evolution of any physical system in the vicinity of a stable equilibrium position, which makes it a transversal tool used in many fields: mechanics, electricity and electronics, optics.
+	\begin{figure}[H]       
+	\begin{minipage}[t]{0.46\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{"images/Diff_equation/Harmonic_oss_1.png"}
+		\captionof{figure}{Simple pendulum}
+	\end{minipage} \hfill
+	\begin{minipage}[t]{0.48\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{"images/Diff_equation/Harmonic_oss_2.png"}
+		\captionof{figure}{Spring/mass system}
+	\end{minipage}
+    \end{figure}
 	
 	\newpage
-	\section{The Lorenz System}
 	
-	\subsection{Introduction to the system}
+	\noindent Let's consider a mass-spring system of the following form :
+
+    \begin{equation}
+    	\frac{d^2 x}{d t^2}+\omega_0^2 x = 0 \quad \iff \quad \frac{d^2 x}{d t^2}=-\omega_0^2 x \quad \text{with} \quad \omega_0=\sqrt{\frac{k}{m}}.
+    	\label{osc}
+    \end{equation}
+    
+    \noindent $k$ and $m$ are the spring stiffness and the suspended mass respectively. We are interested in this equation because its exact solution is known and is of the form :
+    $$x(t) = x_0 \cos(\omega_{0}t+\phi_0).$$
+    
+    \noindent First of all, the numerical methods such as Runge Kutta order 4  allow us to solve first order differential equations. But the harmonic oscillator equation (\ref{osc}) is a second order equation. We will therefore start by making a simple change of variable which will allow us to replace this second order differential equation by a system of two first order equations. We pose :
+     
+    $$\qquad \frac{d x}{d t}=v \quad \Rightarrow \quad \frac{d^2 x}{d t^2}=\frac{d v}{d t}.$$
+    
+    \noindent As a result the equation becomes :
+    
+    $$\left\{\;\begin{aligned}
+    	\frac{d x}{d t}&=v \\
+    	\frac{d v}{d t}&=-\omega_0^2 x
+    \end{aligned}\right.
+    $$
+    
+    \noindent Let's take an example to understand how we can determine the exact solution from the initial conditions that we will take. For example if we take $\omega_0=5$ and $(x(0),v(0))=(0,1)$, we have :
+    
+    $$\left\{\;\begin{aligned}
+    	x(0)&=0 \\
+    	v(0)&=1
+    \end{aligned}\right. \quad \Rightarrow 
+    \left\{\;\begin{aligned}
+    	x_0 \cos(\phi_0)&=0 \\
+    	-x_0 \omega_{0} \sin(\phi_0)&=1
+    \end{aligned}\right.  \quad \Rightarrow  
+    \left\{\;\begin{aligned}
+    	x_0&=\frac{-1}{5} \\
+    	\phi_0&=\frac{\pi}{2}
+    \end{aligned}\right.
+    $$
+    
+    \noindent And thus the solutions of the equation are of the form :
+    
+    $$x(t) = \frac{-1}{5}\cos(5t+\frac{\pi}{2}).$$
+    \subsection{ODE: Lorenz system}
+	\label{lorenz_ode}
+	\noindent The Lorenz system is a simplified three-variable model to investigate atmospheric convection. This model has had important repercussions in showing the possible limits on the ability to predict long-term climate and weather evolution. One of the important characteristics of the Lorenz system is 
+	that it is a chaotic system, which means that this type of system is roughly defined by sensitivity to initial conditions: infinitesimal differences in initial conditions of the system result in large differences in behavior.
+	\begin{figure}[H]   
+		\centering
+		\includegraphics[width=0.5\textwidth]{"images/butterfly.jpg"}
+		\caption{butterfly wing pattern}
+		\label{but_wing}
+	\end{figure}	
 	
-	For centuries, humans have used mathematics and science to make predictions about the universe. Scientist were able to predict an eclipse a century in advance. We are now able to make predictions about asteroids impact in earth. But why can we only predict the weather about a week or two in advance? Why scientists cannot predict the temperature for long periods of time? There have been many times when the weather predictions the day before were completely different from the ones you expected. But it is important to know that weather prediction is a very complicated and difficult task to achieve. The complexity is strongly related to the earth's atmosphere, which can be considered as a fluid. 
-	Around 1960 Edward Lorenz, an MIT meteorologist, started to work with a set of equations that represented a simplified version of the atmosphere, with 12 variables that changed over time. After two years of research, in 1963 he developed the Lorenz system, a simplified three-variable model to investigate atmospheric convection. This system defines a 3 dimensional trajectory by differential equations with 3 parameters.
+	\noindent The Lorenz system defines a 3 dimensional trajectory by differential equations with 3 parameters.
 	$$
 	\begin{cases}
 		
@@ -187,167 +298,79 @@
 	
 	\noindent We deduce that the fixed points of the Lorenz system are: $(0,0,0)$ for all values of the parameters. And for $r>1$, there is also a pair of fixed points $(\sqrt{b(r-1)},\sqrt{b(r-1)},r-1)$ and $(-\sqrt{b(r-1)},-\sqrt{b(r-1)},r-1)$.
 	
-	\subsection{Lorenz Attractor}
-	
-	
-	\noindent Lorenz discovered that an particular structure emerges when $x(t)$ is plotted against $z(t)$: the famous butterfly wing pattern :
-	\begin{figure}
+	\subsection{PDE: Laplacian equation}
+	\label{laplacian_pde}
+    \noindent The Laplace equation is a second-order partial differential equation . This equation is a basic PDE that arises in the heat and diffusion equations. It is a useful method for determining electric potentials in space or the free region.
+    It is often written as :
+    $$\Delta f=0 \qquad \text{or} \qquad \nabla^2 f=0$$
+    \noindent with $\Delta$ the Laplace operator. We can define the Laplace operator as follows: $\Delta=\nabla \cdot \nabla$ where $\nabla \cdot$ divergence operator and $\nabla$  is the gradient operator.
+    
+    \noindent We can write the problem this way:
+    
+	$$\left\{\begin{aligned}
+		-\Delta u &= f \quad&&\Omega \\
+		u&=g \quad&&\Gamma_D \\
+		\frac{\partial u}{\partial n} &=h \quad &&\Gamma_N \\
+		\frac{\partial u}{\partial n}+u &=l \quad &&\Gamma_R \\
+	\end{aligned}\right.$$
+	\noindent Where $\Omega$ corresponds to our domain, $\Gamma_D$  corresponds to the Dirichlet boundary condition, $\Gamma_N$ to the Neumann boundary condition and $\Gamma_R$ to the Robin boundary condition.
+	\subsection{PDE: Heat equation}
+	\label{heat_pde}
+	\noindent Heat transfer is the process of energy transfer resulting from a temperature difference. 
+	\newline
+    \noindent Thermal analysis is undertaken to predict temperatures and heat transfer in and around bodies. This information can then be used to model temperature-dependent phenomena, such as heat-induced stresses or the effect on fluid flow in the case of a solidifying metal.  Heat flow has been classified into three different modes: conduction, convection and radiation.
+    \begin{figure}[H]       
+	\begin{minipage}[t]{0.45\linewidth}
 		\centering
-		\includegraphics[width=0.5\textwidth]{"images/butterfly.jpg"}
-		\caption{butterfly wing pattern}
-		\label{but_wing}
-	\end{figure}	
-	\noindent Few remarks about the attractor:
-	\begin{enumerate}[label=\textbullet]
-		\item The trajectory seems to cross several times, but this is just an illusion of the projection of the three dimensional trajectory on a two dimensional plane. In 3D, there are no crossings.
-		\item The number of circuits made on either side varies unpredictably from one cycle to the next. The sequence of the number of circuits in each lobe has many of the characteristics of a random sequence.
-		\item When the trajectory is viewed in 3 dimensions, it appears to settle onto a thin set that looks like a pair of butterfly wings. We call this attractor a strange attractor and it can be shown schematically as :
-		\begin{figure}
-			\centering
-			\includegraphics[width=0.5\textwidth]{"images/butterfly3D.jpg"}
-			\caption{Strange attractor.}
-		\end{figure}
-	\end{enumerate}
-	
-	\noindent The uniqueness theorem \cite{partie1_ref2} means that trajectories cannot cross or merge, hence the two surfaces of the strange attractor can only appear to merge. Lorenz concluded that “there is an infinite
-	complex of surfaces” where they appear to merge. Today this “infinite complex of surfaces” would be called a fractal, which is a set of points with zero volume but infinite surface area.
-	
-	\noindent The term attractor is also difficult to define in a rigorous way. Loosely, an attractor is a set of points to which all neighbouring trajectories converge. Stable fixed points and
-	stable limit cycles are examples. Nobody has yet proved that the Lorenz attractor is truly an attractor. Finally we define a strange attractor to be an attractor that exhibits sensitive dependence on initial conditions \cite{partie1_ref2}.
-	
-	\subsection{Chaos theory}
-	
-	In 1961, Lorenz was working with a simplified system that represented the atmosphere, with 12 variables. A computer was used to calculate the values for each instant by applying the equations to the values from the previous moment. In some cases, Lorenz’s team needed to re-start the simulation. Since the equations was the same, they expected to see the same results but sometimes they didn’t. At first, they thought that the problem was coming from the computer, but actually the error came from the fact that the computer was storing numbers with six decimal places but it was only printing the number with 3 decimal places, so the values that Lorenz put into the computer had tiny errors. So he discovered that in some systems, tiny changes in the initial conditions can lead to big changes in time.
-	
-	\noindent This effect was later named "butterfly effect". The "butterfly effect" refers to a system that is very sensitive to the initial condition, which is why these systems are very difficult to predict over time. This idea gave birth to the notion of a butterfly flapping its wings in a region of the world and causing a tornado.
-	The Lorenz equations are a chaotic system, which means that this type of system is roughly defined by sensitivity to initial conditions: infinitesimal differences in initial conditions of the system result in large differences in behavior.
-	
-	\section{Numerical resolution of the Lorenz System with different methods}
-	\label{sec4}
-	
-	We consider $f : [0; T] \times \mathbb{R}^n \rightarrow \mathbb{R}^n$ a continuous function. For $X_0\in \mathbb{R}^n$, the problem is to find  $X\in C^1([0,T],\mathbb{R}^n)$ a solution for the differential equation:
+		\includegraphics[width=\linewidth]{"images/Diff_equation/heat_1.png"}
+	\end{minipage} \hfill
+	\begin{minipage}[t]{0.50\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{"images/Diff_equation/heat_2.png"}
+	\end{minipage}
+	\captionof{figure}{Simulation of the temperature of a building using the heat equation with Feel++}
+    \end{figure}
+
+
+	\noindent The heat equation with convective effects can be written as:
+    $$\rho C_p((\frac{\partial T}{\partial t})+u . \nabla T)-\nabla .(k \nabla T)=Q$$
+    and it must be completed  with boundary conditions and initial conditions.
+    \newline
+	\renewcommand{\arraystretch}{2}
+    \begin{tabular}{|R{3cm}|C{3cm}|L{3cm}|L{3cm}|}
+    \hline
+    Notation & Quantity &Unit & Value   \\
+    \hline
+    $\rho$ & density & $Kg.m^
+    {-3}$ & 1.125  \\[4cm]
+    \hline
+    $C_p$ & Specific heat & $J/KgC=J/KgK$ & 1004 \\[4cm]
+    \hline
+    $k$ & Conductivity & $W/mC=W/mK$ & 0.025 \\[4cm]
+    \hline
+    $u$ & Fluid velocity & $m.s^{-1}$  & unknown \\[4cm]
+    \hline
+    $T$ & Temperature & $K$ or $C$  & unknown \\[4cm]
+    \hline
+    $t$ & Time & s. &   \\[4cm]
+    \hline
+\end{tabular}
+
+	\newpage
+
+    \subsection{Runge-Kutta}
+    \label{rk4}
+    \noindent During our project and internship we used the Runge-Kutta method of order 4 to solve ordinary differential equations. Runge-Kutta techniques are one-step numerical schemes for solving ordinary differential equations. They are among the most popular methods because of their ease of implementation and accuracy.
+    
+    \noindent We consider $f : [0; T] \times \mathbb{R}^n \rightarrow \mathbb{R}^n$ a continuous function. For $X_0\in \mathbb{R}^n$, the problem is to find  $X\in C^1([0,T],\mathbb{R}^n)$ solution for the differential equation:
 	
 	$$\left\{\begin{aligned}
 		X'&=f(t,X), \\
 		X(0)&=X_0.
 	\end{aligned}\right.$$
 	
-	\noindent To solve the Lorenz problem we will have:
 	
-	$$X'=\begin{pmatrix}
-		x' \\
-		y' \\
-		z'
-	\end{pmatrix}, \quad X=\begin{pmatrix}
-		x \\
-		y \\
-		z
-	\end{pmatrix} \quad \text{and} \quad f(t,X)=\begin{pmatrix}
-		\sigma(y-x) \\
-		x(r-z)-y \\
-		xy-bz
-	\end{pmatrix}$$.
-	
-	\noindent After discretizing the problem in time, we can implement different methods to solve the ODE. The methods are the following and will be described in more detail in the following parts: explicit Euler, implicit Euler and Runge Kutta (order 4). We will also use a scipy function and finally compare all our methods.
-	
-	\subsection{Discretization}
-	
-	To solve the problem, we will use the finite difference method. We will start by slicing the interval $[0,T]$ in $N+1$ discretization points (so $N$ intervals). Let $t_n=n\Delta t$ the discretization timed with $\Delta t=T/N$ the times step. Then, we denote by $X_n=X(t_n)$ the discretization points. So for $n=\{0,\dots,N\}$, we will have:
-	
-	$$\left\{\begin{aligned} 
-		x_n&=x(t_n)=x(n\Delta t), \\
-		y_n&=y(t_n)=y(n\Delta t), \\
-		z_n&=z(t_n)=z(n\Delta t).
-	\end{aligned}\right.$$
-	
-	\noindent By Taylor's theorem, we get :
-	
-	$$\begin{aligned}
-		&&X(t+\Delta t)&=X(t)+\Delta t X'(t) + O(\Delta t^2) \\
-		\Rightarrow&& \quad X'(t)&=\frac{X(t+\Delta t)-X(t)}{\Delta t} + O(\Delta t) \\
-		\Rightarrow&& \quad \partial_t X_n&\approx\frac{X_{n+1}-X_n}{\Delta t} \\
-	\end{aligned}
-	$$	
-	
-	\subsection{Explicit Euler}
-	
-	The explicit Euler method is written :
-	
-	$$X_{n+1}=X_n+\Delta t f(t_n,X_n)$$,
-	
-	\noindent which will give us:
-	
-	$$\left\{\begin{aligned} 
-		x_{n+1}&=\sigma\Delta t y_n+(1-\sigma\Delta t) x_n ,\\
-		y_{n+1}&=\Delta t x_n(r-z_n)(1-\Delta t)y_n ,\\
-		z_{n+1}&=\Delta t x_ny_n+(1-b\Delta t)z_n.
-	\end{aligned}\right.$$
-	
-	\subsection{Implicit Euler}
-	
-	The implicit Euler method is written :
-	
-	$$X_{n+1}=X_n+\Delta t f(t_{n+1},X_{n+1}),$$
-	
-	\noindent which will give us:
-	
-	$$\left\{\begin{aligned} 
-		x_{n+1}&=x_n+\Delta t\sigma(y_{n+1}-x_{n+1}), \\
-		y_{n+1}&=y_n+\Delta t x_{n+1}(r-z_{n+1})-y_{n+1}, \\
-		z_{n+1}&=z_n+\Delta tx_{n+1}y_{n+1}-\Delta tbz_{n+1}.
-	\end{aligned}\right.$$
-	
-	\begin{enumerate}[label=\textbullet]
-		\item First, we isolate the $n+1$ terms on the left and the $n$ terms on the right:
-		
-		$$\left\{\begin{aligned} 
-			(1+\Delta t\sigma)x_{n+1}-\Delta t\sigma y_{n+1}&=x_n, \\
-			-\Delta t(r-z_{n+1})x_{n+1}+(1+\Delta t)y_{n+1}&=y_n, \\
-			-\Delta ty_{n+1}x_{n+1}+(1+\Delta tb)z_{n+1}&=z_n,
-		\end{aligned}\right.$$
-		
-		\item We can then linearize the terms 
-		
-		$$\begin{aligned}
-			x_{n+1}y_{n+1}&\approx x_{n+1,k+1}y_{n+1,k}, \\
-			x_{n+1}z_{n+1}&\approx x_{n+1,k+1}z_{n+1,k}.
-		\end{aligned}$$ 		
-		\noindent Then, we get :
-		
-		$$\left\{\begin{aligned} 
-			(1+\Delta t\sigma)x_{n+1,k+1}-\Delta t\sigma y_{n+1,k+1}&=x_n ,\\
-			-\Delta t(r-z_{n+1,k})x_{n+1,k+1}+(1+\Delta t)y_{n+1,k+1}&=y_n , \\
-			-\Delta ty_{n+1,k}x_{n+1,k+1}+(1+\Delta tb)z_{n+1,k+1}&=z_n ,
-		\end{aligned}\right.$$
-		
-		\item We can then put in matrix form  $M(X_{n+1,k})X_{n+1,k+1}=X_n$ with :
-		
-		$$M(X_{n+1,k})=\begin{pmatrix}
-			1+\Delta t\sigma & -\Delta t\sigma & 0 \\
-			-\Delta t(r-z_{n+1,k}) & 1+\Delta t & 0 \\
-			-\Delta ty_{n+1,k} & 0 & 1+\Delta tb
-		\end{pmatrix},$$
-		$$X_{n+1,k+1}=\begin{pmatrix}
-			x_{n+1,k+1} \\
-			y_{n+1,k+1} \\
-			z_{n+1,k+1}
-		\end{pmatrix} \quad \text{and} \quad X_n=\begin{pmatrix}
-			x_n \\
-			y_n \\
-			z_n
-		\end{pmatrix} $$
-	\end{enumerate}
-
-	\noindent We make a loop on the $k$ iterator until we have, for $\epsilon>0$ chosen in advance:
-	
-	$$\frac{||x_{n+1}^{k+1}-x_{n+1}^k||}{||x_{n+1}^k||}<\epsilon$$
-	
-	\subsection{Runge Kutta}
-	\label{sec4.4}
-	
-	\begin{enumerate}[label=\textbullet]
-		\item \textbf{Runge Kutta (order 4) :} \\
-		The Runge Kutta method of order 4 is written :
+	 \noindent After discretizing the problem in time, we can use the Runge Kutta method of order 4 to solve the ODE:
 		
 		$$X_{n+1}=X_n+\frac{\Delta t}{6}\left(K_1+2K_2+2K_3+K_4\right) ,$$
 		
@@ -359,33 +382,8 @@
 			K_3&=f\left(t_n+\frac{\Delta t}{2},X_n+\frac{1}{2} K_2\Delta t\right) , \\
 			K_4&=f\left(t_n+\Delta t,X_n+K_3\Delta t\right) .
 		\end{aligned}\right.$$
-		\item \textbf{Scipy function :} \href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html#scipy.integrate.solve_ivp}{scipy.integrate.solve\_ivp} \\
-		This function solve an initial value problem for a system of ODEs. We can chose the numerical method to be used ie the argument "method" which is by default RK45. 
-	\end{enumerate}
 	
-	\subsection{Comparing methods}
-	
-	\begin{enumerate}[label=\textbullet]
-		\item First, we had to implement a function allowing to plot a 2D graph representing $x$ versus $y$, then a 2D graph representing $x$ versus $z$ and finally a 3D graph of the solution. Then, we implemented the different methods described above and we checked visually that they worked correctly. Here are the graphs obtained with the following parameters :
-		\begin{center}
-			$\sigma=10,\quad \beta=8/3 \quad r=9/10$ ,\\
-			$X_0=(-10,10,5)$ ,\\
-			$N=5000, \quad T=100 .$
-		\end{center}
-		\begin{figure}
-			\centering
-			\caption{Comparing results with differents methods.}
-			\includegraphics[width=\textwidth]{"images/euler_explicit.png"}
-			\includegraphics[width=\textwidth]{"images/euler_explicit_dt2.png"}
-			\includegraphics[width=\textwidth]{"images/euler_implicit.png"}
-			\includegraphics[width=\textwidth]{"images/RK4_Lorenz.png"}
-			\includegraphics[width=\textwidth]{"images/scipy.png"}
-		\end{figure}
-		\item Then, we compared the execution times of these different methods (until $T=100$). Here is what we get with the same parameters : \\
-		\includegraphics[width=0.7\textwidth]{"images/execution_times.jpg"} \\
-		It seems that the explicit Euler method is the fastest, followed by the scipy function. \\
-		We can see that implicit Euler is takes more times than the others. This is probably due to the loop on $k$ for each $n$. \\
-	\end{enumerate}
+    
 
 	%\noindent For the next part of the project, we choose to work with the Runge kutta method.
 	
@@ -408,16 +406,21 @@
 	
 	\noindent For the data assimilation part, we first had to realize the implementation of the Ensemble Kalman Filter algorithm in C++ based on the one already done in Python in the FilterPy library. We were able to compare the results by applying it to the Lorenz system to verify our algorithm. After making sure that our EnKF in C++ was working properly, we had to understand the heat equation in order to perform a thermal simulation of an office located at the UFR. Furthermore, we had data from the sensors in the office at our disposition. Using the simulation performed with Feel++ as the model and the data as the observations, we had to perform data assimilation to correct the model. We noticed that there were some incorrect values during this part, but due to lack of time we did not manage to correct our algorithm. For the future, it would be interesting to look further into the problem we had during the realization of the data assimilation. Another point to reconsider will be the simulation made with Feel++, as explained before, when we realized the simulation with the toolboxes available in Feel++, we had ignored the convective effects, so maybe we could try to do the simulation by introducing the convective effects. 
 	
+
 	
 	\newpage
+	
+	\section*{Bibliography}
+	\addcontentsline{toc}{section}{Bibliography}
+	
+	\printbibliography[heading=subbibintoc,keyword=ref,title={References}]
+	
+	\newpage
+	
+	\printbibliography[heading=subbibintoc,keyword=doc,title={Documentation}]
 	
 	\appendix
 	
 	\input{appendix.tex}	
 	
-	\newpage	
-	%\bibliographystyle{plain}
-	%\bibliography{biblio}
-	%\printbibliography[keyword=ref,title={References}]
-	\printbibliography[title={References}]
 \end{document}

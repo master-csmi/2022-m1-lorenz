@@ -94,32 +94,20 @@ Let us precise the notations we will use.
 		\item Errors are unbiased, Gaussian, independent and white in time. For example for the observation we will have $<\epsilon_k^0\epsilon_j^{0T}>=0$ if $k\ne j$:.
 	\end{enumerate}
 So finally we obtain the Kalman filter algorithm.
-\IncMargin{1em}
-\begin{algorithm}
-\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-\BlankLine
-Initialization: $x_0^f$ and $P_0^f$ are given, equal to $x^b$ \;
-BLUE:
-\newline
-$$\begin{aligned} &K_k=(H_kP_k^f)^T[H_k(H_kP_k^f)^T+R_k]^{-1}, \\
-&x_k^a=x_k^f+K_k(y_k^0-H_kx_k^f), \\
-&P_k^a=(I-K_kH_k)P_k^f; \;
+\begin{enumerate}[label=(\roman*)]
+\item Initialization: $x_0^f$ and $P_0^f$ are given, equal to $x^b$ and $B$
+\item BLUE:
+$$\begin{aligned} &K_k=(H_kP_k^f)^T[H_k(H_kP_k^f)^T+R_k]^{-1} \\
+&x_k^a=x_k^f+K_k(y_k^0-H_kx_k^f) \\
+&P_k^a=(I-K_kH_k)P_k^f \\
 \end{aligned}$$
 
 Forecast step:
 $$\begin{aligned} 
-&x_{k+1}^f=M_{k,k+1}x_k^a, \\
-&P_{k+1}^f=M_{k,k+1}P_k^aM_{k,k+1}^T+Q_k;\\
-\end{aligned}$$\
-\caption{Kalman Filter}\label{enkf}
-\end{algorithm}
-
-
-
-
-
+&x_{k+1}^f=M_{k,k+1}x_k^a \\
+&P_{k+1}^f=M_{k,k+1}P_k^aM_{k,k+1}^T+Q_k\\
+\end{aligned}$$
+\end{enumerate}
 
 \subsection{Ensemble Kalman Filter}
 \subsubsection{Explanation of the method}
@@ -140,18 +128,11 @@ $$K=P^f H^T(HP^f H^T+R)^{-1}$$
 
 \noindent In addition, we have:
 $$
-\bar{x}^a=\frac{1}{m}\sum_{i=1}^mx_i^a~~,~~~~[X_a]_i=\frac{x_i^a-\bar{x}^a}{\sqrt{m-1}}. $$
-\noindent Now we can calculate the normalized anomalies $X_i^a:$
-$$X_i^a=X_i^f+K(0-HX_i^f)=(I_n-KH)X_i^f$$
-\noindent with $X_i^f\equiv [X_f]_i$.
-\newline \noindent We can write the covariance matrix of the analysis errors as:
-$$P^a=(I_n-KH)P^f(I_n-KH)^T+KRK^T=(In-KH)P^f.$$
-\noindent A better choice for the rest may be to add a disruption to the observation: $y\rightarrow y_i+\bar{u_i}$ where $u_i$ is drawn from the Gaussian distribution $u_i \sim \mathcal{N}(0,R)$, $\bar{u}$ will be the mean of the sampled $u_i$, then we can define the innovation perturbations as :
-$$[Y_f]_i=\frac{Hx_i^f-u_i-H\bar{x}^f+\bar{u}}{\sqrt{m-1}}.$$
-\noindent Finally we can modify the posterior anomalies:
-$$X_i^a=X_i^f-KY_i^f=(I_n-KH)X_i^f+\frac{K(u_i-\bar{u})}{\sqrt{m-1}}.$$
-\newpage
-\subsubsection{Ensemble Kalman Filter algorithm }
+\bar{x}^a=\frac{1}{m}\sum_{i=1}^mx_i^a~~,~~~~[X_a]_i=\frac{x_i^a-\bar{x}^a}{\sqrt{m-1}} $$
+\subsection{Presentation of the results}
+\subsubsection{Harmonic oscillator}
+\noindent After the implementation for the data assimilation, to test it, the idea was to find an equation for which we know the exact result. That's why we chose to test it with the harmonic oscillator equation:
+$$\qquad \frac{\partial x}{\partial t}=v \quad \Rightarrow \quad \frac{\partial^2 x}{\partial t^2}=\frac{\partial v}{\partial t}$$
 
 \IncMargin{1em}
 \begin{algorithm}

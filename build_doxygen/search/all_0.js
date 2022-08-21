@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['compute_5ftimes_0',['compute_times',['../utils_8hpp.html#ad18c9cf64499969beaed78ec9eb47608',1,'utils.cpp']]],
-  ['creation_5fcsv_1',['creation_csv',['../class_ensemble_kalman_filter.html#a66f2d585fac6434ef5dbc47236eee0ec',1,'EnsembleKalmanFilter']]]
+  ['big_5florenz_0',['big_lorenz',['../utils_8hpp.html#a42a565eff10f158926485d3569efde65',1,'utils.cpp']]],
+  ['big_5foscillator_1',['big_oscillator',['../utils_8hpp.html#a944f61c49a788f70d6bef4d068f9c5f2',1,'utils.cpp']]]
 ];

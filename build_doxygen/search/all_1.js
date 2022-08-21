@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['data_20assimilation_20for_20the_20lorenz_20system_2',['Data assimilation for the Lorenz system',['../index.html',1,'']]],
-  ['delete_5fold_5ffiles_3',['delete_old_files',['../write__csv_8hpp.html#aba928ba399bc89107fb9f1039ced77e8',1,'write_csv.cpp']]]
+  ['compute_5ftimes_2',['compute_times',['../utils_8hpp.html#ad18c9cf64499969beaed78ec9eb47608',1,'utils.cpp']]],
+  ['creation_5fcsv_3',['creation_csv',['../class_ensemble_kalman_filter.html#a66f2d585fac6434ef5dbc47236eee0ec',1,'EnsembleKalmanFilter']]]
 ];

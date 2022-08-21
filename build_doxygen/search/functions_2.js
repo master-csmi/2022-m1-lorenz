@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['f_5florenz_46',['f_lorenz',['../enkf__fct_8hpp.html#ada0ea719a1410c2456a691d2838234ea',1,'enkf_fct.cpp']]],
-  ['fx_47',['fx',['../enkf__fct_8hpp.html#ad50661f330c68b34ec7098ec2141e0d2',1,'enkf_fct.cpp']]],
-  ['fx_5f2_48',['fx_2',['../enkf__fct_8hpp.html#a9b9032434555e76b372fbddbb58d3a0f',1,'enkf_fct.cpp']]]
+  ['delete_5fold_5ffiles_49',['delete_old_files',['../write__csv_8hpp.html#aba928ba399bc89107fb9f1039ced77e8',1,'write_csv.cpp']]]
 ];

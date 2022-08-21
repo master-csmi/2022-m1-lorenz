@@ -121,12 +121,18 @@ Functions</h2></td></tr>
 <tr class="memitem:a7f5e69757ee5fba2f498759af5cfa75a"><td class="memItemLeft" align="right" valign="top">Vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8hpp.html#a7f5e69757ee5fba2f498759af5cfa75a">oscillator</a> (double t, Vector&lt; double &gt; const &amp;X, double *gamma)</td></tr>
 <tr class="memdesc:a7f5e69757ee5fba2f498759af5cfa75a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the value of the Harmonic oscillator.  <a href="utils_8hpp.html#a7f5e69757ee5fba2f498759af5cfa75a">More...</a><br /></td></tr>
 <tr class="separator:a7f5e69757ee5fba2f498759af5cfa75a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a944f61c49a788f70d6bef4d068f9c5f2"><td class="memItemLeft" align="right" valign="top">Vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8hpp.html#a944f61c49a788f70d6bef4d068f9c5f2">big_oscillator</a> (double, Vector&lt; double &gt; const &amp;X, double *gamma)</td></tr>
+<tr class="memdesc:a944f61c49a788f70d6bef4d068f9c5f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the value of the Harmonic oscillator with d*2 equations.  <a href="utils_8hpp.html#a944f61c49a788f70d6bef4d068f9c5f2">More...</a><br /></td></tr>
+<tr class="separator:a944f61c49a788f70d6bef4d068f9c5f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83731cd53f1879fd9a85e8423c2100b0"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8hpp.html#a83731cd53f1879fd9a85e8423c2100b0">oscillator_ex</a> (double t, double *gamma)</td></tr>
 <tr class="memdesc:a83731cd53f1879fd9a85e8423c2100b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the exact solution at the current time of the Harmonic oscillator.  <a href="utils_8hpp.html#a83731cd53f1879fd9a85e8423c2100b0">More...</a><br /></td></tr>
 <tr class="separator:a83731cd53f1879fd9a85e8423c2100b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe3e558c9d3118842985857a5cc85384"><td class="memItemLeft" align="right" valign="top">Vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8hpp.html#afe3e558c9d3118842985857a5cc85384">lorenz</a> (double t, Vector&lt; double &gt; const &amp;X, double *gamma)</td></tr>
 <tr class="memdesc:afe3e558c9d3118842985857a5cc85384"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the value of the Lorenz system.  <a href="utils_8hpp.html#afe3e558c9d3118842985857a5cc85384">More...</a><br /></td></tr>
 <tr class="separator:afe3e558c9d3118842985857a5cc85384"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42a565eff10f158926485d3569efde65"><td class="memItemLeft" align="right" valign="top">Vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8hpp.html#a42a565eff10f158926485d3569efde65">big_lorenz</a> (double t, Vector&lt; double &gt; const &amp;X, double *gamma)</td></tr>
+<tr class="memdesc:a42a565eff10f158926485d3569efde65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the value of the Lorenz system with d*3 equations.  <a href="utils_8hpp.html#a42a565eff10f158926485d3569efde65">More...</a><br /></td></tr>
+<tr class="separator:a42a565eff10f158926485d3569efde65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac782e498587be7db28a6105fdb05593e"><td class="memItemLeft" align="right" valign="top">Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8hpp.html#ac782e498587be7db28a6105fdb05593e">RK4</a> (Vector&lt; double &gt; const &amp;X0, double dt, double t0, int nb_t, Vector&lt; double &gt; prob(double, Vector&lt; double &gt; const &amp;, double *), double *gamma)</td></tr>
 <tr class="memdesc:ac782e498587be7db28a6105fdb05593e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runge Kutta order 4 method.  <a href="utils_8hpp.html#ac782e498587be7db28a6105fdb05593e">More...</a><br /></td></tr>
 <tr class="separator:ac782e498587be7db28a6105fdb05593e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,6 +147,96 @@ Functions</h2></td></tr>
 <div class="textblock"><p>Utilities for the parareal algorithm. </p>
 <dl class="section author"><dt>Author</dt><dd>Frédérique Lecourtier </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a42a565eff10f158926485d3569efde65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42a565eff10f158926485d3569efde65">&#9670;&nbsp;</a></span>big_lorenz()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vector&lt;double&gt; big_lorenz </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Vector&lt; double &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>X</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>gamma</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Compute the value of the Lorenz system with d*3 equations. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>Current time. </td></tr>
+    <tr><td class="paramname">X</td><td>Current point. </td></tr>
+    <tr><td class="paramname">gamma</td><td>System parameters. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector&lt;double&gt; The value of the Lorenz system. </dd></dl>
+
+</div>
+</div>
+<a id="a944f61c49a788f70d6bef4d068f9c5f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a944f61c49a788f70d6bef4d068f9c5f2">&#9670;&nbsp;</a></span>big_oscillator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vector&lt;double&gt; big_oscillator </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Vector&lt; double &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>X</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>gamma</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Compute the value of the Harmonic oscillator with d*2 equations. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>Current time. </td></tr>
+    <tr><td class="paramname">X</td><td>Current point. </td></tr>
+    <tr><td class="paramname">gamma</td><td>Parameters. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector&lt;double&gt; The value of the Harmonic oscillator. </dd></dl>
+
+</div>
+</div>
 <a id="ad18c9cf64499969beaed78ec9eb47608"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad18c9cf64499969beaed78ec9eb47608">&#9670;&nbsp;</a></span>compute_times()</h2>
 

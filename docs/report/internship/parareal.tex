@@ -118,7 +118,75 @@ $$U_j^k=G(U_{j-1}^k)+(F(U_{j-1}^{k-1})-G(U_{j-1}^{k-1}))$$
 
 \subsubsection{Algorithm}
 
-\fbox{TO COMPLETE !!!!!}
+\IncMargin{1em}
+
+\noindent We will present in this section the algorithm to represent the parareal method. We will have :
+
+\begin{algorithm*}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+	
+	\Input{$t_0$ : initial time ; \quad $T$ : final time ; \quad $U_0^0$ : initial point ; \\
+		$F$ : fine integrator ; \quad $G$ : coarse integrator ; \\
+		$\Delta t_F$ : fine time step ; \quad $\Delta t_G$ : coarse time step ; \\
+		$P$ : number of processes}
+	\Output{$sol$ : solution with parareal method}
+\end{algorithm*}\DecMargin{1em}
+
+\noindent This is the initialization of the parareal method:
+
+\begin{algorithm}[H]
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+	\SetKwBlock{DoParallel}{do in parallel}{end}
+
+	k$\leftarrow$0\;
+	init\_pts$\leftarrow$[$U_0^0$]\;
+	coarse$\leftarrow$[]\;
+	fine$\leftarrow$[]\;
+	\For{$j\leftarrow 1$ \KwTo $P$}{
+		coarse[j-1]$\leftarrow$G(init\_points[j-1])[-1]\;
+		init\_pts[j]$\leftarrow$coarse[j]\;
+	}
+	\textcolor{violet}{$U_j^k \leftarrow$ send init\_pts[j] to each proc j\;}
+	\textcolor{blue}{\DoParallel{
+		tab\_F$\leftarrow F(U_j^k)$ \tcp{fine solution on each sub-interval}
+	}}
+	\textcolor{violet}{fine[j]$\leftarrow$ recv tab\_F[-1] from each proc j\;}
+	\caption{initialization}\label{initialization}
+\end{algorithm}\DecMargin{1em}
+
+\newpage
+\noindent And this is the entire algorithm for the parareal method (with the initialization) :
+
+\IncMargin{1em}
+
+\begin{algorithm}[H]
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+	\SetKwBlock{DoParallel}{do in parallel}{end}
+	\SetKw{return}{return}
+	
+	initialization()\;
+	\While{not converge}{
+		\For{$j\leftarrow 1$ \KwTo $P$}{
+			val\_G$\leftarrow$G(init\_points[j-1])[-1]\;
+			init\_pts[j]$\leftarrow$val\_G+fin[j-1]-coarse[j-1]\;
+			coarse[j-1]$\leftarrow$val\_G\;
+		}
+		\textcolor{violet}{$U_j^k \leftarrow$ send init\_pts[j] to each proc j\;}
+		\textcolor{blue}{\DoParallel{
+				tab\_F$\leftarrow F(U_j^k)$ \tcp{fine solution on each sub-interval}
+		}}
+		\textcolor{violet}{fine[j]$\leftarrow$ recv tab\_F[-1] from each proc j\;}
+	}
+	\tcp{Get the solution between $y_0$ and $T$}
+	\tcp{$sol(t_0,T)=[sol(t_0,t_1),\dots,sol(t_{P-1},t_P)]$}
+	\textcolor{violet}{sol $\leftarrow$ send the final point from the last process\;}
+	\return sol
+	\caption{parareal}\label{parareal}
+\end{algorithm}\DecMargin{1em}
 
 \subsubsection{Order of parareal method}
 \label{order}
@@ -644,3 +712,92 @@ $$||u-u_h||_{L^2}\sim h^4 \qquad \qquad ||u-u_h||_{H^1}\sim h^3$$
 		\caption{Convergence order for the Laplacian problem with $P_{c,h}^3$.}
 	\end{minipage}
 \end{figure}
+
+\subsubsection{Heat equation}
+\label{heat}
+
+We now want to apply the parareal method to the solution of the heat equation using Feel++. We will only present here the method without presenting numerical results due to time constraints. As presented in the part \ref{heat_pde}, the heat equation with convective effects can be written as:
+$$\rho C_p((\frac{\partial T}{\partial t})+u . \nabla T)-\nabla .(k \nabla T)=Q$$
+and it must be completed  with boundary conditions and initial conditions. \\
+In this part, we will focus on the heat conduction equation which is written :
+$$\rho C_p\frac{\partial T}{\partial t}-\nabla .(k \nabla T)=Q$$
+with $\quad \rho=C_p=k=1$
+This gives us : \\
+$$\frac{\partial T}{\partial t}-\Delta T=Q$$
+Since we already note T the final time in the parareal method, we will note now on the temperature u and not T. To stay consistent with the Laplace equation, we will note $f:=Q$. \\
+Adding the boundary conditions, we obtain :
+\begin{equation}
+	\left\{\begin{aligned}
+		\frac{\partial u}{\partial t}-\Delta u &= f \quad&&(t_0,T)\times\Omega \\
+		u&=0 \quad&&(t_0,T)\times\partial\Omega\\
+		u&=u_0 \quad &&\{0\}\times\Omega
+	\end{aligned}\right.
+\end{equation}
+We obtain the following weak formulation : \\
+Find $\; u:(t_0,T)\times\Omega \mapsto \mathbb{R} \;$ such that $\; u(t,\cdot)\in H_{g,\Gamma_D}^1(\Omega) \;$ and
+$$\int_\Omega \frac{\partial u}{\partial t}(t,x)v(x)dx+\int_\Omega \nabla u(t,x)\cdot\nabla v(x)dx = \int_\Omega f(t,x)v(x)dx \quad \forall v\in H_{0,\Gamma_D}^1(\Omega)$$
+for almost every $t\in(0,T)$. \\
+The major difference with the Laplace equation is that we must in addition to the spatial discretization performed a temporal discretization:
+$$\int_\Omega \frac{\partial u}{\partial t}(t,x)v(x)dx \simeq \int_\Omega \frac{u^{n+1}(x)-u^n(x)}{\Delta t}v(x)dx$$
+We then obtain :
+$$\frac{1}{\Delta t}\int_\Omega u^{n+1}(x)v(x)dx+\int_\Omega \nabla u^{n+1}(t,x)\cdot\nabla v(x)dx = \int_\Omega f(t,x)v(x)dx + \frac{1}{\Delta t}\int_\Omega u^n(x)v(x)dx$$
+We then pose :
+$$a(u^{n+1},v)=\frac{1}{\Delta t}\int_\Omega u^{n+1}(x)v(x)dx+\int_\Omega \nabla u^{n+1}(t,x)\cdot\nabla v(x)dx$$
+$$l(v)=\int_\Omega f(t,x)v(x)dx + \frac{1}{\Delta t}\int_\Omega u^n(x)v(x)dx$$
+
+\noindent \textbf{Method :} \\
+For the numerical solution, we have been provided with a class \textbf{Heat} allowing the solution of the heat equation with Feel++. When instantiating this class, the constructor allows to define the bilinear form $a$ and the linear form $l$ of the variational formulation as well as the boundary conditions (Dirchlet, Neumann and Robin). \\
+The next objective is therefore to apply the parareal method to the solution of the heat equation using this class. For this, we use the master-slave principle \footnote[1]{\url{https://www.cs.sjsu.edu/~pearce/oom/patterns/behavioral/masterslave.htm}}. 
+\newpage
+\noindent We place ourselves in the following test case:
+\begin{enumerate}[label=\ding{213}]
+	\item The spatial domain is partitioned into 2 sub-domains.
+	\item We also partition the temporal domain into 2 sub-domains, which makes 2*2 processes for the fine integrator and 2 processes for the coarse integrator, so 6 processes in all. We can then run in parallel with 6 processes.
+\end{enumerate}
+For that, we will separate our 6 processes in 3 groups numbered by color $\in\{0,1,2\}$. Each of them has 2 processes with a local rank between 0 and 1. The first group (color=0) is the master and manages the coarse integration between $t_0$ and $T$ : each process of this group deals with a partition of the domain on $[t_0,T]$. The second and third groups are the slaves and handle the fine integration: the second group (color=1) handles the fine integration between $t_0$ and $T/2$ (with each of its processes handling a part of the spatial domain) and similarly the third group handles the fine integration between $T/2$ and $T$. Here is a small diagram:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{"images/parareal/feelpp/master_slave.jpg"}
+	\caption{Explanation of the test case}
+\end{figure}
+\noindent To be able to apply the parareal method, we need to communicate between the processes of the same spatial domain, i.e. the processes of the same local rank in each group must be able to communicate with each other:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{"images/parareal/feelpp/master_slave_comm.jpg"}
+	\caption{Communication between groups}
+\end{figure}
+\noindent For that we will use the group class of boostmpi \footnote[1]{\url{https://www.boost.org/doc/libs/1_62_0/doc/html/boost/mpi/group.html}} which allows to create a new communicator containing only the processes of this group. Here we are going to group the processes which manage the same spatial domains, i.e. the processes of the same local rank :
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{"images/parareal/feelpp/master_slave_group.jpg"}
+	\caption{Group for communications}
+\end{figure}
+
+\noindent \textbf{Result :}
+
+\noindent Let $t_0=0$ and $T=1$. \\
+We consider the following geometry :
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.3\linewidth]{"images/parareal/feelpp/heat_geo.jpg"}
+	\caption{Geometry considered}
+\end{figure}
+\noindent and the following mesh :
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.3\linewidth]{"images/parareal/feelpp/heat_mesh.jpg"}
+	\caption{Mesh}
+\end{figure}
+\noindent Concerning the results, we think that there is a problem with the initial point in group 2, it seems that it does not take into account the final value of group 1 but that it takes 0 as initial point. Here is what we get for $t=0.50s$ (final time of group 1) and at $t=0.51s$ (a fine time step after the initial time of group 2):
+\begin{figure}[H]
+	\centering
+	\begin{minipage}{0.48\linewidth}
+		\includegraphics[width=0.7\linewidth]{"images/parareal/feelpp/heat_0.50.jpg"}
+		\caption{Solution : 0.50s \\ (visualization with Paraview)}
+	\end{minipage}
+	\begin{minipage}{0.48\linewidth}
+		\includegraphics[width=0.7\linewidth]{"images/parareal/feelpp/heat_0.51.jpg"}
+		\caption{Solution : 0.51s \\ (visualization with Paraview)}
+	\end{minipage}	
+\end{figure}
+This last part is still under development.

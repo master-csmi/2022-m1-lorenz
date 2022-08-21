@@ -17,7 +17,7 @@
 % Useful packages for table
 
 \usepackage{array,multirow,makecell}
-\usepackage[linesnumbered]{algorithm2e}
+%\usepackage[linesnumbered]{algorithm2e}
 \usepackage[table]{xcolor}
 \setcellgapes{1pt}
 \makegapedcells
@@ -85,6 +85,13 @@
 \newcommand{\reportsupervisorOne}{Christophe Prudhomme}
 \newcommand{\reportsupervisorTwo}{Luca Berti}
 \newcommand{\reporttype}{Coursework}
+
+%Algorithm
+\usepackage{xcolor}
+\usepackage[linesnumbered,noline,boxed,commentsnumbered]{algorithm2e}
+%\usepackage[noline, linesnumbered]{algorithm2e}% http://ctan.org/pkg/algorithm2e
+\SetNlSty{bfseries}{\color{black}}{}
+
 
 \begin{document}
 	\nocite{*}

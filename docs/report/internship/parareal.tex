@@ -504,7 +504,7 @@ $$t_0=0, \quad T=200, \quad \Delta t_G=0.01, \quad \Delta t_F=0.001, \quad d=1$$
 In the following graph, the blue curve represents the maximum on $j$ of $\mathcal{E}(j,k)$ according to the iterations $k$ and the orange curve represents the $(\Delta t_G)^k$.
 \begin{figure}[H]
 	\centering
-	\fbox{\includegraphics[width=0.3\linewidth]{"images/parareal/osci_cvg_1.jpg"}}
+	\fbox{\includegraphics[width=0.3\linewidth]{"images/parareal/cpp/osci_cvg_1.jpg"}}
 	\caption{Plot of $\mathcal{E}(j,k)$ and $(\Delta t_G)^k$ in \textbf{Python}.}
 \end{figure}
 \noindent We can see that the blue curve is below the orange curve for all the k iterations and so for the parameters fixed previously on the oscillator, the method is of order k.
@@ -518,3 +518,129 @@ In the following graph, the blue curve represents the maximum on $j$ of $\mathca
 	\item In the same way, we could never compute the coarse solution between $t_{P-1}$ and $t_P$ because we never use it and we can compute the fine solution on this interval only at the last iteration (i.e. when the solution converges) because we need this information only to obtain the final solution of the system.
 	\item We could see what happens if we take a lot more intervals that are spread over the different processes. Because here we are limited as the number of processes is equal to the number of intervals. Would we have an improvement for the speed of the method or on the contrary, would we have many more iterations because the initial points would be much less precise?
 \end{itemize}
+
+
+\subsection{Solving PDEs with Feel++}
+
+\textbf{Goal :} Apply the parareal method to the resolution of the heat equation (see Section \ref{heat_pde}) using Feel++ which is a solver developed by Cemosis (see Section \ref{cemosis}) that uses the finite element method. \\
+To solve the heat equation, we will use the finite element method which is a numerical method for solving PDE's and which is based on the approximation of the solution in the space $L^2/H^1$ which are spaces of infinite dimension. For these spaces there are bases of functions which will allow us to make a projection of the equations on these subspaces and to reduce the problem to find the solution to the projected equation which is the solution which minimizes the error among all the possible points of these subspaces. \\
+Before starting to solve the heat equation by the parareal method using Feel++, we will first try to use Feel++ to solve the Laplace equation \cite{feelpp_laplacian}.
+
+\subsubsection{Laplace equation}
+
+\textbf{Explanation :} \\
+We are interested in this section in the conforming finite element approximation of the Laplacian problem :
+\begin{equation}
+	\left\{\begin{aligned}
+		-\Delta u &= f \quad&&\Omega \\
+		u&=g \quad&&\Gamma_D \\
+		\frac{\partial u}{\partial n} &=h \quad &&\Gamma_N \\
+		\frac{\partial u}{\partial n}+u &=l \quad &&\Gamma_R \\
+	\end{aligned}\right.
+\end{equation}
+We deduce the following weak formulation:
+\begin{align*}
+	-\int_\Omega \Delta u v &= \int_\Omega fv \\
+	\int_\Omega \nabla u \cdot \nabla v - \int_{\partial\Omega}\frac{\partial u}{\partial n}v &= \int_\Omega fv \\
+	\int_\Omega \nabla u \cdot \nabla v + \int_{\Gamma_R}uv &= \int_\Omega fv + \int_{\Gamma_N}hv+\int_{\Gamma_R}lv
+\end{align*}
+Thus we try to find $\; u:\Omega \mapsto \mathbb{R} \;$ such that $\; u\in H_{g,\Gamma_D}^1(\Omega) \;$ and
+\begin{equation*}
+	\int_\Omega \nabla u \cdot \nabla v + \int_{\Gamma_R}uv = \int_\Omega fv + \int_{\Gamma_N}hv+\int_{\Gamma_R}lv \quad \forall v\in H_{0,\Gamma_D}^1(\Omega)
+\end{equation*}
+i.e. find $\; u:\Omega \mapsto \mathbb{R} \;$ such that $\; u\in H_{g,\Gamma_D}^1(\Omega) \;$ and
+\begin{equation*}
+	a(u,v)=l(v)  \quad \forall v\in H_{0,\Gamma_D}^1(\Omega)
+\end{equation*}
+with
+$$a(u,v)=\int_\Omega \nabla u \cdot \nabla v + \int_{\Gamma_R}uv, \quad l(v)=\int_\Omega fv + \int_{\Gamma_N}hv+\int_{\Gamma_R}lv$$
+The Galerkin method is then used to determine the approximate variational problem. Let $(\varphi_i)$ a basis of $V_h$, this means $u_h(x)=\sum_{j=1}^{N_h}u_j\varphi_j(x)$ and then the approximate variationnel problem is written : \\
+Find $\quad u_h\in V_h, \quad a(u_h,v_h)=l(v_h) \quad \forall v_h\in V_h$ \\
+and then :
+$$\begin{aligned}
+	&a(u_h,v_h)=l(v_h) \\
+	\iff &\sum_{j=1}^{N_h}u_ja(\varphi_j,v_h)=l(v_h) \quad &&\forall v_h\in V_h \\
+	\iff &\sum_{j=1}^{N_h}u_ja(\varphi_j,\varphi_i)=l(\varphi_i) \quad &&\forall i\in\{1,\dots,N_h\} \\
+	\iff &Au_h=b
+\end{aligned}$$
+with
+$$A=(A_{i,j})_{i,j}=(a(\varphi_i,\varphi_j))_{i,j} \quad  \text{et} \quad b=(b_i)_i=(l(\varphi_i))_i$$
+
+\noindent \textbf{Implementation with Feel++:} \\
+We start by loading the mesh and defining all the elements we will need for the resolution. We can then define the bilinear form $a$ and the linear form $l$ of the variational formulation as well as the boundary conditions (Dirchlet, Neumann and Robin) by imposing by default Dirichlet conditions (see \cite{feelpp_laplacian}). \\
+
+\noindent In the following we will consider the following geometry and the following mesh:
+\begin{figure}[H]
+	\begin{minipage}{0.48\linewidth}
+		\centering
+		\includegraphics[width=0.7\linewidth]{"images/parareal/feelpp/circle.jpg"}
+	\end{minipage}
+	\begin{minipage}{0.48\linewidth}
+		\centering
+		\includegraphics[width=0.7\linewidth]{"images/parareal/feelpp/circle_mesh.jpg"}
+	\end{minipage}
+	\caption{Geometry considered with its mesh (with Dirichlet)}
+\end{figure}
+
+\noindent\textbf{Example 1 :} \\
+We consider :
+$$\left\{\begin{aligned}
+	-\Delta u &= f \quad&&\Omega \\
+	u&=g \quad&&\Gamma_D \\
+\end{aligned}\right. \quad \text{with} \quad
+u_{exact}=g=x^2+y^2, \quad f=-\Delta u_{exact}=-4$$
+\noindent We visualize the result with Paraview and we have the expected convergence results  with $P_{c,h}^1$:
+$$||u-u_h||_{L^2}\sim h^2 \qquad \qquad ||u-u_h||_{H^1}\sim h^1$$
+\begin{figure}[H]
+	\begin{minipage}{0.48\linewidth}
+		\centering
+		\includegraphics[width=0.8\linewidth]{"images/parareal/feelpp/circle_result.jpg"}
+		\caption{Result (with Paraview)}
+	\end{minipage}
+	\begin{minipage}{0.48\linewidth}
+		\centering\includegraphics[width=0.9\linewidth]{"images/parareal/feelpp/cvg_laplacian_k1_o2.png"}
+		\caption{Convergence order for the Laplacian problem with $P_{c,h}^1$.}
+	\end{minipage}
+\end{figure}
+
+\noindent\textbf{Example 2 :} \\
+We consider :
+$$\left\{\begin{aligned}
+	-\Delta u &= f \quad&&\Omega \\
+	u&=g \quad&&\Gamma_D \\
+\end{aligned}\right. \quad \text{with} \quad
+u_{exact}=g=x^3+y^3, \quad f=-\Delta u_{exact}=-(6x+6y)$$
+\noindent We visualize the result with Paraview and we have the expected convergence results  with $P_{c,h}^2$:
+$$||u-u_h||_{L^2}\sim h^3 \qquad \qquad ||u-u_h||_{H^1}\sim h^2$$
+\begin{figure}[H]
+	\begin{minipage}{0.48\linewidth}
+		\centering
+		\includegraphics[width=0.7\linewidth]{"images/parareal/feelpp/circle_result_2.jpg"}
+		\caption{Result (with Paraview)}
+	\end{minipage}
+	\begin{minipage}{0.48\linewidth}
+		\centering\includegraphics[width=0.9\linewidth]{"images/parareal/feelpp/cvg_laplacian_k2_o3.png"}
+		\caption{Convergence order for the Laplacian problem with $P_{c,h}^2$.}
+	\end{minipage}
+\end{figure}
+
+\noindent\textbf{Example 3 :} \\
+We consider :
+$$\left\{\begin{aligned}
+	-\Delta u &= f \quad&&\Omega \\
+	u&=g \quad&&\Gamma_D \\
+\end{aligned}\right. \quad \text{with} \quad
+u_{exact}=g=x^4+y^4, \quad f=-\Delta u_{exact}=-(12x^2+12y^2)$$
+\noindent We visualize the result with Paraview and we have the expected convergence results  with $P_{c,h}^3$:
+$$||u-u_h||_{L^2}\sim h^4 \qquad \qquad ||u-u_h||_{H^1}\sim h^3$$
+\begin{figure}[H]
+	\begin{minipage}{0.48\linewidth}
+		\centering
+		\includegraphics[width=0.7\linewidth]{"images/parareal/feelpp/circle_result_3.jpg"}
+		\caption{Result (with Paraview)}
+	\end{minipage}
+	\begin{minipage}{0.48\linewidth}
+		\centering\includegraphics[width=0.9\linewidth]{"images/parareal/feelpp/cvg_laplacian_k3_o4.png"}
+		\caption{Convergence order for the Laplacian problem with $P_{c,h}^3$.}
+	\end{minipage}
+\end{figure}

@@ -1,4 +1,4 @@
-\section{Para-real method}
+\section{Parareal method}
 	
 Parareal method is a parallel-in-time integration method which was introduced in 2001 by Lions, Maday and Turinici~\cite{partie2_ref1}. Parareal computes the numerical solution for multiple time steps in parallel and it is categorized as a parallel-across-the-steps method.
 
@@ -21,7 +21,7 @@ To have the right number of points in total (i.e. the sum of the number of point
 To do this, let's do the following:
 \begin{enumerate}[label=\textbullet]
 	\item We compute the number of coarse time steps $n_G$ and the number of fine time steps $n_F$ between $t_0$ and $T$ as well as the ratio between the two $r=n_F/n_G$.
-	\item We do the Euclidean division of $nb_G$ by the number of processes $P$, which gives us the number of coarse time steps on each subinterval. Then we distribute equally to each process the rest of the division.
+	\item We do the Euclidean division of $n_G$ by the number of processes $P$, which gives us the number of coarse time steps on each subinterval. Then we distribute equally to each process the rest of the division.
 	\item We compute the number of fine time steps on each sub-interval using $r$ such that the final time of the fine integrator and the final time of the coarse integrator are the same on each sub-interval.
 	\item We then compute the $t_j$, i.e. the initial times of each subinterval, from the number of coarse time steps per process.
 \end{enumerate}
@@ -319,7 +319,7 @@ The main objective of parallel methods is to reduce execution time by simultaneo
 	\newpage
 	\noindent \underline{\textit{Observations :}} 
 	\begin{itemize}[label=-]
-		\item It seems that the time in sequential and with the parareal method with 1 process is not the same. Moreover for the different steps calculated, we have that the execution time with 1 process is greater than for the sequential method. This can be explained by 2 main things. First of all, we have seen previously that there are necessarily 2 iterations which are done on $[t_0,T]$ contrary to the sequential method where there is only one. This problem is easily solved if we compute only the fine and coarse solutions at the first iteration (because the point $U_0^k$ is identical for all k). Thereafter, the parareal method also computes the coarse solution which is not needed at all.
+		\item It seems that the time in sequential and with the parareal method with 1 process is not the same. Moreover for the different steps calculated, we have that the execution time with 1 process is greater than for the sequential method. This can be explained by 2 main observations. First of all, we have seen previously that there are necessarily 2 iterations which are done on $[t_0,T]$ contrary to the sequential method where there is only one. This problem is easily solved if we compute only the fine and coarse solutions at the first iteration (because the point $U_0^k$ is identical for all k). Thereafter, the parareal method also computes the coarse solution which is not needed at all.
 		\item It seems that the time for the parareal method with $P$ processes is not the time of the sequential method divided by $P$. It seems obvious that (with intervals of the same length for each process), the time for the parareal method is only divided by P if there is only one iteration, which is never the case.
 		\item It seems that if we increase the number of processes, the time does not necessarily decrease (as between $P=3$ and $P=4$ for $\Delta t_F=0.001$ and $\Delta t_G=0.01$), so we have to find the right balance between the parameters $\Delta t_F$, $\Delta t_G$, $[t_0,T]$ and $P$.
 	\end{itemize}
@@ -328,7 +328,7 @@ The main objective of parallel methods is to reduce execution time by simultaneo
 	For example let's take the following parameters for the Lorenz system :
 	$$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5)$$
 	$$t_0=0, \quad P=4,\quad \Delta t_G=0.01, \quad \Delta t_F=0.001$$
-	Here are the execution times obtained in Python and C++ :
+	Here are the execution times obtained in Python and C++ with differents final time $T$ :
 	\begin{table}[H]
 		\centering
 		\begin{tabular}{| c | c |}
@@ -341,7 +341,7 @@ The main objective of parallel methods is to reduce execution time by simultaneo
 		\caption{Difference of the execution times between Python and C++}
 		\label{cpp_faster}
 	\end{table}
-	It can be seen that these times are of the same order as the problem in C++ is 1000 times larger than that in Python. This implies that to see a speed-up we must focus on much larger problems. For this we will take into account three parameters
+	It can be seen that these times are of the same order while the problem in C++ is 1000 times larger than that in Python. This implies that, to see a speed-up, we must focus on much larger problems. For this we will take into account three parameters
 	\begin{enumerate}[label=\textbullet]
 		\item the size of the interval: $T$ (we will always take $t_0=0$)
 		\item the precision of the fine time step : $\Delta t_F$
@@ -352,7 +352,7 @@ The main objective of parallel methods is to reduce execution time by simultaneo
 		\item \textbf{First problem : Harmonic oscillator.} (see Section ~\ref{oscillator_ode}) \\
 		We will consider the harmonic oscillator with the following parameters :
 		$$x(0) = 0, \quad v(0) = 1, \quad \omega_0 = 5, \quad x_0 = \frac{-1}{5}, \quad \phi_0 = \frac{\pi}{2}$$
-		As the problem here is a rather small one we will increase its number of lines tenfold to be able to see a speed-up without having to take $T$ too large. In other words, instead of having 2 lines and thus 2 unknowns during the resolution we will have $2*d$ lines where $d$ is a chosen integer. \\
+		As the problem here is a rather small one we will increase its equations tenfold to be able to see a speed-up without having to take $T$ too large. In other words, instead of having 2 equations and thus 2 unknowns during the resolution we will have $2*d$ equations where $d$ is a chosen integer. \\
 		For the parareal method, we will take the following parameters (where $T$ and $d$ will change):
 		$$t_0=0, \quad T=\cdot, \quad \Delta t_G=0.01, \quad \Delta t_F=0.001, \quad d=\cdot$$
 		\textbf{Example 1 :} We start by taking $T=10000$ and $d=100$, this is the execution times obtained :
@@ -421,7 +421,7 @@ The main objective of parallel methods is to reduce execution time by simultaneo
 		\item \textbf{Second problem : Lorenz system.} (see Section ~\ref{lorenz_ode})
 		We will now consider the Lorenz system with the following parameters :
 		$$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5)$$
-		As for the harmonic oscillator, the problem here is rather small, so we will increase the number of lines tenfold to be able to see an acceleration without having to take $T$ too large. In other words, instead of having 3 lines and thus 3 unknowns during the resolution, we will have $3*d$ lines where $d$ is a chosen integer. \\
+		As for the harmonic oscillator, the problem here is rather small, so we will increase the number of equations tenfold to be able to see an acceleration without having to take $T$ too large. In other words, instead of having 3 equations and thus 3 unknowns during the resolution, we will have $3*d$ equations where $d$ is a chosen integer. \\
 		For the parareal method, we will take the following parameters (where $T$ and $d$ will change):
 		$$t_0=0, \quad T=\cdot, \quad \Delta t_G=0.01, \quad \Delta t_F=0.001, \quad d=\cdot$$
 		\textbf{Example 1 :} We start by taking $T=200$ and $d=10000$, this is the execution times obtained :
@@ -504,7 +504,7 @@ The main objective of parallel methods is to reduce execution time by simultaneo
 			$$\text{2 proc : } (x,y,z)=(-12.7836,-15.694,29.2703)$$
 			\item This is how at time $T$, we obtain totally false results with 2 processes which is probably due to a rounding made at the initial time $t_1$ of this sub-interval. That is to say that $(x,y,z)(t_1)$ with 1 process is the right value but that $(x,y,z)(t_1)=U_1^1$ is wrongly computed, possibly because of the coarse integrator whose time step is not precise enough.
 		\end{enumerate}
-		Thus it seems that the more values to be calculated in the interval, the more errors can accumulate and therefore propagate to give false results. This is why the parareal method is perhaps not adapted to the Lorenz system due to the case theory (see section Ref) which makes that small errors can make the results diverge totally from the real solution.
+		Thus it seems that the more values to be calculated in the interval, the more errors can accumulate and therefore propagate to give false results. This is why the parareal method is perhaps not adapted to the Lorenz system due to its sensitivity to initial conditions (see section \ref{lorenz_ode}) which makes that small errors can lead the results diverge totally from the real solution.
 	\end{itemize}
 \end{enumerate}
 
@@ -547,7 +547,7 @@ We will now try to understand why the method seems not to be efficient :
 	\end{figure}
 	We see in the diagram above that RK4 in sequential solves the problem with the fine integrator between 0 and T, i.e. over $T$ seconds. \\
 	The parareal method with 1 process performs the initialization ($k=0$) where it solves the problem with the fine integrator over $T$ seconds and performs a first iteration ($k=1$) where it solves the same problem once again : it therefore solves the problem over $2*T$ seconds and should therefore take twice as much time to execute as the sequential version. \\
-	To check if the method is efficient, we want to solve the problem between 0 and $2T$ with 2 processes.  It solves three times the problem on $2*T$ with 2 processes (because 2 iterations and the initialization) thus $3*2*T$ seconds and each process solves the problem on $3*T$ seconds and thus it should take $1.5$ times more time than the parareal method with 1 process and $3$ times more time than in sequential.
+	To check if the method is efficient, we want to solve the problem between 0 and $2T$ with 2 processes.  It solves three times the problem on $2*T$ with 2 processes (because 2 iterations and the initialization) thus $3*2*T$ seconds and each process solves the problem on $3*T$ seconds and thus it should take $1.5$ times more time than the parareal method with 1 process and $3$ times more time than in sequential. \\
 	\textbf{Second case :} We will try now to understand why the method is not effective in the second case, here is a scheme: 
 	\begin{figure}[H]      
 		\qquad \qquad \qquad
@@ -558,7 +558,7 @@ We will now try to understand why the method seems not to be efficient :
 	This time we want to solve the problem with the parareal method on 2 processes between 0 and $T$ or $T$ seconds. Each process solves the problem on $3*T/2$ seconds because of the 2 iterations and the initialization. \\
 	To check if the method is efficient, we want to solve the problem on $2*T$ seconds with 4 processes. Each process then solves the problem on $T/2$ seconds 5 times because of the 4 iterations and the initialization thus $5*T/2$ seconds. So the parareal method with 4 processes should take $5/3$ times more time than the method with 2 processes.
 	
-	\item Then, it is also necessary to take into account that the method also uses the coarse integrator which must be used sequentially. These sequential parts also slow down the program and therefore the efficiency. Indeed if the fine integrator is used between 0 and $T$ and we double the size of the problem it will have to be computed between 0 and $2*T$ seconds, which will take 2 times more time. 
+	\item Then, it is also necessary to take into account that the method also uses the coarse integrator which must be used sequentially. These sequential parts also slow down the program and therefore has an impact. Indeed if the fine integrator is used between 0 and $T$ and we double the size of the problem it will have to be computed between 0 and $2*T$ seconds, which will take twice more time. 
 	
 	\item One last point to take into account, even if it is smaller than the others, is that increasing the size of the problem also increases the number of operations and communications to do.
 \end{enumerate}
@@ -582,21 +582,20 @@ In the following graph, the blue curve represents the maximum on $j$ of $\mathca
 
 \begin{itemize}[label=-]
 	\item A first improvement for the implementation of the method could be to make a separate case for $P=1$. For this case, we would only compute the fine solution once on $[t_0,T]$.
-	\item As said before, one possibility to improve the permorfances would be to compute only the fine and coarse solutions between $t_0$ and $t_1$ at the first iteration because they are the only ones that never change during the iterations. 
+	\item As said before, one possibility to improve the performances would be to compute only the fine and coarse solutions between $t_0$ and $t_1$ at the first iteration because they are the only ones that never change during the iterations. 
 	\item In the same way, we could never compute the coarse solution between $t_{P-1}$ and $t_P$ because we never use it and we can compute the fine solution on this interval only at the last iteration (i.e. when the solution converges) because we need this information only to obtain the final solution of the system.
-	\item We could see what happens if we take a lot more intervals that are spread over the different processes. Because here we are limited as the number of processes is equal to the number of intervals. Would we have an improvement for the speed of the method or on the contrary, would we have many more iterations because the initial points would be much less precise?
+	\item We could see what happens if we take a lot more intervals that are spread over the different processes. Because here we are limited as the number of processes is equal to the number of intervals. We can ask ourselves if we would have had an improvement for the speed of the method or on the contrary if we would have had many more iterations because the initial points would be much less precise.
 \end{itemize}
 
 
 \subsection{Solving PDEs with Feel++}
 
-\textbf{Goal :} Apply the parareal method to the resolution of the heat equation (see Section \ref{heat_pde}) using Feel++ which is a solver developed by Cemosis (see Section \ref{cemosis}) that uses the finite element method. \\
-To solve the heat equation, we will use the finite element method which is a numerical method for solving PDE's and which is based on the approximation of the solution in the space $L^2/H^1$ which are spaces of infinite dimension. For these spaces there are bases of functions which will allow us to make a projection of the equations on these subspaces and to reduce the problem to find the solution to the projected equation which is the solution which minimizes the error among all the possible points of these subspaces. \\
+In this section our goal will be to apply the parareal method to the resolution of the heat equation (see Section \ref{heat_pde}) using Feel++ which is a solver developed by Cemosis (see Section \ref{cemosis}) that uses the finite element method. \\
+To solve the heat equation, we will use the finite element method which is a numerical method for solving PDEs and which is based on the approximation of the solution in appropriate Hilbert spacess ($L^2$ or $H^1$ wery often) which are spaces of infinite dimension. For these spaces, there are bases of functions which allow to make a projection of the equations on finite dimension subspaces and to reduce the problem to find the solution to the projected equation. \\
 Before starting to solve the heat equation by the parareal method using Feel++, we will first try to use Feel++ to solve the Laplace equation \cite{feelpp_laplacian}.
 
 \subsubsection{Laplace equation}
 
-\textbf{Explanation :} \\
 We are interested in this section in the conforming finite element approximation of the Laplacian problem :
 \begin{equation}
 	\left\{\begin{aligned}
@@ -622,7 +621,7 @@ i.e. find $\; u:\Omega \mapsto \mathbb{R} \;$ such that $\; u\in H_{g,\Gamma_D}^
 \end{equation*}
 with
 $$a(u,v)=\int_\Omega \nabla u \cdot \nabla v + \int_{\Gamma_R}uv, \quad l(v)=\int_\Omega fv + \int_{\Gamma_N}hv+\int_{\Gamma_R}lv$$
-The Galerkin method is then used to determine the approximate variational problem. Let $(\varphi_i)$ a basis of $V_h$, this means $u_h(x)=\sum_{j=1}^{N_h}u_j\varphi_j(x)$ and then the approximate variationnel problem is written : \\
+The Galerkin method is then used to determine the approximate variational problem. Let $(\varphi_i)$ a basis of $V_h$, this means $u_h(x)=\sum_{j=1}^{N_h}u_j\varphi_j(x)$ and then the approximate variational problem is written : \\
 Find $\quad u_h\in V_h, \quad a(u_h,v_h)=l(v_h) \quad \forall v_h\in V_h$ \\
 and then :
 $$\begin{aligned}
@@ -737,7 +736,7 @@ We obtain the following weak formulation : \\
 Find $\; u:(t_0,T)\times\Omega \mapsto \mathbb{R} \;$ such that $\; u(t,\cdot)\in H_{g,\Gamma_D}^1(\Omega) \;$ and
 $$\int_\Omega \frac{\partial u}{\partial t}(t,x)v(x)dx+\int_\Omega \nabla u(t,x)\cdot\nabla v(x)dx = \int_\Omega f(t,x)v(x)dx \quad \forall v\in H_{0,\Gamma_D}^1(\Omega)$$
 for almost every $t\in(0,T)$. \\
-The major difference with the Laplace equation is that we must in addition to the spatial discretization performed a temporal discretization:
+The major difference with the Laplace equation is that we must, in addition to the spatial discretization, perform a temporal discretization:
 $$\int_\Omega \frac{\partial u}{\partial t}(t,x)v(x)dx \simeq \int_\Omega \frac{u^{n+1}(x)-u^n(x)}{\Delta t}v(x)dx$$
 We then obtain :
 $$\frac{1}{\Delta t}\int_\Omega u^{n+1}(x)v(x)dx+\int_\Omega \nabla u^{n+1}(t,x)\cdot\nabla v(x)dx = \int_\Omega f(t,x)v(x)dx + \frac{1}{\Delta t}\int_\Omega u^n(x)v(x)dx$$

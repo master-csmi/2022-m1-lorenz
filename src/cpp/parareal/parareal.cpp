@@ -9,10 +9,10 @@
 #include "utils.hpp"
 #include "write_csv.hpp"
 
-#define TIME 0
+#define TIME 1
 #define TIME_RK4 0
 
-Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double> prob(double, 
+Vector<double> parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double> prob(double, 
         Vector<double> const&, double*), double dt_G, double dt_F, double* gamma, 
         int world_rank, const int n_proc, bool write_csv){
 
@@ -207,48 +207,53 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
     // total number of fine time step (between t0 and T)
     int nb_t_F;
 
-    if(world_rank==0)
-        nb_t_F = tab_nb_t_F_p.sum();
-    
     // each fine time step between t0 and T
     Vector<double> t;
-    if(world_rank==0){
-        t.resize(nb_t_F);
-        t(0) = t0;
-        for(int i=1; i<nb_t_F; i++){
-            t(i) = t(i-1) + dt_F;
-        }
-    }
 
     // fine solution between t0 and T ( only proc 0 )
     Matrix sol_k;
-    if(world_rank==0)
-        sol_k.resize(nb_t_F,dim);
-    #if TIME
-    if(world_rank==0)
-        time(&start_time);
-    #endif
-    MPI_Gatherv(fine.data(), static_cast<int>(fine.size()), MPI_DOUBLE, sol_k.data(), 
-        nEltByProc.data(), displacement.data(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    #if TIME
-    if(world_rank==0){
-        time(&final_time);
-        time_passed = final_time - start_time;
-        std::cout << "6 : " << time_passed << std::endl;
-        total_time+=time_passed;
-    }
-    #endif
 
-    //to add the initial point X0_t0 ?
-    
-
+    //Matrix with X0 at the begining
+    Matrix sol_k_;
     if(write_csv){
+        if(world_rank==0)
+            nb_t_F = tab_nb_t_F_p.sum();
+        
         if(world_rank==0){
-            write_sol_k(k,t,sol_k);
+            t.resize(nb_t_F+1);
+            t(0) = t0;
+            for(int i=1; i<nb_t_F+1; i++){
+                t(i) = t(i-1) + dt_F;
+            }
+        }
+
+        if(world_rank==0)
+            sol_k.resize(nb_t_F,dim);
+        #if TIME
+        if(world_rank==0)
+            time(&start_time);
+        #endif
+        MPI_Gatherv(fine.data(), static_cast<int>(fine.size()), MPI_DOUBLE, sol_k.data(), 
+            nEltByProc.data(), displacement.data(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        #if TIME
+        if(world_rank==0){
+            time(&final_time);
+            time_passed = final_time - start_time;
+            std::cout << "6 : " << time_passed << std::endl;
+            total_time+=time_passed;
+        }
+        #endif
+
+        if(world_rank==0){
+            //to add the initial point X0_t0
+            sol_k_.resize(X0_t0.rows()+sol_k.rows(), sol_k.cols());
+            sol_k_ << X0_t0, sol_k;
+
+            write_sol_k(k,t,sol_k_);
             write_X0_k(k,times,X0_k);
 
-            Matrix sol_ex = RK4(X0_t0,dt_F,t0,(T-t0)/dt_F,prob,gamma);
-            write_sol_ex(t,sol_ex);
+            // Matrix sol_ex = RK4(X0_t0,dt_F,t0,nb_t_F,prob,gamma);
+            // write_sol_ex(t,sol_ex);
         }
     }
 
@@ -269,8 +274,6 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
     /* ============================================
         FOLLOWING ITERATIONS (until the solution converge)
     ============================================ */
-
-    // bool converge = false;
 
     Matrix X0_kp(n_proc,dim);
     X0_kp = Matrix::Zero(n_proc,dim);
@@ -385,24 +388,26 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
         /*
             to save the solution
         */
-
-        #if TIME
-        if(world_rank==0)
-            time(&start_time);
-        #endif
-        MPI_Gatherv(fine.data(), static_cast<int>(fine.size()), MPI_DOUBLE, sol_k.data(), nEltByProc.data(), displacement.data(), MPI_DOUBLE, 0, MPI_COMM_WORLD);    
-        #if TIME
-        if(world_rank==0){
-            time(&final_time);
-            time_passed = final_time - start_time;
-            std::cout << "k=" << k << " ; 14 : " << time_passed << std::endl;
-            total_time+=time_passed;
-        }
-        #endif
-
         if(write_csv){
+            #if TIME
+            if(world_rank==0)
+                time(&start_time);
+            #endif
+            MPI_Gatherv(fine.data(), static_cast<int>(fine.size()), MPI_DOUBLE, sol_k.data(), nEltByProc.data(), displacement.data(), MPI_DOUBLE, 0, MPI_COMM_WORLD);    
+            #if TIME
             if(world_rank==0){
-                write_sol_k(k+1,t,sol_k);
+                time(&final_time);
+                time_passed = final_time - start_time;
+                std::cout << "k=" << k << " ; 14 : " << time_passed << std::endl;
+                total_time+=time_passed;
+            }
+            #endif
+
+            if(world_rank==0){
+                //to add the initial point X0_t0
+                sol_k_ << X0_t0, sol_k;
+
+                write_sol_k(k+1,t,sol_k_);
                 write_X0_k(k+1,times,X0_k);
             }
         }
@@ -417,12 +422,29 @@ Matrix parareal(Vector<double> const& X0_t0, double t0, double T, Vector<double>
         #endif
     }
 
+    if(world_rank==n_proc-1 and n_proc>1){
+        Vector<double> sol_T_(dim);
+        sol_T_ = fine.row(fine.rows()-1);
+        std::cout << "send" << std::endl;
+        MPI_Send(sol_T_.data(), dim, MPI_DOUBLE, 0, 1, MPI_COMM_WORLD);
+    }
+
+    Vector<double> sol_T(dim);
+    if(world_rank==0 and n_proc>1){
+        MPI_Recv(sol_T.data(), dim, MPI_DOUBLE, n_proc-1 , 1, MPI_COMM_WORLD, 
+                MPI_STATUS_IGNORE);
+        std::cout << "recv" << std::endl;
+    }
+    else if(world_rank==0 and n_proc==1){
+        sol_T = fine.row(fine.rows()-1);
+    }
+
     #if 0
     if(write_csv){
         if(world_rank==0)
             csv_files_lorenz(t0, T, dt_F, times, nEltByProc, k, solution, init_pts);
     }
     #endif
-    
-    return sol_k;
+
+    return sol_T;
 }

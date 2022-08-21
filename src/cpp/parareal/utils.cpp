@@ -8,6 +8,18 @@ Vector<double> oscillator(double /*t*/, Vector<double> const& X, double* gamma){
     return sol;
 }
 
+Vector<double> big_oscillator(double /*t*/, Vector<double> const& X, double* gamma){
+    Vector<double> sol(X.cols()); // X = (x,v)
+    for(int i=0; i<X.cols(); i++){
+        if(i%2==0)
+            sol[i] = X[1];
+        else if (i%2==1)
+            sol[i] = - gamma[0] * gamma[0] * X[0];
+    }
+    
+    return sol;
+}
+
 double oscillator_ex(double t, double* gamma){
     return gamma[1] * cos(gamma[0]*t+gamma[2]);
 }

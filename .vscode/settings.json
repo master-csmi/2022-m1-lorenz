@@ -97,6 +97,10 @@
         "slist": "cpp",
         "future": "cpp",
         "shared_mutex": "cpp",
-        "image": "cpp"
+        "image": "cpp",
+        "matrix": "cpp",
+        "mixinvector": "cpp",
+        "vertexarraystate": "cpp",
+        "buffered_value": "cpp"
     }
 }

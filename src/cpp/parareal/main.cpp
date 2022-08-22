@@ -5,31 +5,7 @@
 #include <ctime>
 #include <cmath>
 #include <iostream>
-
-// RK4
-
-#if 0
-int main (){
-    double t0 = 0.;
-    double T = 500.;
-    double dt_F = 0.01;
-    double gamma[3] = {10.,8./3,28.};
-
-    // Lorenz
-
-    Vector<double> X0(3); 
-    for(int i=0; i<3; i++){
-        X0[i] = 5.;
-    }
-
-    Matrix sol_k = RK4(X0,dt_F,t0,static_cast<int>((T-t0)/dt_F),lorenz,gamma);
-    
-    std::cout << "avant : " << sol_k.row(sol_k.rows()-2).leftCols(3) << std::endl;
-    std::cout << sol_k.row(sol_k.rows()-1).leftCols(3) << std::endl;
-
-    return 0;
-}
-#endif
+#define RK4_bool 0
 
 // Lorenz
 
@@ -46,7 +22,7 @@ int main (){
     bool write = false;
 
     double t0 = 0.;
-    double T = 200000.;
+    double T = 10000.;
     double dt_G = 0.01;
     double dt_F = 0.001;
 
@@ -55,21 +31,20 @@ int main (){
     // Big Lorenz (which is Lorenz with duplicate*3 equations)
     // if duplicate=1 => Lorenz
 
-    int duplicate = 1;
+    int duplicate = 100;
     Vector<double> X0(3*duplicate); 
     for(int i=0; i<3*duplicate; i++){
         X0[i] = 5.;
     }
 
     time_t start_time, final_time, time_passed;
-    if(!write){
+    if(!write)
         time(&start_time);
-    }
 
-    Matrix sol_k = parareal(X0, t0, T, big_lorenz, dt_G, dt_F, gamma, world_rank, n_proc, write);
+    Vector<double> sol = parareal(X0, t0, T, big_lorenz, dt_G, dt_F, gamma, world_rank, n_proc, write);
     if(world_rank==0){
-        std::cout << sol_k.cols() << std::endl;
-        std::cout << sol_k.rows() << std::endl;
+        std::cout << "Solution :" << std::endl;
+        std::cout << sol.leftCols(3) << std::endl;
     }
 
     if(!write){
@@ -82,11 +57,20 @@ int main (){
         }
     }
 
-    if(world_rank==0){
-        std::cout << "avant : " << sol_k.row(sol_k.rows()-2).leftCols(3) << std::endl;
-        std::cout << sol_k.row(sol_k.rows()-1).leftCols(3) << std::endl;
-        // std::cout << sol_k.leftCols(3) << std::endl;
+    // RK4
+    #if RK4_bool
+    if(n_proc==1){
+            if(!write)
+        time(&start_time);
+        Matrix sol_rk4 = RK4(X0,dt_F,t0,static_cast<int>((T-t0)/dt_F),big_lorenz,gamma);
+        if(!write){
+            time(&final_time);
+            time_passed = final_time - start_time;
+            std::cout << "Time - RK4 : " << std::floor(time_passed/60) << "m" << time_passed%60 << "s" << std::endl;
+        }
+        std::cout << "RK4 : " << sol_rk4.row(sol_rk4.rows()-1).leftCols(3) << std::endl;
     }
+    #endif
 
     MPI_Finalize ();
 
@@ -104,14 +88,22 @@ int main (){
     MPI_Comm_size ( MPI_COMM_WORLD , & n_proc );
 
     double gamma[3] = {5.,-1./5.,M_PI/2.};
-    Vector<double> X0(2); X0 << 0.,1.;
 
     double t0 = 0.;
-    double T = 20000.;
+    double T = 10000.;
     double dt_G = 0.01;
     double dt_F = 0.001;
 
-    bool write = false;
+    bool write = true;
+
+    int duplicate = 200;
+    Vector<double> X0(2*duplicate); 
+    for(int i=0; i<2*duplicate; i++){
+        if(i%2==0)
+            X0[i] = 0.;
+        else if(i%2==1)
+            X0[i] = 1.;
+    }
 
     // if(world_rank==0)
     //     delete_old_files();
@@ -124,7 +116,11 @@ int main (){
         // std::cout << "Start : " << start_time << std::endl;
     }
 
-    Matrix sol_k = parareal(X0, t0, T, oscillator, dt_G, dt_F, gamma, world_rank, n_proc, write);
+    Vector<double> sol = parareal(X0, t0, T, big_oscillator, dt_G, dt_F, gamma, world_rank, n_proc, write);
+    if(world_rank==0){
+        std::cout << "Solution :" << std::endl;
+        std::cout << sol.leftCols(2) << std::endl;
+    }
 
     if(!write){
         time(&final_time);
@@ -137,11 +133,20 @@ int main (){
         }
     }
 
-    if(world_rank==0){
-        std::cout << "avant : " << sol_k.row(sol_k.rows()-2) << std::endl;
-        std::cout << sol_k.row(sol_k.rows()-1) << std::endl;
-        // std::cout << sol_k << std::endl;
+    // RK4
+    #if RK4_bool
+    if(n_proc==1){
+            if(!write)
+        time(&start_time);
+        Matrix sol_rk4 = RK4(X0,dt_F,t0,static_cast<int>((T-t0)/dt_F),big_oscillator,gamma);
+        if(!write){
+            time(&final_time);
+            time_passed = final_time - start_time;
+            std::cout << "Time - RK4 : " << std::floor(time_passed/60) << "m" << time_passed%60 << "s" << std::endl;
+        }
+        std::cout << "RK4 : " << sol_rk4.row(sol_rk4.rows()-1).leftCols(2) << std::endl;
     }
+    #endif
 
     MPI_Finalize ();
 

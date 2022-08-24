@@ -229,8 +229,9 @@
 	\textbf{Test case :}
 	\begin{enumerate}[\textbullet]
 		\item Spatial : 2 sub-domains.
-		\item Temporal : 2 sub-domains, which makes 2*2 processes for the fine integrator and 2 processes for the coarse integrator, so 6 processes in all. We can then run in parallel with 6 processes.
+		\item Temporal : 2 sub-domains.
 	\end{enumerate}
+	$\Rightarrow$ 2*2 processes : fine integrator + 2 processes : coarse integrator $ \quad \Rightarrow$ 6 processes.
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.5\linewidth]{"images/parareal/master_slave.jpg"}

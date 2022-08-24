@@ -75,60 +75,61 @@ $$[Y_f]_i=\frac{Hx_i^f-u_i-H\bar{x}^f+\bar{u}}{\sqrt{m-1}}.$$
 \noindent Finally we can modify the posterior anomalies:
 $$X_i^a=X_i^f-KY_i^f=(I_n-KH)X_i^f+\frac{K(u_i-\bar{u})}{\sqrt{m-1}}.$$
 \end{frame}
+
 \begin{frame}{Ensemble Kalman Filter Algorithm}
     \begin{figure}[H]
 		\pgfimage[width=0.85\linewidth]{images/enkf/algorithm.png}
 	\end{figure}
 \end{frame}
+
 \begin{frame}[allowframebreaks]{Comparing Cpp results with Python}
-\begin{minipage}{0.4\hsize}
-			\centering
+	\begin{minipage}{0.4\hsize}
+		\centering
+		\begin{figure}[H]
+			\pgfimage[width=0.9\linewidth]{images/enkf/result.png}
+			\caption{Visualization of the model and observations (Initial condition: $X_0=(-10.,-10.,25.) $ )}
+		\end{figure}
+	\end{minipage} \quad
+	\begin{minipage}{0.5\hsize}
+		\begin{itemize}
+			\item $(\sigma, r, b)=(12.,6.,12.)$ for observation
+			\item $(\sigma, r, b)=(10.,6.,10.)$ for the model
+		\end{itemize}
+		\; \\
+		$$P=\begin{pmatrix}
+			0.1 & 0. & 0. \\
+			0. & 0.1 & 0. \\
+			0. & 0. & 0.1
+		\end{pmatrix}
+		Q=\begin{pmatrix}
+			0.1 & 0. & 0. \\
+			0. & 0.1 & 0. \\
+			0. & 0. & 0.1
+		\end{pmatrix}$$
+		$$R=\begin{pmatrix}
+			0.01 & 0. & 0. \\
+			0. & 0.01 & 0. \\
+			0. & 0. & 0.01
+		\end{pmatrix}.$$ 
+	\end{minipage}
+
+	\newpage
+	
 	\begin{figure}[H]
-		\pgfimage[width=0.9\linewidth]{images/enkf/result.png}
-		\caption{Visualization of the model and observations (Initial condition: $X_0=(-10.,-10.,25.) $ )}
-	\end{figure}
-		\end{minipage} \quad
-		\begin{minipage}{0.5\hsize}
-			\begin{itemize}
-    \item $(\sigma, r, b)=(12.,6.,12.)$ for observation
-    \item $(\sigma, r, b)=(10.,6.,10.)$ for the model
-    \end{itemize}
-    \newline
-    \newline
-     $$P=\begin{pmatrix}
-            0.1 & 0. & 0. \\
-            0. & 0.1 & 0. \\
-            0. & 0. & 0.1 \\
-            \end{pmatrix}
-            Q=\begin{pmatrix}
-            0.1 & 0. & 0. \\
-            0. & 0.1 & 0. \\
-            0. & 0. & 0.1 \\
-            \end{pmatrix}$$
-            \newline
-            $$R=\begin{pmatrix}
-            0.01 & 0. & 0. \\
-            0. & 0.01 & 0. \\
-            0. & 0. & 0.01 \\
-            \end{pmatrix}.$$ 
-    
-		\end{minipage}
-		
-\newpage
-\centering
-	\begin{figure}[H]
+		\centering
 		\pgfimage[width=1\linewidth]{images/enkf/result_filterpy.png}
 		\caption{Result with Filterpy}
 	\end{figure}
-
-\newpage
-\centering
+	
+	\newpage
+	
 	\begin{figure}[H]
+		\centering
 		\pgfimage[width=1\linewidth]{images/enkf/result_cpp.png}
 		\caption{Result with Cpp}
 	\end{figure}
-
 \end{frame}
+
 \subsection{Integrate data assimilation to Feel++}
 \begin{frame}[allowframebreaks]{The context}
 \begin{itemize}

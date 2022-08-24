@@ -17,15 +17,24 @@
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash }b{#1}}
 \newcolumntype{C}[1]{>{\centering\arraybackslash }b{#1}}
 
+%bibliography (with section)
+\usepackage[backend=biber,style=numeric,sorting=nyt]{biblatex}
+\renewcommand*{\bibfont}{\scriptsize}
+\addbibresource{biblio_ref.bib}
+\addbibresource{biblio_doc.bib}
+
 \hypersetup{
+	colorlinks=true,
 	urlcolor=blue,
+	citecolor=blue,
+	linkcolor=titre,
 }
 
 \title[Lorenz]{Parareal method and data assimilation for PDEs with Feel++}
 \subtitle{Presentation}
 \author[name]{AYDOGDU Melissa, LECOURTIER Frédérique}
 \institute{\large Strasbourg University}
-\date{July 22, 2022}
+\date{August 25, 2022}
 
 %\useoutertheme[subsection=false]{miniframes}
 %\usepackage{etoolbox}
@@ -155,40 +164,8 @@
 	
 	\section{A few comments about the internship}
 	
-	\begin{frame}{References}
-		\begin{thebibliography}{9}
-			\footnotesize
-			\bibitem{partie1_ref1}
-			\textit{The Lorenz 63 model and its relevance to data assimilation.} University Corporation for Atmospheric Research. (\href{https://docs.dart.ucar.edu/en/latest/guide/lorenz-63-model.html}{see})
-			\bibitem{partie1_ref2}
-			\textit{THREE DIMENSIONAL SYSTEMS, Lecture 6 : The Lorenz Equations.} (\href{https://www2.physics.ox.ac.uk/sites/default/files/profiles/read/lect6-43147.pdf}{see})
-			\bibitem{partie1_ref3}
-			\textit{Laboratory 6: A Simple Model of the Unpredictability of Weather: The Lorenz Equations.} John Stockie and Ken Wong.  (\href{https://ftp.emc.ncep.noaa.gov/mmb/sref/Doc/lorenz_fcst.pdf}{see})	
-			
-			\bibitem{partie2_ref1}
-			\textit{Parareal.}  (\href{https://en.wikipedia.org/w/index.php?title=Parareal&oldid=1047894968}{see})
-			\bibitem{partie2_ref2}
-			\textit{Ŕesolution d’EDP par un sch́ema en temps paraŕeel.} Jacques-Louis Lions, Yvon Maday, and Gabriel Turinici.   (\href{https://hal.archives-ouvertes.fr/hal-00798372/file/CRAS_01_lions_maday_turinici.pdf}{see})
-			\bibitem{partie2_ref3}
-			\textit{The ’Parareal in Time’ Algorithm.} Y. Maday.  (\href{https://www.ljll.math.upmc.fr/publications/2008/R08030.pdf}{see})
-			
-			\bibitem{partie3_ref1}
-			\textit{Introduction to Data Assimilation.} Maëlle Nodet.   (\href{https://team.inria.fr/airsea/files/2012/03/Nodet_Intro_DataAssimilation.pdf}{see})
-			\bibitem{partie3_ref2}
-			\textit{An introduction to data assimilation. } Eric Blayo.  (\href{https://www.eccorev.fr/IMG/pdf/Assimilationdonnees_EBlayo.pdf}{see})
-			\bibitem{partie3_ref3}
-			\textit{Data Assimilation training course CEMRACS Introduction and varia-
-			tional algorithms. } S Ricci.    (\href{http://smai.emath.fr/cemracs/cemracs16/images/DA_Ricci_
-				CEMRACS2016.pdf}{see})
-			
-			\bibitem{heat_equation}
-			\textit{Numerical Approximation of Partial Differential Equations.} Alfio Quarteroni and Alberto Valli.    (\href{https://link.springer.com/content/pdf/10.1007/978-3-540-85268-1.pdf}{see})
-		
-			\bibitem{feelpp_doc}
-			\textit{Feel++ documentation.} Christophe Prud’homme and Vincent Chabannes   (\href{https://docs.feelpp.org/feelpp/0.109/index.html}{see})
-			
-			
-		\end{thebibliography}
+	\begin{frame}[allowframebreaks]{Bibliography}
+		\printbibliography[heading=none]
 	\end{frame}
 	
 \end{document}

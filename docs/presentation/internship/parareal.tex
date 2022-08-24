@@ -1,4 +1,6 @@
-\begin{frame}{What is the parareal method ?}
+\begin{frame}{}
+	
+	\textbf{What is the parareal method ?}
 	
 	\begin{enumerate}[\textbullet]
 		\item parallel-in-time integration method, introduced in 2001 by Lions, Maday and Turinici~\cite{partie2_ref1}
@@ -6,10 +8,8 @@
 		\item categorized as a parallel-across-the-steps method 
 	\end{enumerate}
 
-\end{frame}
+	\textbf{Objectives for parareal method}
 
-\begin{frame}{Objectives for parareal method}
-	
 	\begin{enumerate}[\textbullet]
 		\item Implement the parareal method in C++ and :
 		\begin{itemize}
@@ -156,9 +156,12 @@
 
 \subsection{Solving PDEs with Feel++}
 
-\begin{frame}{Heat equation}
+\begin{frame}{Heat conduction equation}
 	
-	\textbf{The problem :}
+	\textbf{Goal : } apply the parareal method to the resolution of the heat equation using Feel++ (solver developed by Cemosis that uses the finite element method) \\ \; \\
+	
+	\textbf{The problem :} \\
+	We study the heat equation without the convection term and with $\rho=C_p=k=1$
 	$$\left\{\begin{aligned}
 		\frac{\partial u}{\partial t}-\Delta u &= f \quad&&(t_0,T)\times\Omega \\
 		u&=0 \quad&&(t_0,T)\times\partial\Omega\\
@@ -171,79 +174,87 @@
 
 \begin{frame}{Laplacian equation}
 	
-	\textbf{The problem :}
-	$$\left\{\begin{aligned}
-		-\Delta u &= f \quad&&\Omega \\
-		u&=g \quad&&\Gamma_D \\
-		\frac{\partial u}{\partial n} &=h \quad &&\Gamma_N \\
-		\frac{\partial u}{\partial n}+u &=l \quad &&\Gamma_R \\
-	\end{aligned}\right.$$
+	\begin{minipage}{0.48\linewidth}
+		\textbf{The problem :}
+		$$\left\{\begin{aligned}
+			-\Delta u &= f \quad&&\Omega \\
+			u&=g \quad&&\Gamma_D \\
+			\frac{\partial u}{\partial n} &=h \quad &&\Gamma_N \\
+			\frac{\partial u}{\partial n}+u &=l \quad &&\Gamma_R \\
+		\end{aligned}\right.$$
+	\end{minipage}
+	\begin{minipage}{0.48\linewidth}
+		\begin{figure}
+			\includegraphics[width=0.8\linewidth]{"images/parareal/circle_mesh.jpg"}
+		\end{figure}
+	\end{minipage}
 	
 	\textbf{Weak formulation :} \\
-	Find $\; u:\Omega \mapsto \mathbb{R} \;$ such that $\; u\in H_0^1(\Omega) \;$ and
-	$$\int_\Omega \nabla u \cdot \nabla v + \int_{\Gamma_R}uv = \int_\Omega fv + \int_{\Gamma_N}hv+\int_{\Gamma_R}lv \quad \forall v\in H_0^1(\Omega)$$
+	Find $\; u:\Omega \mapsto \mathbb{R} \;$ such that $\; u\in H_{g,\Gamma_D}^1(\Omega) \;$ and
+	$$\int_\Omega \nabla u \cdot \nabla v + \int_{\Gamma_R}uv = \int_\Omega fv + \int_{\Gamma_N}hv+\int_{\Gamma_R}lv \quad \forall v\in H_{0,\Gamma_D}^1(\Omega)$$
 	
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Example with Laplacian}
-	$$\left\{\begin{aligned}
-		-\Delta u &= f \quad&&\Omega \\
-		u&=g \quad&&\Gamma_D \\
-	\end{aligned}\right. \quad \text{with} \quad
-	u_{exact}=g=x^2+y^2, \quad f=-\Delta u_{exact}=-4$$
-	\begin{minipage}{0.31\linewidth}
-		\begin{figure}
-			\includegraphics[width=\linewidth]{"images/parareal/circle.jpg"}
-			\caption{Geometry considered}
-		\end{figure}
-	\end{minipage} \quad
-	\begin{minipage}{0.31\linewidth}
-		\begin{figure}
-			\includegraphics[width=\linewidth]{"images/parareal/circle_mesh.jpg"}
-			\caption{Mesh of the geometry (with Dirichlet Boundary condition)}
-		\end{figure}
-	\end{minipage} \quad
-	\begin{minipage}{0.31\linewidth}
-		\begin{figure}
-			\includegraphics[width=\linewidth]{"images/parareal/circle_result.jpg"}
-			\caption{Result (with Paraview)}
-		\end{figure}	
-	\end{minipage}
+\begin{frame}[allowframebreaks]{Convergence with Laplacian}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\linewidth]{"images/parareal/convergence_laplace.jpg"}
+	\end{figure}
 
 	\newpage
-	\centering
-	$||u-u_h||_{L^2}\sim h^2 \qquad \qquad ||u-u_h||_{H^1}\sim h^1 $
+	
 	\begin{figure}
-		\includegraphics[width=0.52\linewidth]{"images/parareal/cvg_laplacian.png"}
-		\caption{Convergence order for the Laplacian problem.}
+		\centering
+		\includegraphics[width=0.8\linewidth]{"images/parareal/convergence_laplace_2.jpg"}
 	\end{figure}
 \end{frame}
 
 \begin{frame}{Back to the heat equation}
 	\textbf{Weak formulation :} \\
-	Find $\; u:(t_0,T)\times\Omega \mapsto \mathbb{R} \;$ such that $\; u(t,\cdot)\in H_0^1(\Omega) \;$ and
-	$$\int_\Omega \frac{\partial u}{\partial t}(t,x)v(x)dx+\int_\Omega \nabla u(t,x)\cdot\nabla v(x)dx = \int_\Omega f(t,x)v(x)dx \quad \forall v\in H_0^1(\Omega)$$
-	for almost every $t\in(0,T)$. \\
+	Find $\; u:(t_0,T)\times\Omega \mapsto \mathbb{R} \;$ such that $\; u(t,\cdot)\in H_{g,\Gamma_D}^1(\Omega) \;$ and
+	$$\boxed{\int_\Omega \frac{\partial u}{\partial t}(t,x)v(x)dx}+\int_\Omega \nabla u(t,x)\cdot\nabla v(x)dx = \int_\Omega f(t,x)v(x)dx \quad \forall v\in H_{0,\Gamma_D}^1(\Omega)$$
+	for almost every $t\in(0,T)$.
 	
-	
-\end{frame}
-
-\begin{frame}{Back to the heat equation}
-	\textbf{Weak formulation :} \\
-	Find $\; u:(t_0,T)\times\Omega \mapsto \mathbb{R} \;$ such that $\; u(t,\cdot)\in H_0^1(\Omega) \;$ and
-	$$\boxed{\int_\Omega \frac{\partial u}{\partial t}(t,x)v(x)dx}+\int_\Omega \nabla u(t,x)\cdot\nabla v(x)dx = \int_\Omega f(t,x)v(x)dx \quad \forall v\in H_0^1(\Omega)$$
-	for almost every $t\in(0,T)$. \\ \; \\
-	
-	need to manage the temporal discretizations \\
-	$\Rightarrow$ use of the Feel++ bdf (Backward differencing formula) class :
-	
+	\textbf{Temporal discretization :}
 	$$\int_\Omega \frac{\partial u}{\partial t}(t,x)v(x)dx \simeq \int_\Omega \frac{u^{n+1}(x)-u^n(x)}{\Delta t}v(x)dx$$
 	
-	(Backward Euler scheme)
+	We then obtain :
+	$$\frac{1}{\Delta t}\int_\Omega u^{n+1}(x)v(x)dx+\int_\Omega \nabla u^{n+1}(t,x)\cdot\nabla v(x)dx$$
+	$$=\int_\Omega f(t,x)v(x)dx + \frac{1}{\Delta t}\int_\Omega u^n(x)v(x)dx$$
 \end{frame}
 
-\begin{frame}{Parareal method with the Heat equation}
-	\textbf{Goal :} To have a function that solves the heat equation between $t_i$ and $t_j$ with an initial condition (by using the previous resolution in C++ with Feel++) and apply the parareal method to it.
+\begin{frame}[allowframebreaks]{Parareal method with the Heat equation}
+	\textbf{Provided :} a class \textbf{Heat} allowing the solution of the heat equation with Feel++ (constructor define : the bilinear form $a$ + the linear form $l$ + boundary conditions). \\
+	
+	\textbf{Test case :}
+	\begin{enumerate}[\textbullet]
+		\item Spatial : 2 sub-domains.
+		\item Temporal : 2 sub-domains, which makes 2*2 processes for the fine integrator and 2 processes for the coarse integrator, so 6 processes in all. We can then run in parallel with 6 processes.
+	\end{enumerate}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.5\linewidth]{"images/parareal/master_slave.jpg"}
+	\end{figure}
+
+	\newpage
+
+	Need to communicate :
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.45\linewidth]{"images/parareal/master_slave_comm.jpg"}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.45\linewidth]{"images/parareal/master_slave_group.jpg"}
+	\end{figure}
+
+	\newpage
+	
+	Results : Let $t_0=0$, $T=1$ and a piece of finned heat exchanger.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{"images/parareal/heat_results.jpg"}
+	\end{figure}
 \end{frame}
 
 

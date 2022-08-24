@@ -272,12 +272,20 @@ Ensemble Kalman Filter class:
 
 \end{itemize}
 \newpage
-The delicate part to realize the data assimilation was to create the fx function.
-
-	\begin{figure}[H]
-		\pgfimage[width=0.6\linewidth]{images/enkf/Maillage_rayon.png}
+\begin{minipage}{0.4\hsize}
+			\centering
+		\begin{figure}[H]
+		\pgfimage[width=0.8\linewidth]{images/enkf/Maillage_rayon.png}
 		\caption{Mesh with radius on the sensors}
 	\end{figure}
+		\end{minipage} \quad
+		\begin{minipage}{0.4\hsize}
+		\begin{figure}[H]
+		\pgfimage[width=1.4\linewidth]{images/enkf/fx.png}
+		\caption{Steps for the fx function}
+		\end{figure}
+		\end{minipage}
+
 
 
 \end{frame}

@@ -1,4 +1,5 @@
 
+
 \begin{frame}[allowframebreaks]{Objectives}
 		
     \begin{enumerate}[\textbullet]
@@ -9,7 +10,6 @@
         \end{itemize}
         
     \item Understand the heat equation and what are the phenomena involved in the modification of the temperature of a building (conduction, convection, radiation).
-    \item Realize with Gmsh the geometry of the figure.
     \item Write the mathematical problem to be solved if we want to simulate an office then realize the simulation using Feel++ toolboxes.
     \item Introduce data assimilation using the sensor and correct the simulation.
     \end{enumerate}
@@ -34,42 +34,6 @@ $$x^a=Lx^b+Ky^0$$
 with $x^a$ the analyzed state, $x^b$ the state of the model and $y^0$ the observations.
 \end{frame}
 \subsection{Theory}
-
-\begin{frame}[allowframebreaks]{Statistical approach : Derivation of the Kalman filter}
-   The Kalman filter method consists in looking for $x^a$ as linear combination of our model and our observations.
-   \begin{equation*}
-       x^a=x^b+K(y-x^b)
-       \label{eq1}
-   \end{equation*}
-   with K the gain matrix.
-\newpage
-    The Kalman filter method consists in looking for $x^a$ as linear combination of our model and our observations.
-   \begin{equation}
-       x^a=x^b+K(y-x^b)
-       \label{eq1}
-   \end{equation}
-   with K the gain matrix.
-   \newline Let’s consider that true state $x^t$ exists:
-   \begin{equation}
-       x^a-x^t=x^b-x^t+K(y-x^t-x^b+x^t)
-   \end{equation}
-   Errors: \qquad $\epsilon^a=x^a-x^t,\qquad \epsilon^b=x^b-x^t, \qquad \epsilon^y=y-x^t$ \\
-   One realisation of these errors :$ \quad \epsilon^a=\epsilon^b+K(\epsilon^y-\epsilon^b)$
-   Many realisation of these errors + sample average :
-   \begin{equation}
-       <\epsilon^a>=<\epsilon^b>+K(<\epsilon^y>-<\epsilon^b>)
-   \end{equation}
-\end{frame}
-\begin{frame}{Kalman filter in one-dimension}
-
-   Analysis error variance as low as possible.
-   \newline Minimize $<(\epsilon^a)^2>$ with respect to $K$ :
-   $$<(\epsilon^a)^2>=<(\epsilon^b)^2>+K^2<(\epsilon^y-\epsilon^b)^2>+2K<\epsilon^b(\epsilon^y-\epsilon^b)^2>$$
-   The errors in the background and observation are uncorrelated.
-   $$K=\frac{<(\epsilon^b)^2>}{<(\epsilon^b)^2>+<(\epsilon^y)^2>} \Rightarrow K=\frac{(\sigma^b)^2}{(\sigma^b)^2+(\sigma^y)^2} $$
-   $(\sigma^y)^2$ the observation error variance, \newline $(\sigma^b)^2$ the background or model error variance.
-
-\end{frame}
    
 \begin{frame}{Kalman filter in multi-dimensional case}
    Now that we have explained the method for finding $x^a$ let's try to generalize our formula in a \textbf{multi-dimensional case}.
@@ -84,32 +48,83 @@ with $x^a$ the analyzed state, $x^b$ the state of the model and $y^0$ the observ
        \caption{Kalman Filter}
    \end{figure}
 \end{frame}
-\begin{frame}{Ensemble Kalman Filter}
-   The ENKF method consists in using the Kalman filter in non-linear system.
-   \newline We apply the Kalman filter on several state samples $x_1,x_2,..,x_{m}$.
-   $$x_i^a=x_i^f+K[y-h(x_i^f)]$$
-   with $h(x_i^f)$ the observation operator.
-   We can also define the Kalman gains: 
-   $$K=P^f H^T(HP^f H^T+R)^{-1}$$
-   For exemple we can estimate the
-   forecast error covariance matrix as:
-   $$P^f=\frac{1}{m-1}\sum_{i=1}^{m}(x_i^f-\bar{x}^f)(x_i^f-\bar{x}^f)^T~~\text{with}~~\bar{x}^f=\frac{1}{m}\sum_{i=1}^{m}x_i^f $$ .
+\begin{frame}[allowframebreaks]{Ensemble Kalman Filter}
+   \noindent The ENKF method consists in using the Kalman filter method in high dimension and compare P by a set of states $x_1,x_2,..,x_{m}$. So we can approximate the moments of the error by the moments of the sample.
+For all the samples, we have:
+$$x_i^a=x_i^f+K[y-h(x_i^f)]$$
+with $h(x_i^f)$ the observation operator.
+\newline \noindent To begin with we can estimate the
+forecast error covariance matrix as:
+$$P^f=\frac{1}{m-1}\sum_{i=1}^{m}(x_i^f-\bar{x}^f)(x_i^f-\bar{x}^f)^T~~with~~\bar{x}^f=\frac{1}{m}\sum_{i=1}^{m}x_i^f .$$ 
+\noindent We can factorized the forecast error covariance matrix by:
+$$P^f=X_f X_f^T$$
+where $X_f$ is an $n \times m$ matrix whose columns are the normalized anomalies or normalized perturbations,
+$$[X_f]_i=\frac{x_i^f-\bar{x}^f}{\sqrt{m-1}}$$
+
+\noindent We can also define the Kalman gains: 
+$$K=P^f H^T(HP^f H^T+R)^{-1}$$
+
+\noindent In addition, we have:
+$$
+\bar{x}^a=\frac{1}{m}\sum_{i=1}^mx_i^a~~,~~~~[X_a]_i=\frac{x_i^a-\bar{x}^a}{\sqrt{m-1}}. $$
+\newline \noindent We can write the covariance matrix of the analysis errors as:
+$$P^a=(I_n-KH)P^f(I_n-KH)^T+KRK^T=(In-KH)P^f.$$
+\noindent Add a disruption to the observation: $y\rightarrow y_i+\bar{u_i}$ where $u_i$ is drawn from the Gaussian distribution $u_i \sim \mathcal{N}(0,R)$
+\newline the innovation perturbations as :
+$$[Y_f]_i=\frac{Hx_i^f-u_i-H\bar{x}^f+\bar{u}}{\sqrt{m-1}}.$$
+\noindent Finally we can modify the posterior anomalies:
+$$X_i^a=X_i^f-KY_i^f=(I_n-KH)X_i^f+\frac{K(u_i-\bar{u})}{\sqrt{m-1}}.$$
 \end{frame}
-\begin{frame}{Comparing Cpp results with Python}
-	\centering
-$\sigma=12, \quad b=6, \quad r=12, \quad X_0=(-10,-10,25), \quad t_0=0, \quad T=1$
-\begin{minipage}{0.48\linewidth}
+\begin{frame}{Ensemble Kalman Filter}
+    \begin{figure}[H]
+		\pgfimage[width=0.85\linewidth]{images/enkf/algorithm.png}
+	\end{figure}
+\end{frame}
+\begin{frame}[allowframebreaks]{Comparing Cpp results with Python}
+\begin{minipage}{0.4\hsize}
+			\centering
 	\begin{figure}[H]
-		\pgfimage[width=0.9\linewidth]{images/enkf/Comparaison_python.jpg}
+		\pgfimage[width=0.9\linewidth]{images/enkf/result.png}
+		\caption{Visualization of the model and observations (Initial condition: $X_0=(-10.,-10.,25.) $ )}
+	\end{figure}
+		\end{minipage} \quad
+		\begin{minipage}{0.5\hsize}
+			\begin{itemize}
+    \item $(\sigma, r, b)=(12.,6.,12.)$ for observation
+    \item $(\sigma, r, b)=(10.,6.,10.)$ for the model
+    \item $$P=\begin{pmatrix}
+            0.1 & 0. & 0. \\
+            0. & 0.1 & 0. \\
+            0. & 0. & 0.1 \\
+            \end{pmatrix}
+            Q=\begin{pmatrix}
+            0.1 & 0. & 0. \\
+            0. & 0.1 & 0. \\
+            0. & 0. & 0.1 \\
+            \end{pmatrix}$$
+            \newline
+            $$R=\begin{pmatrix}
+            0.01 & 0. & 0. \\
+            0. & 0.01 & 0. \\
+            0. & 0. & 0.01 \\
+            \end{pmatrix}.$$ 
+    \end{itemize}
+		\end{minipage}
+		
+\newpage
+\centering
+	\begin{figure}[H]
+		\pgfimage[width=1\linewidth]{images/enkf/result_filterpy.png}
 		\caption{Result with Filterpy}
 	\end{figure}
-\end{minipage}
-\begin{minipage}{0.48\linewidth}
+
+\newpage
+\centering
 	\begin{figure}[H]
-		\pgfimage[width=0.9\linewidth]{images/enkf/Comparaison_cpp.jpg}
+		\pgfimage[width=1\linewidth]{images/enkf/result_cpp.png}
 		\caption{Result with Cpp}
 	\end{figure}
-\end{minipage}
+
 \end{frame}
 \subsection{Integrate data assimilation to Feel++}
 \begin{frame}[allowframebreaks]{The context}
@@ -121,21 +136,21 @@ $\sigma=12, \quad b=6, \quad r=12, \quad X_0=(-10,-10,25), \quad t_0=0, \quad T=
 \begin{minipage}{0.48\linewidth}
     \begin{figure}
         \centering
-        \includegraphics[width=\linewidth]{"images/enkf/Maillage_1.jpg"}
+        \includegraphics[width=\linewidth]{"images/enkf/Maillage_1.png"}
         \caption{Mesh of the office that we will use for the simulation.}
     \end{figure}
 \end{minipage} \;
 \begin{minipage}{0.48\linewidth}
     \begin{figure}
         \centering
-        \includegraphics[width=\linewidth]{"images/enkf/Maillage_2.jpg"}
+        \includegraphics[width=\linewidth]{"images/enkf/Maillage_2.png"}
         \caption{Visualization of windows and door in the mesh.}
     \end{figure}
 \end{minipage}
 \newpage
 \begin{itemize}
     \item Heat equation with convective effects\\
-    $$\rho C_p((\frac{\partial T}{\partial t})+u . \nabla T)-\nabla .(k \nabla T)=Q$$
+    $$\rho C_p((\frac{\partial T}{\partial t})+u \cdot \nabla T)-\nabla \cdot (k \nabla T)=Q$$
     Which is completed with boundary conditions and initial value.
     \newline
     \newline
@@ -155,7 +170,7 @@ $u$ & Fluid velocity & $m.s^{-1}$ & unknown \\[0.5cm]
 \newpage
 \item Equation of the air motion (Navier-Stokes).
  $$\left\{\begin{aligned} 
-        &\rho (\frac{\partial u}{\partial t}+u.\nabla u)-\nabla.(\mu \nabla u)+\nabla P =-\rho_0 \beta(T-T_{ref})g\\
+        &\rho (\frac{\partial u}{\partial t}+u\cdot \nabla u)-\nabla \cdot (\mu \nabla u)+\nabla P =-\rho_0 \beta(T-T_{ref})g\\
         &\nabla . u=0 \\
     \end{aligned}\right.$$
 \renewcommand{\arraystretch}{2}
@@ -172,6 +187,24 @@ $\beta$ & coefficient of thermal expansion & $K^
 $\mu$ & dynamic viscosity & $Pa.s$ & $1.81e^{-5}$\\[0.7cm]
 \hline
 $g$ & gravitational acceleration & $m.s^{-2}$ & $9.8$\\[0.7cm]
+\hline
+\end{tabular}
+
+\newpage
+\item Heat equation without convective effects\\
+    $$\rho C_p(\frac{\partial T}{\partial t})-\nabla \cdot (k \nabla T)=Q$$
+    Which is completed with boundary conditions and initial value.
+    \newline
+    \newline
+\renewcommand{\arraystretch}{2}
+\begin{tabular}{|R{2cm}|C{2.5cm}|L{2.5cm}|L{2.5cm}|}
+\hline
+$\rho$ & Air density & $Kg.m^
+{-3}$ & 1.125  \\[0.5cm]
+\hline
+$C_p$ & Specific heat & $J/KgK$ & 1004 \\[0.5cm]
+\hline
+$k$ & Conductivity & $W/mK$ & 0.025  \\[0.5cm]
 \hline
 \end{tabular}
 \end{itemize}
@@ -200,29 +233,55 @@ $g$ & gravitational acceleration & $m.s^{-2}$ & $9.8$\\[0.7cm]
 
 \end{frame}
 \begin{frame}[allowframebreaks]{Simulation}
+\begin{minipage}{0.47\linewidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{"images/enkf/sim_1.png"}
+        \caption{Visualization of the simulation made with the toolbox heat (Initial condition ) .}
+    \end{figure}
+\end{minipage} \;
 \begin{minipage}{0.48\linewidth}
     \begin{figure}
         \centering
-        \includegraphics[width=\linewidth]{"images/enkf/Simulation_1.jpg"}
-        \caption{Visualization of the simulation made with the toolbox heat (4th second) .}
-    \end{figure}
-\end{minipage} \;
-\begin{minipage}{0.46\linewidth}
-    \begin{figure}
-        \centering
-        \includegraphics[width=\linewidth]{"images/enkf/Simulation_2.jpg"}
-        \caption{Visualization of the simulation made with the toolbox heat (38th second) .}
+        \includegraphics[width=\linewidth]{"images/enkf/sim_2.png"}
+        \caption{Visualization of the simulation made with the toolbox heat (1 hour) .}
     \end{figure}
 \end{minipage}
 \begin{itemize}
-    \item For this simulation we do not consider the convection, but we increase k (Conductivity) in order to visualize the temperature increase in the room.
+    \item For this simulation we do not consider the convection .
 \end{itemize}
 
 \end{frame}
     
-\begin{frame}{Continuation of the project}
-	\textbf{Goal :} Try to apply data assimilation to our model using our sensors as observation to correct the simulation.
+\begin{frame}[allowframebreaks]{Including data assimilation to our simulation}
+\begin{minipage}{1\linewidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{"images/enkf/enkf.png"}
+    \end{figure}
+\end{minipage}
+Ensemble Kalman Filter class:
+\begin{itemize}
+    \item the dimension of our model;
+    \item the dimension of the vector containing our observations;
+    \item a vector X which will represent the initial state for our model;
+    \item the matrix P ;
+    \item our time step dt. 
+    \item a function \text{hx};
+    \item a function \text{fx}.
+
+\end{itemize}
+\newpage
+The delicate part to realize the data assimilation was to create the fx function.
+
+	\begin{figure}[H]
+		\pgfimage[width=0.6\linewidth]{images/enkf/Maillage_rayon.png}
+		\caption{Mesh with radius on the sensors}
+	\end{figure}
+
+
 \end{frame}
+
 
 
 

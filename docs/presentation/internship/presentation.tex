@@ -75,31 +75,33 @@
 
 	\begin{frame}{Cemosis}
 		
-		\begin{minipage}{0.4\hsize}
+		\begin{minipage}{0.3\hsize}
 			\centering
 			\pgfimage[width=\linewidth]{images/logo-cemosis.pdf}
 			\begin{enumerate}[$\rightarrow$]
 				\item created in January 2013
 				\item hosted by the Institute of Advanced Mathematical Research (IRMA)
+				\item same thematics as CSMI
 			\end{enumerate}
 		\end{minipage} \quad
-		\begin{minipage}{0.5\hsize}
-			They use and develop tools in the fields of : 
-			\begin{enumerate}[\textbullet]
-				\item \textbf{MSO} \\
-				Modeling Simulation and Optimization
-				\item \textbf{DS} \\
-				Data Science, Big Data, Smart Data
-				\item \textbf{HPC} \\
-				High Performance Computing, \\
-				Parallel Computing, Cloud Computing
-				\item \textbf{SI} \\
-				Signal and Image processing
-			\end{enumerate}
+		\begin{minipage}{0.6\hsize}
+			
+     \begin{itemize}
+        \item Developing
+competences and projects in the energy sector of buildings.
+\item Accelerate simulations: parallel computing
+\item To realize simulations by incorporating data assimilation in order to complete models that may be coarse.
+    \end{itemize}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.65\linewidth]{"images/intro/cemosis_simulation_2.png"}
+        \caption{Visualization of the simulation made with the toolbox heat  .}
+    \end{figure}
 		\end{minipage}
+		
 	
 	\end{frame}
-
+ 
 	\begin{frame}{Objectives}
 		
 		\begin{enumerate}[\textbullet]
@@ -152,6 +154,30 @@
 			\item $\phi_0$ : the phase at the origin
 		\end{enumerate}
 		We have the period $\quad Pe=\frac{2\pi}{\omega_0}$		
+	\end{frame}
+\begin{frame}{Heat equation}
+	    \noindent The heat equation with convective effects can be written as:
+    $$\rho C_p((\frac{\partial T}{\partial t})+u \cdot  \nabla T)-\nabla \cdot (k \nabla T)=Q$$
+    and it must be completed  with boundary conditions and initial conditions.
+	\begin{table}[H]
+	\renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{|R{3cm}|C{3cm}|L{3cm}|}
+    \hline
+    Notation & Quantity &Unit  \\
+    \hline
+    $\rho$ & density & $Kg.m^
+    {-3}$  \\[3cm]
+    \hline
+    $C_p$ & Specific heat & $J/KgC=J/KgK$ \\[3cm]
+    \hline
+    $k$ & Conductivity & $W/mC=W/mK$  \\[3cm]
+    \hline
+    $u$ & Fluid velocity & $m.s^{-1}$  \\[3cm]
+    \hline
+    \end{tabular}
+    \\[10pt]
+    \caption{Parameters for the heat equation}
+    \end{table}
 	\end{frame}
 
 	\section{Application of the parareal method to PDE simulation in Feel++}

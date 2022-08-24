@@ -1,6 +1,6 @@
 
 
-\begin{frame}[allowframebreaks]{Objectives}
+\begin{frame}{Objectives}
 		
     \begin{enumerate}[\textbullet]
         \item Write a class for the EnKF in C++, inspired by the EnKF written in Python (FilterPy); Test the algorithm.
@@ -68,14 +68,14 @@ $$K=P^f H^T(HP^f H^T+R)^{-1}$$
 $$
 \bar{x}^a=\frac{1}{m}\sum_{i=1}^mx_i^a~~,~~~~[X_a]_i=\frac{x_i^a-\bar{x}^a}{\sqrt{m-1}}. $$
 \newline \noindent We can write the covariance matrix of the analysis errors as:
-$$P^a=(I_n-KH)P^f(I_n-KH)^T+KRK^T=(In-KH)P^f.$$
-\noindent Add a disruption to the observation: $y\rightarrow y_i+\bar{u_i}$ where $u_i$ is drawn from the Gaussian distribution $u_i \sim \mathcal{N}(0,R)$
+$$P^a=(I_n-KH)P^f(I_n-KH)^T+KRK^T=(I_n-KH)P^f.$$
+\noindent Add a perturbation to the observation: $y\rightarrow y_i+\bar{u_i}$ where $u_i$ is drawn from the Gaussian distribution $u_i \sim \mathcal{N}(0,R)$
 \newline the innovation perturbations as :
 $$[Y_f]_i=\frac{Hx_i^f-u_i-H\bar{x}^f+\bar{u}}{\sqrt{m-1}}.$$
 \noindent Finally we can modify the posterior anomalies:
 $$X_i^a=X_i^f-KY_i^f=(I_n-KH)X_i^f+\frac{K(u_i-\bar{u})}{\sqrt{m-1}}.$$
 \end{frame}
-\begin{frame}{Ensemble Kalman Filter}
+\begin{frame}{Ensemble Kalman Filter Algorithm}
     \begin{figure}[H]
 		\pgfimage[width=0.85\linewidth]{images/enkf/algorithm.png}
 	\end{figure}
@@ -92,7 +92,10 @@ $$X_i^a=X_i^f-KY_i^f=(I_n-KH)X_i^f+\frac{K(u_i-\bar{u})}{\sqrt{m-1}}.$$
 			\begin{itemize}
     \item $(\sigma, r, b)=(12.,6.,12.)$ for observation
     \item $(\sigma, r, b)=(10.,6.,10.)$ for the model
-    \item $$P=\begin{pmatrix}
+    \end{itemize}
+    \newline
+    \newline
+     $$P=\begin{pmatrix}
             0.1 & 0. & 0. \\
             0. & 0.1 & 0. \\
             0. & 0. & 0.1 \\
@@ -108,7 +111,7 @@ $$X_i^a=X_i^f-KY_i^f=(I_n-KH)X_i^f+\frac{K(u_i-\bar{u})}{\sqrt{m-1}}.$$
             0. & 0.01 & 0. \\
             0. & 0. & 0.01 \\
             \end{pmatrix}.$$ 
-    \end{itemize}
+    
 		\end{minipage}
 		
 \newpage
@@ -137,14 +140,14 @@ $$X_i^a=X_i^f-KY_i^f=(I_n-KH)X_i^f+\frac{K(u_i-\bar{u})}{\sqrt{m-1}}.$$
     \begin{figure}
         \centering
         \includegraphics[width=\linewidth]{"images/enkf/Maillage_1.png"}
-        \caption{Mesh of the office that we will use for the simulation.}
+        \caption{Geometry of the office that we will use for the simulation.}
     \end{figure}
 \end{minipage} \;
 \begin{minipage}{0.48\linewidth}
     \begin{figure}
         \centering
         \includegraphics[width=\linewidth]{"images/enkf/Maillage_2.png"}
-        \caption{Visualization of windows and door in the mesh.}
+        \caption{Visualization of windows and door in the geometry.}
     \end{figure}
 \end{minipage}
 \newpage
@@ -154,7 +157,7 @@ $$X_i^a=X_i^f-KY_i^f=(I_n-KH)X_i^f+\frac{K(u_i-\bar{u})}{\sqrt{m-1}}.$$
     Which is completed with boundary conditions and initial value.
     \newline
     \newline
-\renewcommand{\arraystretch}{2}
+\renewcommand{\arraystretch}{1.7}
 \begin{tabular}{|R{2cm}|C{2.5cm}|L{2.5cm}|L{2.5cm}|}
 \hline
 $\rho$ & Air density & $Kg.m^
@@ -166,14 +169,16 @@ $k$ & Conductivity & $W/mK$ & 0.025  \\[0.5cm]
 \hline
 $u$ & Fluid velocity & $m.s^{-1}$ & unknown \\[0.5cm]
 \hline
+$T$ & Temperature & $K$ or $C$ & unknown \\[0.5cm]
+\hline
 \end{tabular}
 \newpage
 \item Equation of the air motion (Navier-Stokes).
  $$\left\{\begin{aligned} 
         &\rho (\frac{\partial u}{\partial t}+u\cdot \nabla u)-\nabla \cdot (\mu \nabla u)+\nabla P =-\rho_0 \beta(T-T_{ref})g\\
-        &\nabla . u=0 \\
+        &\nabla \cdot u=0 \\
     \end{aligned}\right.$$
-\renewcommand{\arraystretch}{2}
+\renewcommand{\arraystretch}{1.5}
 \begin{tabular}{|R{1cm}|C{5cm}|L{1.5cm}|L{1.5cm}|}
 \hline
 $\rho$ & fluid density & $Kg.m^
@@ -187,6 +192,8 @@ $\beta$ & coefficient of thermal expansion & $K^
 $\mu$ & dynamic viscosity & $Pa.s$ & $1.81e^{-5}$\\[0.7cm]
 \hline
 $g$ & gravitational acceleration & $m.s^{-2}$ & $9.8$\\[0.7cm]
+\hline
+$\rho_0$ & fluid density of air & $kg .m^{-3}$ & 1.225\\[0.7cm]
 \hline
 \end{tabular}
 
@@ -205,6 +212,8 @@ $\rho$ & Air density & $Kg.m^
 $C_p$ & Specific heat & $J/KgK$ & 1004 \\[0.5cm]
 \hline
 $k$ & Conductivity & $W/mK$ & 0.025  \\[0.5cm]
+\hline
+$T$ & Temperature & $K$ or $C$ & unknown \\[0.5cm]
 \hline
 \end{tabular}
 \end{itemize}
@@ -276,7 +285,7 @@ Ensemble Kalman Filter class:
 			\centering
 		\begin{figure}[H]
 		\pgfimage[width=0.8\linewidth]{images/enkf/Maillage_rayon.png}
-		\caption{Mesh with radius on the sensors}
+		\caption{Geometry with radius on the sensors}
 	\end{figure}
 		\end{minipage} \quad
 		\begin{minipage}{0.4\hsize}

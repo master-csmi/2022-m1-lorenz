@@ -90,7 +90,7 @@
         \item Developing
 competences and projects in the energy sector of buildings.
 \item Accelerate simulations: parallel computing
-\item To realize simulations by incorporating data assimilation in order to complete models that may be coarse.
+\item Complete models that may be coarse : Data assimilation
     \end{itemize}
     \begin{figure}
         \centering
@@ -128,35 +128,51 @@ competences and projects in the energy sector of buildings.
 			\frac{d z(t)}{d t}&=x(t)y(t)-bz(t)
 		\end{aligned}\right.$$
 	
-		where
-		
-		\begin{enumerate}[\textbullet]
-			\item $\sigma > 0$  relates to the Prandtl number
-			\item $r > 0$  relates to the Rayleigh number
-			\item $b > 0$ is a geometric factor
-		\end{enumerate}
-		
+		\begin{minipage}{0.48\linewidth}
+			
+			where
+			
+			\begin{enumerate}[\textbullet]
+				\item $\sigma > 0$  relates to the Prandtl number
+				\item $r > 0$  relates to the Rayleigh number
+				\item $b > 0$ is a geometric factor
+			\end{enumerate}
+			
+			to investigate atmospheric convection \\ \; \\
+		\end{minipage}
+		\begin{minipage}{0.48\linewidth}
+			\begin{figure}
+				\centering
+				\includegraphics[width=0.65\linewidth]{"images/intro/butterfly.jpg"}
+				\caption{Butterfly effect}
+			\end{figure}
+		\end{minipage}
 	\end{frame}
 
 	\begin{frame}{Harmonic oscillator}
 		\begin{minipage}{0.48\linewidth}
 			Equation :
 			$$\frac{d^2 x}{d t^2}+\omega_0^2 x = 0$$
+			with
+			\begin{enumerate}[\textbullet]
+				\item $\omega_0$ a pulsation
+				\item $x_0$ : the amplitude of the oscillations
+				\item $\phi_0$ : the phase at the origin
+			\end{enumerate}
+			We have the period $\quad Pe=\frac{2\pi}{\omega_0}$ \\ \; \\
 		\end{minipage}
 		\begin{minipage}{0.48\linewidth}
 			Exact solution :
 			$$x(t) = x_0 \cos(\omega_{0}t+\phi_0).$$ 
+			\begin{figure}
+				\centering
+				\includegraphics[width=0.65\linewidth]{"images/intro/mass_sping.png"}
+				\caption{Spring/mass system}
+			\end{figure}
 		\end{minipage}	
-		with
-		\begin{enumerate}[\textbullet]
-			\item $\omega_0$ a pulsation
-			\item $x_0$ : the amplitude of the oscillations
-			\item $\phi_0$ : the phase at the origin
-		\end{enumerate}
-		We have the period $\quad Pe=\frac{2\pi}{\omega_0}$		
 	\end{frame}
 \begin{frame}{Heat equation}
-	    \noindent The heat equation with convective effects can be written as:
+	\noindent The heat equation with convective effects can be written as:
     $$\rho C_p((\frac{\partial T}{\partial t})+u \cdot  \nabla T)-\nabla \cdot (k \nabla T)=Q$$
     and it must be completed  with boundary conditions and initial conditions.
 	\begin{table}[H]

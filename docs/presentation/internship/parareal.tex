@@ -1,7 +1,7 @@
 \begin{frame}{What is the parareal method ?}
 	
 	\begin{enumerate}[\textbullet]
-		\item parallel-in-time integration method, introduced in 2001 by Lions, Maday and Turinici
+		\item parallel-in-time integration method, introduced in 2001 by Lions, Maday and Turinici~\cite{partie2_ref1}
 		\item computes the numerical solution for multiple time steps in parallel
 		\item categorized as a parallel-across-the-steps method 
 	\end{enumerate}
@@ -45,12 +45,16 @@
 		\end{enumerate}
 	\end{minipage} \\
 	\begin{enumerate}[\textbullet]
-		\item $F(U_{j-1}^k), j\in\{1,\dots,P\}$ : value of the fine integrator at $t_j$ starting by $U_{j-1}^k$ (resp. $G(U_{j-1}^k)$)
+		\item $F(U_{j-1}^k), j\in\{1,\dots,P\}$ : value of the fine integrator at $t_j$ starting by $U_{j-1}^k$ \\
+		(resp. $G(U_{j-1}^k)$) \\
+		$F$ and $G$ are Runge Kutta of order 4 
+		\begin{minipage}{\linewidth}
+			\centering
+			\qquad \qquad \qquad \qquad \qquad \qquad \qquad
+			\includegraphics[width=0.3\linewidth]{images/parareal/explane_F.jpg}
+		\end{minipage}
 	\end{enumerate}
-	\begin{minipage}{\linewidth}
-		\centering
-		\qquad \qquad \qquad \qquad \qquad \qquad \qquad \includegraphics[width=0.35\linewidth]{images/parareal/explane_F.jpg}
-	\end{minipage}
+	
 	
 \end{frame}
 
@@ -69,20 +73,12 @@
 	We have at iteration $k$ : \qquad	$U_j^k=G(U_{j-1}^k)+(F(U_{j-1}^{k-1})-G(U_{j-1}^{k-1}))$
 \end{frame}
 
-\begin{frame}{Example with the Lorenz system}
-	\centering
-	$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5), \quad t_0=0, \quad T=20$
-	$P=4,\quad \Delta t_G=0.1, \quad \Delta t_F=0.01$
-	\begin{figure}
-		\centering
-		\begin{minipage}{0.48\linewidth}
-			\includegraphics[width=\linewidth]{"images/parareal/lorenz_sol_0.png"}
-		\end{minipage}
-		\begin{minipage}{0.48\linewidth}
-			\includegraphics[width=\linewidth]{"images/parareal/lorenz_sol_4.png"}
-		\end{minipage}
-		\caption{Solution of the Lorenz system at the first and the last iteration (with C++)}
-	\end{figure}
+\begin{frame}[allowframebreaks]{Algorithm}
+	 \begin{figure}
+	 	\centering
+	 	\includegraphics[width=\linewidth]{images/parareal/algorithm.jpg}
+	 	\caption{Algorithm for the parareal method}
+	 \end{figure}
 \end{frame}
 
 \begin{frame}{Order of the parareal method}
@@ -99,8 +95,37 @@
 	\end{figure}
 \end{frame}
 
+\section{Application in Python and C++}
 
-\begin{frame}{Harmonic oscillator}
+\begin{frame}{Example with the Lorenz system}
+	\centering
+	$\sigma=10, \quad b=\frac{8}{3}, \quad r=28, \quad X_0=(5,5,5), \quad t_0=0, \quad T=20$
+	$P=4,\quad \Delta t_G=0.1, \quad \Delta t_F=0.01$
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\linewidth]{"images/parareal/lorenz_4p.jpg"}
+		\caption{Solution of the Lorenz system with C++ at each iteration}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Speed-up for the Lorenz system}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.9\linewidth]{"images/parareal/speedup_lorenz.jpg"}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Incorrect results for the Lorenz System}
+	\centering
+	$\sigma=10, \; b=\frac{8}{3}, \; r=28, \; X_0=(5,5,5), \; t_0=0, \; \Delta t_G=0.1, \; \Delta t_F=0.01$
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.9\linewidth]{"images/parareal/incorrect_results.jpg"}
+	\end{figure}
+\end{frame}
+
+
+\begin{frame}{Example for the Harmonic oscillator}
 	
 	$$P=3, \quad x(0)=0,\quad v(0)=1, \quad\omega_0=5, \quad x_0=\frac{-1}{5}, \quad \phi_0=\frac{\pi}{2}$$
 	
@@ -121,36 +146,13 @@
 	
 \end{frame}
 
-\begin{frame}{Speed-up ?}
-	\begin{enumerate}[\textbullet]
-		\item Why use this method ? \\
-		Useful if the number of iteration is lower than $P$. \\
-		
-		\item We can see that the implementation of the method in C++ is considerably faster than in Python. \\
-		
-		\item Speed-up when we increase the number of processes $P$ ? \\
-		With Python :
-		\begin{table}[H]
-			\centering
-			\begin{tabular}{| c || c | c | c | c | c |}
-				\hline
-				\multirow{2}{1.5 cm}{$\Delta t$} & \multirow{2}{1.5 cm}{Seq (RK4)} & \multirow{2}{1.5 cm}{1 proc} & \multirow{2}{1.5 cm}{2 proc} & \multirow{2}{1.5 cm}{3 proc} &\multirow{2}{1.5 cm}{4 proc} \\
-				& & & & & \\
-				\hline 
-				F : 0.00125 & \multirow{2}{1.5 cm}{1m19} & \multirow{2}{1.5 cm}{1m42} & \multirow{2}{1.5 cm}{39s} & \multirow{2}{1.5 cm}{32s} & \multirow{2}{1.5 cm}{29s} \\
-				G : 0.0125 & & & & & \\	 
-				\hline
-			\end{tabular}
-			\caption{Execution time for the Lorenz system with Python ($T=200$).}
-			\label{time}
-		\end{table}
-	\end{enumerate}
+\begin{frame}{Efficiency for the Harmonic oscillator}
+	\begin{figure}
+		\centering
+		\includegraphics[width=\linewidth]{"images/parareal/efficiency.jpg"}
+	\end{figure}
+	+ sequential part + operations + communications
 \end{frame}
-
-
-
-
-
 
 \subsection{Solving PDEs with Feel++}
 

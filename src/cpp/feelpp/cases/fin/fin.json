@@ -1,0 +1,101 @@
+{
+    "Name": "Case Thermal fin",
+    "ShortName": "thermal fin",
+    "Models": {
+        "heat": {
+            "name": "heat",
+            "materials": [
+                "Post",
+                "Fin_1",
+                "Fin_2",
+                "Fin_3",
+                "Fin_4"
+            ]
+        }
+    },
+    "Time":{
+        "final_time": 1,
+        "dt_fine": 0.01,
+        "partitions": 2
+
+    },
+    "Parameters": {
+        "phi": {
+            "min": "1e3",
+            "max": "250e3",
+            "value": "250000"
+        },
+        "hconv": {
+            "min": "10",
+            "max": "1000",
+            "value": "300"
+        },
+        "Tref": // °C
+        {
+            "min": "20",
+            "max": "600",
+            "value": "450"
+        },
+        "P": {
+            "min": "0",
+            "max": "2e8",
+            "value": "2e8"
+        },
+        "Tdir": 250 // C
+    },
+    "Meshes": {
+        "heat": {
+            "Import": {
+                "filename": "$cfgdir/../fin_p2.json"
+                //"partitions": 2
+            }
+        }
+    },
+    "Materials": {
+        "Post": // Omega2
+        {
+            "k": "1",
+            "Cp": "1",
+            "rho": "1"
+        },
+        "Fin_1": // Omega1
+        {
+            "k": "1",
+            "Cp": "1",
+            "rho": "1"
+        },
+        "Fin_2": // Omega1
+        {
+            "k": "1",
+            "Cp": "1",
+            "rho": "1"
+        },
+        "Fin_3": // Omega1
+        {
+            "k": "1",
+            "Cp": "1",
+            "rho": "1"
+        },
+        "Fin_4": // Omega1
+        {
+            "k": "1",
+            "Cp": "1",
+            "rho": "1"
+        }
+    },
+    "BoundaryConditions": {
+        "heat": {
+            "flux": {
+                "Gamma_root": {
+                    "expr": "1"
+                }
+            },
+            "convective_heat_flux": {
+                "Gamma_ext": {
+                    "h": "1",
+                    "Text": "0"
+                }
+            }
+        }
+    }
+}

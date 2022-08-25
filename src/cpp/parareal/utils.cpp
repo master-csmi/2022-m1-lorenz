@@ -1,9 +1,22 @@
 // #include <parareal/utils.hpp>
 #include "utils.hpp"
+#include <iostream>
 
 Vector<double> oscillator(double /*t*/, Vector<double> const& X, double* gamma){
     Vector<double> sol(X.cols()); // X = (x,v)
     sol << X[1], - gamma[0] * gamma[0] * X[0];
+    return sol;
+}
+
+Vector<double> big_oscillator(double /*t*/, Vector<double> const& X, double* gamma){
+    Vector<double> sol(X.cols()); // X = (x,v)
+    for(int i=0; i<X.cols(); i++){
+        if(i%2==0)
+            sol[i] = X[1];
+        else if (i%2==1)
+            sol[i] = - gamma[0] * gamma[0] * X[0];
+    }
+    
     return sol;
 }
 
@@ -19,26 +32,42 @@ Vector<double> lorenz(double /*t*/, Vector<double> const& X, double* gamma){
     return sol;
 }
 
+Vector<double> big_lorenz(double /*t*/, Vector<double> const& X, double* gamma){
+    Vector<double> sol(X.cols());
+    for(int i=0; i<X.cols(); i++){
+        if(i%3==0)
+            sol[i] = gamma[0] * (X[1]-X[0]);
+        else if (i%3==1)
+            sol[i] = X[0] * (gamma[2]-X[2])-X[1];
+        else if (i%3==2)
+            sol[i] = X[0]*X[1]-gamma[1]*X[2];
+        // sol << gamma[0] * (X[1]-X[0]), X[0] * (gamma[2]-X[2])-X[1],
+        //  X[0]*X[1]-gamma[1]*X[2];
+    }
+
+    return sol;
+}
+
 Matrix RK4(Vector<double> const& X0, double dt, double t0, int nb_t, 
         Vector<double> prob(double, Vector<double> const&, double*), double* gamma){
 
     int dim = static_cast<int>(X0.cols());
-    Matrix X(1,dim); X << X0;
+    Matrix X(nb_t,dim); 
+    // X.row(0) = X0;
 
     double t = t0;
     Vector<double> K1(dim), K2(dim), K3(dim), K4(dim);
-    Vector<double> X_prec(dim);
+    Vector<double> X_prec = X0;
     
-    for(int i=1; i<nb_t; i++){
-        X_prec = X.bottomRows<1>();
+    for(int i=0; i<nb_t; i++){
+        if(i!=0)
+            X_prec = X.row(i-1);
         K1=prob(t, X_prec, gamma);
         K2=prob(t+dt/2., X_prec + 1./2. * K1 * dt, gamma);
         K3=prob(t+dt/2., X_prec + 1./2. * K2 * dt, gamma);
         K4=prob(t+dt, X_prec+ K3 * dt, gamma);
 
-        X.conservativeResize(X.rows()+1, X.cols());
-        X.row(X.rows()-1) = X_prec + dt/6.* (K1+2.*K2+2.*K3+K4);
-
+        X.row(i) = X_prec + dt/6.* (K1+2.*K2+2.*K3+K4);
         t+=dt;
     }
 
@@ -83,6 +112,7 @@ Vector<double> compute_times(double t0, double T, double dt_G, double dt_F, int 
     for(int i=1; i<n_proc+1; i++){
         times(i) = times(i-1) + (*tab_nb_t_G_p)(i-1) * dt_G;
     }
+    times(n_proc)-=dt_G;
 
     return times;
 }

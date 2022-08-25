@@ -1,0 +1,35 @@
+:feelpp: Feel++
+= Heat examples
+:toc: macro
+
+toc:[]
+
+== feelpp heat with json
+
+
+
+[source,shell]
+----
+# configure
+cmake --preset default
+
+# build
+cmake --build --preset default heat.j -j4
+
+# go in build directory 
+cd build/default/src/cpp/feelpp
+
+# copy case files to current build directory
+make feelpp_add_testcase_
+----
+
+=== 2D
+
+.2D one  thermal fin 
+[source,shell]
+----
+# in sequential
+../../../bin/heat.j --config-file cases/rht/fin1/fin.cfg 
+# in parallel
+mpirun -np 2 ../../../bin/heat.j --config-file cases/rht/fin1/fin.cfg
+----

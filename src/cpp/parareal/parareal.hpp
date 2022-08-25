@@ -24,7 +24,7 @@ template<class T> using Vector = Eigen::Matrix<T,1,Eigen::Dynamic>;
  * @param write_csv True to write the solutions in a csv file. Defaults to True.
  * @return Matrix The solution by using the parareal method.
  */
-Matrix parareal(Vector<double> const& X0_t0, double t0, double T, 
+Vector<double> parareal(Vector<double> const& X0_t0, double t0, double T, 
                 Vector<double> prob(double, Vector<double> const&, double*), 
                 double dt_G, double dt_F, double* gamma, 
                 int world_rank, int n_proc, bool write_csv=true);
